@@ -4,9 +4,9 @@
   "author":  "simp",
   "summary": "Compliance-mapping annotation for Puppet code",
   "license": "Apache-2.0",
-  "source":  "https://github.com/onyxpoint/compliance_markup",
-  "project_page": "https://github.com/onyxpoint/compliance_markup",
-  "issues_url":   "https://github.com/onyxpoint/compliance_markup/issues",
+  "source":  "https://github.com/simp/compliance_markup",
+  "project_page": "https://github.com/simp/compliance_markup",
+  "issues_url":   "https://github.com/simp/compliance_markup/issues",
   "tags": [ "simp", "security", "compliance", "reporting"],
   "dependencies": [],
   "operatingsystem_support": [

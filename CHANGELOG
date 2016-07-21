@@ -1,2 +1,6 @@
-2015-12-07 Release 0.1.0
-- Initial Release
+* Mon Mar 07 2016 Chris Tessmer <chris.tessmer@onyxpoint.com> - 1.0.0-0
+- Converted org from `onyxpoint` to `simp`.
+- Fixed linting problems.
+
+* Mon Nov 30 2015 Trevor Vaughan - 0.1.0-0
+- Initial package.
