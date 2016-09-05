@@ -1,11 +1,20 @@
-2016-09-28 Release 1.0.1
+Fri Oct 28 2016 Trevor Vaughan <tvaughan@onyxpoint.com> - 2.0.0-0
+- New map format
+- New output format
+  - Added compliant values
+  - Added missed parameters
+  - Added missing class references
+  - Added server-side storage
+- Added a conversion utility in the 'utils' directory
+
+Wed Sep 28 2016 Chris Tessmer <ctessmer@onyxpoint.com> - 1.0.1-0
 - Move GitHub org from `onyxpoint` to `simp`
 
-2016-03-07 Release 1.0.0
+Sun Jul 03 2016 Chris Tessmer <ctessmer@onyxpoint.com> - 1.0.0-0
 - Move Forge org from `onyxpoint` to `simp`
 - Provide Ruby 1.8.7 compatibility
 - Ensure that a report is written on every run.
 - Updated to properly handle the hash references
 
-2015-12-07 Release 0.1.0
+Mon Dec 07 2015 Trevor Vaughan <tvaughan@onyxpoint.com> - 0.0.1-0
 - Initial Release

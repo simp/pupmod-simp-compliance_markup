@@ -1,8 +1,8 @@
 HOSTS:
   el7:
     roles:
-      - server
       - default
+      - server
     platform:   el-7-x86_64
     box:        centos/7
     hypervisor: vagrant
@@ -14,6 +14,6 @@ HOSTS:
     hypervisor: vagrant
 CONFIG:
   log_level: verbose
-  type:      aio
+  type:      foss
   vagrant_memsize: 256
   ## vb_gui: true
