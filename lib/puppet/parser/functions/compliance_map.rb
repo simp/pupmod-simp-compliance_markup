@@ -1,172 +1,51 @@
 module Puppet::Parser::Functions
-  module SIMP
-#### BEGIN COPIED CODE ####
-# This code portion is directly pulled from ActiveSupport and is licensed unter
-# the MIT License.
-#
-# This should be removed when we drop support for Ruby < 1.9
-#
-    unless defined?(OrderedHash)
-      # Hash is ordered in Ruby 1.9!
-      if RUBY_VERSION >= '1.9'
-        OrderedHash = ::Hash
-      else
-        class OrderedHash < Hash #:nodoc:
-          def initialize(*args, &block)
-            super
-            @keys = []
-          end
-    
-          def self.[](*args)
-            ordered_hash = new
-    
-            if (args.length == 1 && args.first.is_a?(Array))
-              args.first.each do |key_value_pair|
-                next unless (key_value_pair.is_a?(Array))
-                ordered_hash[key_value_pair[0]] = key_value_pair[1]
-              end
-    
-              return ordered_hash
-            end
-    
-            unless (args.size % 2 == 0)
-              raise ArgumentError.new("odd number of arguments for Hash")
-            end
-    
-            args.each_with_index do |val, ind|
-              next if (ind % 2 != 0)
-              ordered_hash[val] = args[ind + 1]
-            end
-    
-            ordered_hash
-          end
-    
-          def initialize_copy(other)
-            super
-            # make a deep copy of keys
-            @keys = other.keys
-          end
-    
-          def []=(key, value)
-            @keys << key if !has_key?(key)
-            super
-          end
-    
-          def delete(key)
-            if has_key? key
-              index = @keys.index(key)
-              @keys.delete_at index
-            end
-            super
-          end
-          
-          def delete_if
-            super
-            sync_keys!
-            self
-          end
-    
-          def reject!
-            super
-            sync_keys!
-            self
-          end
-    
-          def reject(&block)
-            dup.reject!(&block)
-          end
-    
-          def keys
-            @keys.dup
-          end
-    
-          def values
-            @keys.collect { |key| self[key] }
-          end
-    
-          def to_hash
-            self
-          end
-    
-          def to_a
-            @keys.map { |key| [ key, self[key] ] }
-          end
-    
-          def each_key
-            @keys.each { |key| yield key }
-          end
-    
-          def each_value
-            @keys.each { |key| yield self[key]}
-          end
-    
-          def each
-            @keys.each {|key| yield [key, self[key]]}
-          end
-    
-          alias_method :each_pair, :each
-    
-          def clear
-            super
-            @keys.clear
-            self
-          end
-    
-          def shift
-            k = @keys.first
-            v = delete(k)
-            [k, v]
-          end
-    
-          def merge!(other_hash)
-            other_hash.each {|k,v| self[k] = v }
-            self
-          end
-    
-          def merge(other_hash)
-            dup.merge!(other_hash)
-          end
-    
-          def inspect
-            "#<OrderedHash #{super}>"
-          end
-    
-        private
-    
-          def sync_keys!
-            @keys.delete_if {|k| !has_key?(k)}
-          end
-        end
-      end
-  #### END COPIED CODE ####
-    end
-  end
 
-  newfunction(:compliance_map, :doc => <<-'ENDHEREDOC') do |args|
+    newfunction(:compliance_map, :doc => <<-'ENDHEREDOC') do |args|
       This function provides a mechanism for mapping compliance data to
       settings in Puppet.
 
-      It is primarily designed for use in classes to validate that parameters
-      are properly set.
+      It should be used **once**, after all of your classes have been included
+      and is designed for use in classes to validate that parameters are
+      properly set.
 
-      When called, the parameters in the calling class will be evaluated
-      against top level parameters or Hiera data, in that order.
+      The easiest method for doing this is to add it as the **last** line of
+      ``site.pp``.
+
+      When called, the parameters of all classes will be evaluated against
+      global scope variables followed by Hiera data.
 
       The variable space against which the class parameters will be evaluated
       must be structured as the following hash:
 
-        compliance::<compliance_profile>::<class_name>::<parameter> :
-          'identifier' : 'ID String'
-          'value'      : 'Compliant Value'
+        compliance_map :
+          <compliance_profile> :
+            <class_name>::<parameter> :
+              'identifier' :
+                - 'ID String'
+              'value'      : 'Compliant Value'
 
       For instance, if you were mapping to NIST 800-53 in the SSH class, you
       could use something like the following in Hiera:
 
-        compliance::nist_800_53::ssh::permit_root_login :
-          'identifier' : 'CCE-1234'
-          'value'      : false
+        compliance_map :
+          nist_800_53 :
+            ssh::permit_root_login :
+              'identifier' :
+                - 'CCE-1234'
+              'value'      : false
 
-      Alternatively, you may add compliance data to your modules outside of a
+      'value' items have some special properties. Hashes and Arrays will
+      be matched using '==' in Ruby.
+
+      Everything else will be converted to a String and can be provided a Ruby
+      regular expression of the following format: 're:REGEX' where 'REGEX' does
+      **not** include the starting and trailing slashes.
+
+      If you use the special string '__IGNORE__', the check will be ignored.
+      This may be useful when overriding items in a Hierarchy where you want to
+      ignore indiviual checks that were inherited from a lower level.
+
+      You may also add compliance data directly to your modules outside of a
       parameter mapping. This is useful if you have more advanced logic that is
       required to meet a particular internal requirement.
 
@@ -174,8 +53,82 @@ module Puppet::Parser::Functions
       the function is being called from based on the version of the Puppet
       parser being used.
 
-      The following optional parameters may be used to add your own compliance
-      data:
+      ## Global Options
+
+      If a Hash is passed as the only argument, then this will configure the
+      global report settings.
+
+      The following options are supported:
+
+        **:report_types**
+
+          Default: [ 'non_compliant', 'unknown_parameters', 'custom_entries' ]
+
+          A String, or Array that denotes which types of reports should be
+          generated.
+
+          Valid Types:
+            **full**               => The full report, with all other types
+                                      included.
+            **non_compliant**      => Items that differ from the reference
+                                      will be reported.
+            **compliant**          => Compliant items will be reported.
+            **unknown_resources**  => Reference resources without a
+                                      system value will be reported.
+            **unknown_parameters** => Reference parameters without a system
+                                      value will be reported.
+            **custom_entries**     => Any one-off custom calls to
+                                      compliance_map will be reported.
+
+        **:format**
+
+        Default: 'json'
+
+        A String that indicates what output style to use. Valid values are
+        'json' and 'yaml'.
+
+        **:client_report**
+
+          Default: false
+
+          A Boolean which, if set, will place a copy of the report on the
+          client itself. This will ensure that PuppetDB will have a copy of the
+          report for later processing.
+
+        **:server_report**
+
+          Default: true
+
+          A Boolean which, if set, will store a copy of the
+          report on the Server.
+
+        **:server_report_dir**
+
+          Default: Puppet[:vardir]/simp/compliance_reports
+
+          An Absolute Path that specifies the location on
+          the *server* where the reports should be stored.
+
+          A directory will be created for each FQDN that
+          has a report.
+
+      Example:
+        # Only non-compilant entries and only store them on the client and the
+        # server
+        compliance_map({
+          :report_types  => [
+            'non_compliant',
+            'unknown_parameters',
+            'custom_entries'
+          ],
+          :client_report => true,
+          :server_report => true
+        })
+
+      ## Custom Content
+
+      The following optional **ordered** parameters may be used to add your own
+      compliance data at any location:
 
         :compliance_profile => 'A String, or Array, that denotes the compliance
                                 profile(s) to which you are mapping.'
@@ -185,11 +138,13 @@ module Puppet::Parser::Functions
                                 notes to include in the compliance report'
 
       Example:
-        if $::circumstance {
+        if $circumstance {
           compliance_map('nist_800_53','CCE-1234','Note about this section')
           ...code that applies CCE-1234...
         }
     ENDHEREDOC
+
+    load File.expand_path(File.dirname(__FILE__) + '/../../../puppetx/simp/compliance_map.rb')
 
     # There is no way to silence the global warnings on looking up a qualified
     # variable, so we're going to hack around it here.
@@ -197,54 +152,118 @@ module Puppet::Parser::Functions
       find_global_scope.to_hash[param]
     end
 
-    # Set the API version for our report in case we change the format in the
-    # future.
-    report_api_version = '0.0.1'
+    main_config = {
+      :report_types      => [
+        'non_compliant',
+        'unknown_parameters',
+        'custom_entries'
+      ],
+      :format            => 'json',
+      :client_report     => false,
+      :server_report     => true,
+      :server_report_dir => File.join(Puppet[:vardir], 'simp', 'compliance_reports')
+    }
+
+    # What profile are we using?
+    if args && !args.empty?
+      unless (args.first.is_a?(String) || args.first.is_a?(Hash))
+        raise Puppet::ParseError, "compliance_map(): First parameter must be a String or Hash"
+      end
+
+      if args.first.is_a?(Hash)
+        main_call = true
+
+        # Convert whatever was passed in to a symbol so that the Hash merge
+        # works properly.
+        user_config = Hash[args.first.map{|k,v| [k.to_sym, v] }]
+        if user_config[:report_types]
+          user_config[:report_types] = Array(user_config[:report_types])
+        end
+
+        main_config.merge!(user_config)
+      else
+        custom_compliance_profile    = args.shift
+        custom_compliance_identifier = args.shift
+        custom_compliance_notes      = args.shift
+
+        if custom_compliance_profile && !custom_compliance_identifier
+          raise Puppet::ParseError, "compliance_map(): You must pass at least two parameters"
+        end
+
+        unless custom_compliance_identifier.is_a?(String)
+          raise Puppet::ParseError, "compliance_map(): Second parameter must be a compliance identifier String"
+        end
+
+        if custom_compliance_notes
+          unless custom_compliance_notes.is_a?(String)
+            raise Puppet::ParseError, "compliance_map(): Third parameter must be a compliance notes String"
+          end
+        end
+      end
+    else
+      main_call = true
+    end
+
+    valid_formats = [
+      'json',
+      'yaml'
+    ]
+
+    unless valid_formats.include?(main_config[:format])
+      raise Puppet::ParseError, "compliance_map(): 'valid_formats' must be one of: '#{valid_formats.join(', ')}'"
+    end
+
+    valid_report_types = [
+      'full',
+      'non_compliant',
+      'compliant',
+      'unknown_resources',
+      'unknown_parameters',
+      'custom_entries'
+    ]
+
+    unless (main_config[:report_types] - valid_report_types).empty?
+      raise Puppet::ParseError, "compliance_map(): 'report_type' must include '#{valid_report_types.join(', ')}'"
+    end
+
+    compliance_profiles = Array(lookup_global_silent('compliance_profile'))
+    reference_map       = lookup_global_silent('compliance_map')
+    reference_map ||= Hash.new
+
+    if ( !reference_map || reference_map.empty? )
+      # If not using an ENC, look in Hiera
+      # Puppet 4 compat
+      if self.respond_to?(:call_function)
+        begin
+          reference_map = call_function('lookup',['compliance_map',Hash,'deep',nil])
+        # Super-hack because 3.X raises a Puppet::ParseError complaining about
+        # the lookup function
+        rescue NoMethodError, Puppet::ParseError
+          begin
+            reference_map = call_function('hiera_hash',['compliance_map',nil])
+          rescue NoMethodError
+            reference_map = nil
+          end
+        end
+      else
+        # This is Puppet 3.X only
+        reference_map = function_hiera_hash(['compliance_map',nil])
+      end
+    end
 
     # Pick up our compiler hitchhiker
+    # This is only needed when passing arguments. Users should no longer call
+    # compliance_map() without arguments directly inside their classes or
+    # definitions.
     hitchhiker = @compiler.instance_variable_get(:@compliance_map_function_data)
     if hitchhiker
       @compliance_map = hitchhiker
     else
-      # Create the validation report
-      unless @compliance_map
-        @compliance_map = Puppet::Parser::Functions::SIMP::OrderedHash.new
-        @compliance_map['version'] = report_api_version
-      end
-
-      unless @compliance_map['compliance_profiles']
-        @compliance_map['compliance_profiles'] = Puppet::Parser::Functions::SIMP::OrderedHash.new
-      end
+      # Create the validation report object
+      # Have to break things out because jruby can't handle '::' in const_get
+      @compliance_map ||= PuppetX.const_get("SIMP#{Puppet[:environment]}").const_get('ComplianceMap').new(compliance_profiles, reference_map, main_config)
     end
 
-    # What profile are we using?
-    if args && !args.empty?
-      custom_compliance_profile = args.shift
-      custom_compliance_identifier = args.shift
-      custom_compliance_notes = args.shift
-
-      unless custom_compliance_profile.is_a?(String)
-        raise Puppet::ParseError, "compliance_map(): First parameter must be a compliance profile String"
-      end
-
-      if custom_compliance_profile && !custom_compliance_identifier
-        raise Puppet::ParseError, "compliance_map(): You must pass at least two parameters"
-      end
-
-      unless custom_compliance_identifier.is_a?(String)
-        raise Puppet::ParseError, "compliance_map(): Second parameter must be a compliance identifier String"
-      end
-
-      if custom_compliance_notes
-        unless custom_compliance_notes.is_a?(String)
-          raise Puppet::ParseError, "compliance_map(): Third parameter must be a compliance notes String"
-        end
-      end
-    end
-
-    compliance_profiles = Array(lookup_global_silent('compliance_profile'))
-
-    # Obtain the file position
     file = @source.file
     # We may not know the line number if this is at Top Scope
     line = @source.line || '<unknown>'
@@ -269,115 +288,59 @@ module Puppet::Parser::Functions
       )
     end
 
-    resource_name = %(#{@resource.type}::#{@resource.title})
+    # If we've gotten this far, we're ready to process *everything* and update
+    # the file object.
+    if main_call
+      # We need to set the configuration here just in case someone called the
+      # one-off mode and the @compliance_map object was already initialized.
+      @compliance_map.config = main_config
 
-    # Obtain the list of variables in the class
-    class_params = @resource.parameters.keys
+      @compliance_map.process_catalog(@resource.scope.catalog)
 
-    # Obtain the associated Hiera variables that do not match the settings in
-    # the class.
-    difference_params = Hash.new
-    hiera_unknown = '__COMPLIANCE_UNKNOWN__'
+      # Drop an entry on the server so that it can be processed when applicable.
+      if main_config[:server_report]
+        report_dir = File.join(main_config[:server_report_dir], lookupvar('fqdn'))
+        FileUtils.mkdir_p(report_dir)
 
-    generate_report = false
-    compliance_profiles.each do |compliance_profile|
-
-      class_params.each do |param|
-        _param = param.to_s
-        _compliance_namespace = %(compliance::#{compliance_profile}::#{name}::#{_param})
-
-        # Allow for ENC Settings
-        _found_param = lookup_global_silent(_compliance_namespace)
-        unless _found_param
-          # If not using an ENC, look in Hiera
-          # Puppet 4 compat
-          if self.respond_to?(:call_function)
-            _found_param = call_function('hiera',[_compliance_namespace,hiera_unknown])
-          else
-            _found_param = function_hiera([_compliance_namespace,hiera_unknown])
-          end
-        end
-
-        _current_value = @resource.parameters[param].value
-
-        unless _found_param == hiera_unknown
-          # Compare the string version of the values, reporting differences in
-          # non-string values is not useful.
-          if _found_param['value'].to_s != _current_value.to_s
-            difference_params[_param] = Puppet::Parser::Functions::SIMP::OrderedHash.new
-
-            difference_params[_param]['identifier'] = _found_param['identifier']
-            difference_params[_param]['compliant_value'] = _found_param['value']
-            difference_params[_param]['system_value'] = _current_value
-
-            # If we have other parameters (notes, custom entries, etc...) drag
-            # them into the stack as they are.
-            (_found_param.keys - ['identifier','value']).each do |extra_param|
-              difference_params[_param][extra_param] = _found_param[extra_param]
-            end
+        File.open(File.join(report_dir,"compliance_report.#{main_config[:format]}"),'w') do |fh|
+          if main_config[:format] == 'json'
+            fh.puts(@compliance_map.to_json)
+          elsif main_config[:format] == 'yaml'
+            fh.puts(@compliance_map.to_yaml)
           end
         end
       end
+    else
+      # Here, we will only be adding custom items inside of classes or defined
+      # types.
 
-      if compliance_profile && !difference_params.empty?
-        unless @compliance_map['compliance_profiles'][compliance_profile]
-          @compliance_map['compliance_profiles'][compliance_profile] = Puppet::Parser::Functions::SIMP::OrderedHash.new
-        end
-
-        unless @compliance_map['compliance_profiles'][compliance_profile][resource_name]
-          @compliance_map['compliance_profiles'][compliance_profile][resource_name] = Puppet::Parser::Functions::SIMP::OrderedHash.new
-        end
-      end
-
-      include_custom_compliance_profile = (custom_compliance_profile && compliance_profiles.include?(custom_compliance_profile))
-
-      if include_custom_compliance_profile
-        unless @compliance_map['compliance_profiles'][custom_compliance_profile]
-          @compliance_map['compliance_profiles'][custom_compliance_profile] = Puppet::Parser::Functions::SIMP::OrderedHash.new
-        end
-
-        unless @compliance_map['compliance_profiles'][custom_compliance_profile][resource_name]
-          @compliance_map['compliance_profiles'][custom_compliance_profile][resource_name] = Puppet::Parser::Functions::SIMP::OrderedHash.new
-        end
-      end
-
-      generate_report = false
-      # Perform the parameter mapping
-      unless difference_params.empty?
-        unless @compliance_map['compliance_profiles'][compliance_profile][resource_name]['parameters']
-          @compliance_map['compliance_profiles'][compliance_profile][resource_name]['parameters'] = Puppet::Parser::Functions::SIMP::OrderedHash.new
-        end
-
-        difference_params.keys.each do |param|
-          @compliance_map['compliance_profiles'][compliance_profile][resource_name]['parameters'][param] = difference_params[param]
-        end
-
-        generate_report = true
-      end
+      resource_name = %(#{@resource.type}::#{@resource.title})
 
       # Add in custom materials if they exist
-      if include_custom_compliance_profile
-        unless @compliance_map['compliance_profiles'][custom_compliance_profile][resource_name]['custom_entries']
-          @compliance_map['compliance_profiles'][custom_compliance_profile][resource_name]['custom_entries'] = []
-        end
 
-        _data_hash = Puppet::Parser::Functions::SIMP::OrderedHash.new
-
-        _data_hash['location'] = %(#{file}:#{line})
-        _data_hash['identifier'] = custom_compliance_identifier
-
-        if custom_compliance_notes
-          _data_hash['notes'] = custom_compliance_notes
-        end
-        @compliance_map['compliance_profiles'][custom_compliance_profile][resource_name]['custom_entries'] |= [_data_hash]
-
-        generate_report = true
+      _entry_opts = {}
+      if custom_compliance_notes
+        _entry_opts['notes'] = custom_compliance_notes
       end
+
+      @compliance_map.add(
+        resource_name,
+        custom_compliance_profile,
+        custom_compliance_identifier,
+        %(#{file}:#{line}),
+        _entry_opts
+      )
     end
 
-    # This will be useful for a future iteration of the software.
-    #if generate_report
-      compliance_report_target = %(#{Puppet[:vardir]}/compliance_report.yaml)
+    # Embed a File resource that will place the report on the client.
+    if main_config[:client_report]
+      client_vardir = lookupvar('puppet_vardir')
+
+      unless client_vardir
+        raise(Puppet::ParseError, "compliance_map(): Cannot find fact `puppet_vardir`. Ensure `puppetlabs/stdlib` is installed")
+      else
+        compliance_report_target = %(#{client_vardir}/compliance_report.#{main_config[:format]})
+      end
 
       # Retrieve the catalog resource if it already exists, create one if it
       # does not
@@ -410,14 +373,18 @@ module Puppet::Parser::Functions
         compliance_resource.set_parameter('mode','0600')
       end
 
-      compliance_resource.set_parameter('content',%(#{@compliance_map.to_yaml}\n))
+      if main_config[:format] == 'json'
+        compliance_resource.set_parameter('content',%(#{(@compliance_map.to_json)}\n))
+      elsif main_config[:format] == 'yaml'
+        compliance_resource.set_parameter('content',%(#{@compliance_map.to_yaml}\n))
+      end
 
       # Inject new information into the catalog
       catalog.add_resource(compliance_resource)
+    end
 
-      # This gets a little hairy, we need to persist the compliance map across
-      # the entire compilation so we hitch a ride on the compiler.
-      @compiler.instance_variable_set(:@compliance_map_function_data, @compliance_map)
-    #end
+    # This gets a little hairy, we need to persist the compliance map across
+    # the entire compilation so we hitch a ride on the compiler.
+    @compiler.instance_variable_set(:@compliance_map_function_data, @compliance_map)
   end
 end
