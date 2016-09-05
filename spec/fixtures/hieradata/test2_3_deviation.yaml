@@ -1,0 +1,15 @@
+---
+# Some very basic compliance checks designed for the tests
+#
+# These should all pass
+
+'compliance_map' :
+  'test_profile' :
+    test1::arg1_1 :
+      'identifiers' :
+        - 'ID1.1'
+      'value' : 'foo1_1'
+    test2::test3::arg3_1 :
+      'identifiers' :
+        - 'ID1.2'
+      'value' : 'bar3_1'

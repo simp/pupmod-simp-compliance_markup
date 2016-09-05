@@ -10,30 +10,34 @@ describe 'compliance_markup class' do
       class test (
         $var1 = 'test1'
       ) {
-        compliance_map()
-
         compliance_map('test_policy', 'INTERNAL1', 'Test Note')
       }
 
       include 'test'
+
+      compliance_map()
     EOS
   }
 
   let(:compliant_hieradata) {
     <<-EOS
 ---
-compliance::test_policy::test::var1 :
-  'identifier' : 'TEST_POLICY1'
-  'value' : 'test1'
+compliance :
+  test_policy :
+    test::var1 :
+      'identifier' : 'TEST_POLICY1'
+      'value' : 'test1'
     EOS
   }
 
   let(:non_compliant_hieradata) {
     <<-EOS
 ---
-compliance::test_policy::test::var1 :
-  'identifier' : 'TEST_POLICY1'
-  'value' : 'not test1'
+compliance :
+  test_policy :
+    test::var1 :
+      'identifier' : 'TEST_POLICY1'
+      'value' : 'not test1'
 EOS
   }
 
@@ -44,7 +48,7 @@ EOS
         set_hieradata_on(host,compliant_hieradata)
         apply_manifest_on(host, manifest, :catch_failures => true)
       end
-  
+
       it 'should be idempotent' do
         apply_manifest_on(host,manifest, :catch_changes => true)
       end
@@ -56,7 +60,7 @@ EOS
         set_hieradata_on(host,non_compliant_hieradata)
         apply_manifest_on(host, manifest, :catch_failures => true)
       end
-  
+
       it 'should be idempotent' do
         apply_manifest_on(host,manifest, :catch_changes => true)
       end

@@ -1,4 +1,0 @@
----
-compliance::pci::test::var_one :
-  'identifier' : 'CCE-1234'
-  'value' : 'one'
