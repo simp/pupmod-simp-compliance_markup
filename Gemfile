@@ -18,8 +18,7 @@ group :test do
   gem "hiera-puppet-helper"
   gem "puppetlabs_spec_helper"
   gem "metadata-json-lint"
-  gem "simp-rspec-puppet-facts", "~> 1.3"
-
+  gem "simp-rspec-puppet-facts", "~> 1.4"
 
   # simp-rake-helpers does not suport puppet 2.7.X
   if "#{ENV['PUPPET_VERSION']}".scan(/\d+/).first != '2' &&

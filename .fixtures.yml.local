@@ -1,4 +1,0 @@
----
-fixtures:
-  symlinks:
-    compliance_markup: "#{source_dir}"
