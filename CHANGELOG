@@ -1,2 +1,11 @@
-2015-12-07 Release 0.1.0
+Mon Oct 24 2016 Trevor Vaughan <tvaughan@onyxpoint.com> - 1.0.0-0
+- New map format
+- New output format
+  - Added compliant values
+  - Added missed parameters
+  - Added missing class references
+  - Added server-side storage
+- Added a conversion utility in the 'utils' directory
+
+Mon Dec 07 2015 Trevor Vaughan <tvaughan@onyxpoint.com> - 0.0.1-0
 - Initial Release
