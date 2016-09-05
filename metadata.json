@@ -1,6 +1,6 @@
 {
   "name": "simp-compliance_markup",
-  "version": "1.0.2",
+  "version": "2.0.0",
   "author": "simp",
   "summary": "Compliance-mapping annotation for Puppet code",
   "license": "Apache-2.0",

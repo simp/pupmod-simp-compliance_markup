@@ -1,4 +1,8 @@
 ---
 fixtures:
+    #stdlib:
+    #repo: "https://github.com/simp/puppetlabs-stdlib"
+    #branch: "simp-master"
   symlinks:
-    compliance: "#{source_dir}"
+    compliance_markup: "#{source_dir}"
+    #stdlib: "#{source_dir}/../stdlib"
