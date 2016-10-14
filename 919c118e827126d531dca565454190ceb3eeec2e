@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "baa041b7_c861dc3a",
+        "filename": "Gemfile",
+        "patchSetId": 1
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1005194
+      },
+      "writtenOn": "2016-10-14T17:10:34Z",
+      "side": 1,
+      "message": "un-closed if statement breaks the gem file.",
+      "range": {
+        "startLine": 23,
+        "startChar": 0,
+        "endLine": 27,
+        "endChar": 25
+      },
+      "revId": "919c118e827126d531dca565454190ceb3eeec2e",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
