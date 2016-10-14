@@ -19,15 +19,12 @@ group :test do
   gem "puppetlabs_spec_helper"
   gem "metadata-json-lint"
   gem "simp-rspec-puppet-facts", "~> 1.3"
-
-
   # simp-rake-helpers does not suport puppet 2.7.X
   if "#{ENV['PUPPET_VERSION']}".scan(/\d+/).first != '2' &&
       # simp-rake-helpers and ruby 1.8.7 bomb Travis tests
       # TODO: fix upstream deps (parallel in simp-rake-helpers)
       RUBY_VERSION.sub(/\.\d+$/,'') != '1.8'
-    gem 'simp-rake-helpers'
-  end
+  gem 'simp-rake-helpers'
 end
 
 group :development do
@@ -35,6 +32,7 @@ group :development do
   gem "travis-lint"
   gem "travish"
   gem "puppet-blacksmith"
+  gem "puppet-strings"
   gem "guard-rake"
   gem 'pry'
   gem 'pry-doc'
