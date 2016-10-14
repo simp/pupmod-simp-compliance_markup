@@ -25,34 +25,31 @@ describe 'compliance' do
         let(:facts) { facts }
 
         before(:each) do
-          Puppet[:vardir] = @tmpdir
+          Facter.stubs(:value).with(:puppet_vardir).returns(@tmpdir)
         end
 
         context 'parameter-only compliance map test' do
           let(:pre_condition) do
             "include 'compliance'"
           end
-
           it { is_expected.to compile.with_all_deps }
-          it { is_expected.not_to contain_file("#{Puppet[:vardir]}/compliance_report.yaml") }
+          it { is_expected.not_to contain_file("#{Facter.value(:vardir)}/compliance_report.yaml") }
         end
 
         context 'one parameter required compliance map test' do
           let(:pre_condition) do
-           %(
-            include 'compliance::test2'
-            )
+            "include 'compliance::test2'"
           end
 
           it { is_expected.to compile.with_all_deps }
-          it { is_expected.not_to contain_file("#{Puppet[:vardir]}/compliance_report.yaml") }
+          it { is_expected.not_to contain_file("#{Facter.value(:vardir)}/compliance_report.yaml") }
         end
 
         shared_examples_for "a deviation run" do |profile, test_run, use_custom_content = false, extra_profiles = []|
           it {
             is_expected.to compile.with_all_deps
-            is_expected.to contain_file("#{Puppet[:vardir]}/compliance_report.yaml")
-            report = YAML.load(@catalogue.resource("File[#{Puppet[:vardir]}/compliance_report.yaml]")[:content])
+            is_expected.to contain_file("#{Facter.value(:vardir)}/compliance_report.yaml")
+            report = YAML.load(@catalogue.resource("File[#{Facter.value(:vardir)}/compliance_report.yaml]")[:content])
 
             expect( report['compliance_profiles'][profile][test_run]['parameters'].size ).to eq(1)
             expect( report['compliance_profiles'][profile][test_run]['parameters'].first['compliant_param'] ).to eq('1')
