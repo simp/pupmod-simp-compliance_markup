@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "baa041b7_e0b929cc",
+        "filename": "lib/puppet/parser/functions/compliance_map.rb",
+        "patchSetId": 3
+      },
+      "lineNbr": 380,
+      "author": {
+        "id": 1004834
+      },
+      "writtenOn": "2016-10-26T14:15:16Z",
+      "side": 1,
+      "message": "This isn\u0027t a thing. The fact is puppet_vardir from stdlib.\n\nYou should make sure that that fact exists prior to pointing at that directory, otherwise, the report will be written to \u0027/\u0027.\n\nIf it doesn\u0027t exist, we should raise an error and tell people that the fact was not found.",
+      "revId": "5db76f3fdc250bf8bbae672bc97713ea6906b6ed",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
