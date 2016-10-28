@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "baa041b7_35fd02b2",
+        "filename": ".fixtures.yml",
+        "patchSetId": 2
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1005194
+      },
+      "writtenOn": "2016-10-28T21:17:44Z",
+      "side": 1,
+      "message": "local testing cruft?",
+      "range": {
+        "startLine": 3,
+        "startChar": 0,
+        "endLine": 8,
+        "endChar": 38
+      },
+      "revId": "9df905254dfeb707988ee59081d83df7043c7032",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "baa041b7_da9ba516",
+        "filename": "Gemfile",
+        "patchSetId": 2
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1005194
+      },
+      "writtenOn": "2016-10-28T21:17:44Z",
+      "side": 1,
+      "message": "What\u0027s the deal here?",
+      "range": {
+        "startLine": 48,
+        "startChar": 0,
+        "endLine": 50,
+        "endChar": 86
+      },
+      "revId": "9df905254dfeb707988ee59081d83df7043c7032",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
