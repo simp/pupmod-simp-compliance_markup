@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "baa041b7_bb6a201a",
+        "filename": ".fixtures.yml",
+        "patchSetId": 3
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1005194
+      },
+      "writtenOn": "2016-10-31T15:07:10Z",
+      "side": 1,
+      "message": "needs clean up",
+      "range": {
+        "startLine": 3,
+        "startChar": 0,
+        "endLine": 8,
+        "endChar": 38
+      },
+      "revId": "b95b2eb516bfd0b56e203a59bb4e8836b30cd47e",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "baa041b7_5bf6745e",
+        "filename": "Gemfile",
+        "patchSetId": 3
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1005194
+      },
+      "writtenOn": "2016-10-31T15:07:10Z",
+      "side": 1,
+      "message": "On master, this needs to be tested against puppet 4",
+      "range": {
+        "startLine": 8,
+        "startChar": 74,
+        "endLine": 8,
+        "endChar": 79
+      },
+      "revId": "b95b2eb516bfd0b56e203a59bb4e8836b30cd47e",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "baa041b7_db84c4d4",
+        "filename": "Gemfile",
+        "patchSetId": 3
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1005194
+      },
+      "writtenOn": "2016-10-31T15:07:10Z",
+      "side": 1,
+      "message": "needs clean up",
+      "range": {
+        "startLine": 48,
+        "startChar": 0,
+        "endLine": 51,
+        "endChar": 14
+      },
+      "revId": "b95b2eb516bfd0b56e203a59bb4e8836b30cd47e",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "baa041b7_3b9290fd",
+        "filename": "spec/acceptance/suites/default/00_default_spec.rb",
+        "patchSetId": 3
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1005194
+      },
+      "writtenOn": "2016-10-31T15:07:10Z",
+      "side": 1,
+      "message": "compliance_map, and identifier is a list",
+      "range": {
+        "startLine": 25,
+        "startChar": 0,
+        "endLine": 29,
+        "endChar": 23
+      },
+      "revId": "b95b2eb516bfd0b56e203a59bb4e8836b30cd47e",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "baa041b7_fb9b0816",
+        "filename": "spec/acceptance/suites/default/00_default_spec.rb",
+        "patchSetId": 3
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1005194
+      },
+      "writtenOn": "2016-10-31T15:07:10Z",
+      "side": 1,
+      "message": "x2",
+      "range": {
+        "startLine": 36,
+        "startChar": 0,
+        "endLine": 40,
+        "endChar": 27
+      },
+      "revId": "b95b2eb516bfd0b56e203a59bb4e8836b30cd47e",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
