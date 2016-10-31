@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "baa041b7_db3cc4e3",
+        "filename": "Gemfile",
+        "patchSetId": 5
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1005194
+      },
+      "writtenOn": "2016-10-31T15:20:09Z",
+      "side": 1,
+      "message": "Should be tested against p4 in master",
+      "range": {
+        "startLine": 8,
+        "startChar": 75,
+        "endLine": 8,
+        "endChar": 78
+      },
+      "revId": "bbcc5b39ace21491c79af1bd88f4a3fee211d7c9",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "baa041b7_fb0e683c",
+        "filename": "spec/acceptance/nodesets/default.yml",
+        "patchSetId": 5
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1005194
+      },
+      "writtenOn": "2016-10-31T15:20:09Z",
+      "side": 1,
+      "message": "Our current nodesets bring in p3 not p4.  Not sure what nodesets we want to use going forward, but testing against p3 on master is not a good test.",
+      "range": {
+        "startLine": 1,
+        "startChar": 0,
+        "endLine": 13,
+        "endChar": 24
+      },
+      "revId": "bbcc5b39ace21491c79af1bd88f4a3fee211d7c9",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
