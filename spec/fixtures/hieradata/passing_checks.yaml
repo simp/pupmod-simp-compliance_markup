@@ -1,0 +1,37 @@
+---
+# Some very basic compliance checks designed for the tests
+#
+# These should all pass
+
+compliance_map :
+  version : '1.0.0'
+
+  test_profile :
+    test1::arg1_1 :
+      identifiers :
+        - 'ID1.1'
+      value : foo1_1
+    test2::test3::arg3_1 :
+      identifiers :
+        - 'ID1.2'
+      value : foo3_1
+    test2::test3::ref_miss1 :
+      identifiers :
+        - 'MISS1'
+      value : missing1
+    testdef1:defarg1_1 :
+      identifiers :
+        - 'DEF1.1'
+      value : deffoo1_1
+    unmapped1::arg1_1 :
+      identifiers :
+        - 'UNK001'
+      value : um1_1
+    unmapped1::arg1_2 :
+      identifiers :
+        - 'UNK002'
+      value : um1_2
+    unmapped1::subclass::arg1_2 :
+      identifiers :
+        - 'UNK003'
+      value : um1_3

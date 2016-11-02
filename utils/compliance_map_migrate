@@ -1,0 +1,218 @@
+#!/usr/bin/env ruby
+
+require 'yaml'
+require 'optparse'
+require 'ostruct'
+require 'fileutils'
+
+@uid = Time.now.strftime('%s')
+
+def parse_options
+  options = OpenStruct.new
+  options.dst_version = '1.0.0'
+
+  _opts = OptionParser.new do |opts|
+    opts.banner = "Usage: #{$0} [options]"
+
+    opts.separator ""
+
+    opts.on(
+      '-i PATH',
+      '--input PATH',
+      'The source Compliance Mapper Hieradata file'
+    ) do |arg|
+      options.input = File.absolute_path(arg.strip)
+    end
+
+    opts.on(
+      '-o PATH',
+      '--output PATH',
+      'The output Compliance Mapper Hieradata file',
+      '  Default: "input" file with the output version appended'
+    ) do |arg|
+      options.output = File.absolute_path(arg.strip)
+
+      unless File.directory?(File.dirname(options.output))
+        $stderr.puts("Error: Could not find output directory '#{File.dirname(options.output)}'")
+        exit 1
+      end
+    end
+
+    opts.on(
+      '-s VERSION',
+      '--src_version VERSION',
+      'Compliance Mapper source API version',
+      "  Default: #{options.src_version}"
+    ) do |arg|
+      options.src_version = arg.strip
+
+      unless options.src_version =~ /\d+\.\d+\.\d+/
+        $stderr.puts('Error: src_version must be of the form X.Y.Z')
+        exit 1
+      end
+    end
+
+    opts.on(
+      '-d VERSION',
+      '--dst_version VERSION',
+      'Compliance Mapper destination API version',
+      "  Default: #{options.dst_version}"
+    ) do |arg|
+      options.dst_version = arg.strip
+
+      unless options.dst_version =~ /\d+\.\d+\.\d+/
+        $stderr.puts('Error: src_version must be of the form X.Y.Z')
+        exit 1
+      end
+    end
+
+    opts.on(
+      '-h',
+      '--help',
+      'Help Message'
+    ) do
+      puts opts
+      exit(0)
+    end
+  end
+
+  begin
+    _opts.parse!(ARGV)
+  rescue OptionParser::ParseError => e
+    puts e
+    puts _opts
+    exit 1
+  end
+
+  unless options.input
+    $stderr.puts("You must pass an input file to #{$0}")
+    puts _opts
+    exit 1
+  end
+
+  unless options.output
+    options.output = File.join(
+      File.dirname(options.input),
+      "#{File.basename(options.input,'.yaml')}.#{options.dst_version}.yaml"
+    )
+  end
+
+  _infile = options.input
+  if File.exist?(options.input)
+    begin
+      options.input = YAML.load_file(_infile)
+    rescue Psych::SyntaxError
+      $stderr.puts("Error: Could not parse input file '#{_infile}'")
+    end
+  else
+    $stderr.puts("Error: Could not find input file '#{_infile}'")
+    exit 1
+  end
+
+  unless options.src_version
+    # 0.0.1
+    options.src_version = options.input['version']
+
+    unless options.src_version
+      # 1.0.0
+      unless options.input['compliance_map'].nil?
+        options.src_version = options.input['compliance_map']['version']
+      end
+
+      unless options.src_version
+        $stderr.puts("Error: Could not determine source version from '#{_infile}'")
+        exit 1
+      end
+    end
+  end
+
+  return options
+end
+
+class HieraXlat
+  attr_reader :src_version, :dst_version
+
+  def initialize(from, to)
+    @src_version = from
+    @dst_version = to
+  end
+
+  def xlat_0_0_1_to_1_0_0(input)
+    output_hash = {
+      'compliance_map::percent_sign' => '%',
+
+      'compliance_map' => {
+        'version' => '1.0.0'
+      }
+    }
+
+    input.keys.sort.each do |entry|
+      garbage, policy, *key = entry.split('::')
+      key = key.join('::')
+
+      if garbage == 'compliance'
+        output_hash['compliance_map'][policy] ||= Hash.new
+
+        unless input[entry]['identifier'].nil?
+          input[entry]['identifiers'] = Array(input[entry]['identifier'])
+          input[entry].delete('identifier')
+        end
+
+        value = input[entry]['value']
+
+        if value.is_a?(String)
+          value.gsub!('global::percent_sign', 'compliance_map::percent_sign')
+        end
+
+        input[entry]['value'] = value
+
+        # Ordering for readability
+        main_sections = ['identifiers', 'value', 'notes']
+        other_sections = (input[entry].keys - main_sections)
+
+        (main_sections + other_sections).each do |section|
+          output_hash['compliance_map'][policy][key] ||= Hash.new
+
+          unless input[entry][section].nil?
+            output_hash['compliance_map'][policy][key][section] = input[entry][section]
+          end
+        end
+      elsif garbage == 'global'
+        next
+      else
+        $stderr.puts("Warning: Unknown source entry '#{entry}'")
+        next
+      end
+    end
+
+    return output_hash
+  end
+
+  def process(input)
+    xlat_name = "xlat_#{@src_version.gsub('.','_')}_to_#{@dst_version.gsub('.','_')}"
+
+    unless self.respond_to?(xlat_name)
+      $stderr.puts("Error: Cannot translate from #{@src_version} to #{@dst_version}")
+
+      exit(1)
+    end
+
+    return self.send(xlat_name.to_sym, input).to_yaml
+  end
+end
+
+options = parse_options
+
+output = HieraXlat.new(options.src_version, options.dst_version).process(options.input)
+
+backup_file = File.join(File.dirname(options.output), "#{File.basename(options.output,'.yaml')}.#{@uid}.yaml")
+
+if File.exist?(options.output)
+  puts "Info: Backing up pre-existing output file\n  '#{options.output}' to\n  '#{backup_file}'"
+
+  FileUtils.mv(options.output, backup_file)
+end
+
+File.open(options.output,'w') do |fh|
+  fh.puts(output)
+end
