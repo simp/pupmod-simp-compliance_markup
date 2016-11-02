@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "baa041b7_bc744cfe",
+        "filename": "utils/compliance_map_migrate",
+        "patchSetId": 10
+      },
+      "lineNbr": 220,
+      "author": {
+        "id": 1004834
+      },
+      "writtenOn": "2016-11-02T16:50:36Z",
+      "side": 1,
+      "message": "No",
+      "revId": "b67f4be10c3117b75bffbc4ae5890753e9bdff69",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
