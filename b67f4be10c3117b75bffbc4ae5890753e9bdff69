@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "baa041b7_7c5da47b",
+        "filename": "lib/puppetx/simp/compliance_map.rb",
+        "patchSetId": 10
+      },
+      "lineNbr": 219,
+      "author": {
+        "id": 1005361
+      },
+      "writtenOn": "2016-11-02T16:51:03Z",
+      "side": 1,
+      "message": "metadata\n\nAlso this error message is amazing and actually useful. 10/10",
+      "range": {
+        "startLine": 219,
+        "startChar": 95,
+        "endLine": 219,
+        "endChar": 103
+      },
+      "revId": "b67f4be10c3117b75bffbc4ae5890753e9bdff69",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "baa041b7_bc744cfe",
         "filename": "utils/compliance_map_migrate",
         "patchSetId": 10
