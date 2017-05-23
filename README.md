@@ -17,22 +17,31 @@
 
 ## Overview
 
-This module adds a function `compliance_map()` to the Puppet language. The
-`compliance_map()` function provides the ability for users to compare their
-in-scope class parameters against a set of *compliant* parameters, either in
-Hiera or at the global scope. Users may also provide custom inline policy
-documentation and mapping documentation.
+This module adds a function `compliance_map()`, and a Hiera backend
+`compliance_markup_enforce` to the Puppet language. The `compliance_map()`
+function provides the ability for users to compare their in-scope class
+parameters against a set of *compliant* parameters, either in Hiera or at the
+global scope. Users may also provide custom inline policy documentation and
+mapping documentation.
 
-The goal of this module is to make it easier for users to both detect, and
-report on, deviations from a given policy inside their Puppet codebase.
+The `compliance_markup_enforce` Hiera backend takes the **same** data that is
+used by the `compliance_map()` function and applies it to the running system.
+
+The goal of this module is to make it easier for users to both enforce, and
+detect and report on deviations from, a given policy inside their Puppet
+codebase.
 
 ## Module Description
 
-This module provides the function `compliance_map()` and a `compliance_markup`
-class for including the functionality into your stack at the global level.
+This module provides the function `compliance_map()` and a
+`compliance_markup::validate` class for including the functionality into your
+stack at the global level.
 
 A utility for converting your old `compliance_map()` Hiera data has also been
 included in the `utils` directory.
+
+A custom Hiera backend called `compliance_markup_enforce` is also available
+that allows for the **enforcement** of the compliance map where applicable.
 
 ## Upgrading
 
@@ -53,26 +62,43 @@ deploying them into production.
 ### What compliance_markup affects
 
 By default, the `compliance_map()` function creates a set of reports, one per
-node, on your Puppet Server at
-`Puppet[:vardir]/simp/compliance_reports/<fqdn>`.
+node, on your Puppet Server in the *server's* vardir:
+`/opt/puppetlabs/server/data/puppetserver/simp/compliance_reports`.
 
 You may optionally enable the creation of a `File` resource on each of your
-clients if you with to have changes in this data automatically exported into
+clients if you wish to have changes in this data automatically exported into
 `PuppetDB`.
 
 ## Usage
 
+### Selecting Which Profile to Validate Against
+
+If you wish enforce multiple profiles, they should be specified as an Array.
+
+Items at the left side of the Array will override later items.
+
+#### Module Parameter (preferred)
+
+The `compliance_markup::validate_profiles` parameter may be used to cleanly set, and override, the applicable profiles in Hiera (or your ENC).
+
+#### Global Setting
+
+You may enforce one or more profiles in parallel by setting the globally scoped
+variable `$compliance_profile`.
+
+### Activating the Mapper
+
 The `compliance_map()` function provides a mechanism for mapping compliance
 data to settings in Puppet and should be globally activated by `including` the
-`compliance_markup` class.
+`compliance_markup::validate` class.
 
 It is primarily designed for use in classes to validate that parameters are
 properly set but may also be used to perform a *full* compliance report against
 multiple profiles across your code base at compile time.
 
-When the `compliance_markup` class is included, the parameters in all in-scope
-classes and defined types will be evaluated against top level parameters,
-`lookup()` values, or Hiera data, in that order.
+When the `compliance_markup::validate` class is included, the parameters in all
+in-scope classes and defined types will be evaluated against top level
+parameters, `lookup()` values, or Hiera data, in that order.
 
 The variable space against which the parameters will be evaluated must be
 structured as the following hash:
@@ -98,6 +124,8 @@ would use something like the following:
         - 'CCE-1234'
         'value'      : false
 ```
+
+### Adding One-Off Compliance Entries
 
 Alternatively, you may use the `compliance_map()` function to add compliance
 data to your modules outside of a parameter mapping. This is useful if you have
@@ -158,16 +186,12 @@ A Boolean which, if set, will store a copy of the report on the Server.
 
 *Default*: `Puppet[:vardir]/simp/compliance_reports`
 
-An Absolute Path that specifies the location on
-
-#### server_report_dir
-
-*Default*: `Puppet[:vardir]/simp/compliance_reports`
-
 An Absolute Path that specifies the location on the *server* where the reports
 should be stored.
 
 A directory will be created for each FQDN that has a report.
+
+**NOTE:** The Puppet **SERVER** must be able to write to this directory!
 
 ## Reference
 
@@ -186,7 +210,7 @@ class foo (
 $compliance_profile = 'my_policy'
 
 include '::foo'
-include '::compliance_markup'
+include '::compliance_markup::validate'
 ```
 
 **Hiera.yaml**
@@ -223,17 +247,142 @@ if $::circumstance {
 }
 ```
 
+## Enforcement
+
+You can use the custom Hiera backend, `compliance_markup_enforce`, to actually
+enforce the values set in the compliance map data structure.
+
+### Installing the Backend
+
+The Puppet server **should** automatically pick the backend up from the module.
+
+In some **rare** cases, we have seen this fail and have had to drop the
+`compliance_markup_enforce_backend.rb` file directly into
+`/opt/puppetlabs/puppet/lib/ruby/vendor_ruby/hiera/backend` and then restart
+the Puppet server.
+
+### IMPORTANT: Preparing for Activation
+
+Due to the order that Puppet does lookups in 4.10+, you must be sure to include
+the following **prior** to any module include that you wish to enforce.
+
+**NOTE:** Including this class will have **no** impact on your infrastructure,
+it simply ensures that the `compliance_markup` resource is properly loaded.
+
+```ruby
+  include compliance_markup::enforcement_helper
+```
+
+### Activating the Backend
+
+The backend is loaded like any standard Hiera backend.
+
+The following two examples provide methods by which you may make the values
+authoritative or overridable (recommended).
+
+**Hiera.yaml - Overridable**
+
+```yaml
+:backends:
+  - 'yaml'
+  - 'compliance_markup_enforce'
+:yaml:
+  :datadir: '/path/to/your/hieradata'
+:compliance_map:
+  :datadir: '/path/to/your/hieradata'
+:hierarchy:
+  "compliance_profiles/%{compliance_profile}"
+  "global"
+```
+
+**Hiera.yaml - Authoritative**
+
+```yaml
+:backends:
+  - 'compliance_markup_enforce'
+  - 'yaml'
+:yaml:
+  :datadir: '/path/to/your/hieradata'
+:compliance_map:
+  :datadir: '/path/to/your/hieradata'
+:hierarchy:
+  "compliance_profiles/%{compliance_profile}"
+  "global"
+```
+
+### Selecting Which Profile to Enforce
+
+If you wish enforce multiple profiles, they should be specified as an Array.
+
+Items at the left side of the Array will override later items.
+
+#### Module Parameter (preferred)
+
+The `compliance_markup::enforcement_helper::profiles` parameter may be used to
+cleanly set, and override, the applicable profiles in Hiera (or your ENC).
+
+If you specify an Array, then the first profile to have a valid entry, from
+left to right, will win.
+
+#### Global Setting
+
+You may enforce one or more profiles in parallel by setting the globally scoped
+variable `$enforce_compliance_profile`.
+
+#### Example 1 - Standard Usage
+
+**Manifest**
+
+```ruby
+class foo (
+  $var_one => 'one',
+  $var_two => 'two'
+) {
+  notify { 'Sample Class': }
+}
+
+$enforce_compliance_profile = 'my_policy'
+
+include compliance_markup::enforcement_helper
+include foo
+```
+
+#### Example 2 - Multi-Profile
+
+**Manifest**
+
+```ruby
+class foo (
+  $var_one => 'one',
+  $var_two => 'two'
+) {
+  notify { 'Sample Class': }
+}
+
+# my_policy wins conflicts
+$enforce_compliance_profile = ['my_policy', 'my_less_important_policy']
+
+include compliance_markup::enforcement_helper
+include foo
+```
+
 ## Limitations
 
 Depending on the version of Puppet being used, the `compliance_map()` function
 may not be able to precisely determine where the function has been called and a
 best guess may be provided.
 
+Enforcement, when using the profiles baked into the `compliance_markup` module,
+will only apply to classes that are included **after**
+`compliance_markup::enforcement_helper`. This is an unfortunate side effect of
+Puppet 4.9+
+
 ## Development
 
-Patches are welcome to the code on the [SIMP Project Github](https://github.com/simp/pupmod-simp-compliance_markup) account. If you provide code, you are
-guaranteeing that you own the rights for the code or you have been given rights
-to contribute the code.
+Patches are welcome to the code on the [SIMP Project
+Github](https://github.com/simp/pupmod-simp-compliance_markup) account. If you
+provide code, you are guaranteeing that you own the rights for the code or you
+have been given rights to contribute the code.
 
 ### Acceptance tests
 

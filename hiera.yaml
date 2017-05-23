@@ -14,3 +14,6 @@ hierarchy:
   - name: 'OS - DISA STIG'
     backend: 'yaml'
     path: "compliance_profiles/%{facts.os.name}/disa_stig"
+  - name: 'common'
+    backend: 'yaml'
+    path: 'common'

@@ -1,8 +1,14 @@
 ---
 fixtures:
-  #repositories:
-  #  simplib:
-  #    repo: "https://github.com/simp/pupmod-simp-simplib"
-  #    branch: "master"
+  repositories:
+    simplib:
+      repo: "https://github.com/simp/pupmod-simp-simplib"
+      branch: "master"
+    stdlib:
+      repo: "https://github.com/simp/puppetlabs-stdlib"
+      branch: "master"
+    useradd:
+      repo: "https://github.com/simp/pupmod-simp-useradd"
+      branch: "master"
   symlinks:
     compliance_markup: "#{source_dir}"

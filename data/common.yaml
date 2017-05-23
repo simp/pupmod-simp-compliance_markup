@@ -1,0 +1,6 @@
+---
+lookup_options:
+  compliance_markup::compliance_map:
+    merge:
+      strategy: deep
+      knockout_prefix: '--'

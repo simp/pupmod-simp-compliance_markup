@@ -14,7 +14,7 @@ describe 'compliance_markup class' do
       }
 
       include 'test'
-      include 'compliance_markup'
+      include 'compliance_markup::validate'
     EOS
   }
 

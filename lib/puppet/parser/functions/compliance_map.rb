@@ -1,5 +1,4 @@
 module Puppet::Parser::Functions
-
     newfunction(:compliance_map, :doc => <<-'ENDHEREDOC') do |args|
       This function provides a mechanism for mapping compliance data to
       settings in Puppet.
@@ -40,6 +39,11 @@ module Puppet::Parser::Functions
       Everything else will be converted to a String and can be provided a Ruby
       regular expression of the following format: 're:REGEX' where 'REGEX' does
       **not** include the starting and trailing slashes.
+
+        Example:
+          'value' : 're:oo'
+
+          Matches: 'foo' and 'boo' but not 'bar'
 
       You may also add compliance data directly to your modules outside of a
       parameter mapping. This is useful if you have more advanced logic that is
@@ -185,6 +189,11 @@ module Puppet::Parser::Functions
           user_config[:report_types] = Array(user_config[:report_types])
         end
 
+        # Takes care of things that have been set to 'undef' in Puppet
+        user_config.delete_if{|k,v|
+          v.nil? || v.is_a?(Symbol)
+        }
+
         main_config.merge!(user_config)
       else
         custom_compliance_profile    = args.shift
@@ -231,8 +240,17 @@ module Puppet::Parser::Functions
       raise Puppet::ParseError, "compliance_map(): 'report_type' must include '#{valid_report_types.join(', ')}'"
     end
 
-    compliance_profiles = Array(lookup_global_silent('compliance_profile'))
-    reference_map       = lookup_global_silent('compliance_map')
+    # Global lookup for the legacy stack
+    compliance_profiles = lookup_global_silent('compliance_profile')
+    # ENC compatible lookup
+    compliance_profiles ||= lookup_global_silent('compliance_markup::validate_profiles')
+    # Module-level lookup
+    compliance_profiles ||= catalog.resource('Class[compliance_markup]')[:validate_profiles]
+
+    # If we didn't find any profiles to map, bail
+    return unless compliance_profiles
+
+    reference_map = lookup_global_silent('compliance_map')
     reference_map ||= Hash.new
 
     if ( !reference_map || reference_map.empty? )
@@ -268,9 +286,27 @@ module Puppet::Parser::Functions
     if hitchhiker
       @compliance_map = hitchhiker
     else
+      extra_data = {
+        # Add the rest of the useful information to the map
+        'fqdn'              => lookupvar('fqdn'),
+        'hostname'          => lookupvar('hostname'),
+        'ipaddress'         => lookupvar('ipaddress'),
+        'puppetserver_info' => 'local_compile'
+      }
+
+      puppetserver_facts = lookup_global_silent('server_facts')
+
+      if puppetserver_facts && !puppetserver_facts.empty?
+        extra_data['puppetserver_info'] = puppetserver_facts
+      end
+
+      if main_config[:site_data]
+        extra_data['site_data'] = main_config[:site_data]
+      end
+
       # Create the validation report object
       # Have to break things out because jruby can't handle '::' in const_get
-      @compliance_map ||= PuppetX.const_get("SIMP#{Puppet[:environment]}").const_get('ComplianceMap').new(compliance_profiles, reference_map, main_config)
+      @compliance_map ||= PuppetX.const_get("SIMP#{Puppet[:environment]}").const_get('ComplianceMap').new( compliance_profiles, reference_map, main_config, extra_data )
     end
 
     file = @source.file

@@ -1,3 +1,15 @@
+Mon Mar 22 2017 Trevor Vaughan <tvaughan@onyxpoint.com> - 3.0.0-0
+- Added a compliance_markup::enforcement_helper class to prep the environment
+  for enforcement
+- Added a compliance_markup::validate class to properly isolate the validation
+  code from the environment
+- Implemented the documented regular expression validation
+- Added basic host information to the compliance report
+- Added the ability to provide an arbitrary information hash to be embedded in
+  the compliance report
+- Added a compliance enforcement backend that, by default, uses the data in
+  this module
+
 Mon May 01 2017 Trevor Vaughan <tvaughan@onyxpoint.com> - 2.0.2-0
 - Added the defaut SIMP compliance profiles to the module data
 - Enhanced the lookup mapper function to take an optional default map

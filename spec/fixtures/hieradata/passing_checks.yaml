@@ -14,7 +14,7 @@ compliance_map :
     test2::test3::arg3_1 :
       identifiers :
         - 'ID1.2'
-      value : foo3_1
+      value : 're:foo3_.*'
     test2::test3::ref_miss1 :
       identifiers :
         - 'MISS1'
