@@ -894,7 +894,7 @@ compliance_markup::compliance_map:
         - RHEL-07-040030
         - SRG-OS-000066-GPOS-00034
         - CCI-000185
-      value: '10'
+      value: 10
     simp_openldap::client::app_pki_ca_dir:
       identifiers:
         - RHEL-07-040240

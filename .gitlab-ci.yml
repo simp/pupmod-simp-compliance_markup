@@ -1,4 +1,3 @@
-#
 ---
 puppet-syntax: 
   stage: test
@@ -85,13 +84,30 @@ unit-test-puppet4.7-ruby-2.3:
   image: ruby:2.3
   allow_failure: true
   script: 
-    - PUPPET_VERSION=4.7 bundle install
-    - PUPPET_VERSION=4.7 bundle exec rake spec
+    - PUPPET_VERSION=4.7.0 bundle install
+    - PUPPET_VERSION=4.7.0 bundle exec rake spec
 
-acceptance-test: 
+acceptance-test-4.7: 
   stage: test
   tags: 
     - beaker
   script: 
     - bundle install --no-binstubs --path=vendor
-    - bundle exec rake acceptance
+    - PUPPET_VERSION=4.7.0 bundle update
+    - PUPPET_VERSION=4.7.0 bundle exec rake acceptance
+acceptance-test-4.8: 
+  stage: test
+  tags: 
+    - beaker
+  script: 
+    - bundle install --no-binstubs --path=vendor
+    - PUPPET_VERSION=4.8.0 bundle update
+    - PUPPET_VERSION=4.8.0 bundle exec rake acceptance
+acceptance-test-4.10.0: 
+  stage: test
+  tags: 
+    - beaker
+  script: 
+    - bundle install --no-binstubs --path=vendor
+    - PUPPET_VERSION=4.10.0 bundle update
+    - PUPPET_VERSION=4.10.0 bundle exec rake acceptance

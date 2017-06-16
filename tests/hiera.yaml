@@ -1,0 +1,11 @@
+---
+version: 5
+defaults:
+        datadir: data
+        data_hash: yaml_data
+hierarchy:
+        - name: "compliance_markup"
+          lookup_key: "compliance_markup::hiera_backend"
+        - name: "common"
+          path: "common.yaml"
+

@@ -1,0 +1,9 @@
+compliance_markup::enforcement: [ 'disa', 'nist' ]
+compliance_markup::compliance_map:
+        disa:
+                compliance_markup::test::testvariable:
+                        value: 'disa'
+        nist:
+                compliance_markup::test::testvariable:
+                        value: 'nist'
+

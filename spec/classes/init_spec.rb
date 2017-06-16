@@ -6,6 +6,13 @@ describe 'compliance_markup' do
       let(:report_version) { '1.0.1' }
 
       context "on #{os}" do
+
+        # This needs to be called as the very last item of a compile
+        let(:post_condition) {<<-EOM
+            include 'compliance_markup'
+          EOM
+        }
+
         context 'with data in modules' do
           before(:each) do
             @server_report_dir = Dir.mktmpdir

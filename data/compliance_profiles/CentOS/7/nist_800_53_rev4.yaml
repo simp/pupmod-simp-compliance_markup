@@ -54,7 +54,7 @@ compliance_markup::compliance_map:
         - AU-4
         - AU-5(b)
         - AU-11
-      value: '50'
+      value: 50
     auditd::admin_space_left_action:
       identifiers:
         - AU-4
@@ -226,19 +226,19 @@ compliance_markup::compliance_map:
       identifiers:
         - AU-5(b)
       notes: This is set to '1' in SIMP by default since '2' was proven to be prone to random kernel panics in production.
-      value: '2'
+      value: 2
     auditd::max_log_file:
       identifiers:
         - AU-4
         - AU-11
       notes: This value can be different than 24 but should be justified.
-      value: '24'
+      value: 24
     auditd::num_logs:
       identifiers:
         - AU-4
         - AU-11
       notes: This value can be different than 5 but should be justified.
-      value: '5'
+      value: 5
     auditd::package_name:
       identifiers:
         - AU-3

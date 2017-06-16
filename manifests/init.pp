@@ -99,5 +99,5 @@ class compliance_markup (
     }
   }
 
-  compliance_markup::map { 'execute': options => $::compliance_markup::_options }
+  compliance_markup::map { 'execute': options => $_options }
 }

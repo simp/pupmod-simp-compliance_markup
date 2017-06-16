@@ -1,0 +1,12 @@
+---
+:backends:
+- yaml
+- simp_compliance_enforcement
+:yaml:
+  :datadir: "/data/helio/code/github/simp/pupmod-simp-compliance_markup/spec/fixtures/hieradata"
+:simp_compliance_enforcement:
+  :datadir: "/data/helio/code/github/simp/pupmod-simp-compliance_markup/spec/fixtures/hieradata"
+:hierarchy:
+- "%{custom_hiera}"
+- "%{module_name}"
+- default

@@ -1,19 +1,37 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+Table of Contents
+
+- [Overview](#overview)
+- [Module Description](#module-description)
+- [Upgrading](#upgrading)
+- [Reporting](#reporting)
+  - [What compliance_markup affects](#what-compliance_markup-affects)
+- [Usage](#usage)
+  - [Report Format](#report-format)
+  - [Options](#options)
+    - [report_types](#report_types)
+    - [site_data](#site_data)
+    - [client_report](#client_report)
+    - [server_report](#server_report)
+    - [server_report_dir](#server_report_dir)
+    - [server_report_dir](#server_report_dir-1)
+    - [catalog_to_compliance_map](#catalog_to_compliance_map)
+- [Reference](#reference)
+  - [Example 1 - Standard Usage](#example-1---standard-usage)
+  - [Example 2 - Custom Compliance Map](#example-2---custom-compliance-map)
+- [Enforcement](#enforcement)
+  - [v5 Backend Configuration](#v5-backend-configuration)
+  - [v3 Backend Configurationa](#v3-backend-configurationa)
+  - [Configuring profiles to enforce](#configuring-profiles-to-enforce)
+- [Limitations](#limitations)
+- [Development](#development)
+  - [Acceptance tests](#acceptance-tests)
+- [Packaging](#packaging)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 [![License](http://img.shields.io/:license-apache-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0.html) [![Build Status](https://travis-ci.org/simp/pupmod-simp-compliance_markup.svg)](https://travis-ci.org/simp/pupmod-simp-compliance_markup)
-
-#### Table of Contents
-
-1. [Overview](#overview)
-2. [Upgrading](#upgrading)
-3. [Module Description - What the module does and why it is useful](#module-description)
-4. [Setup - The basics of getting started with compliance_markup](#setup)
-    * [What compliance_markup affects](#what-compliance_markup-affects)
-    * [Setup requirements](#setup-requirements)
-    * [Beginning with compliance_markup](#beginning-with-compliance_markup)
-5. [Usage - Configuration options and additional functionality](#usage)
-6. [Reference - An under-the-hood peek at what the module is doing and how](#reference)
-7. [Limitations - OS compatibility, etc.](#limitations)
-8. [Development - Guide for contributing to the module](#development)
-      * [Acceptance Tests - Beaker env variables](#acceptance-tests)
 
 ## Overview
 
@@ -48,7 +66,7 @@ it to.  For instance, to upgrade a compliance map from API 0.0.1 to 1.0.0:
 Please validate that the migrated YAML files work as expected prior to
 deploying them into production.
 
-## Setup
+## Reporting
 
 ### What compliance_markup affects
 
@@ -277,7 +295,6 @@ include '::compliance_markup'
 :yaml:
   :datadir: '/path/to/your/hieradata'
 :hierarchy:
-  "compliance_profiles/%{compliance_profile}"
   "global"
 ```
 
@@ -285,7 +302,7 @@ include '::compliance_markup'
 
 ```yaml
 ---
-# In file /path/to/your/hieradata/compliance_profiles/my_policy.yaml
+# In file /path/to/your/hieradata/global.yaml
 compliance_map :
   my_policy :
     foo::var_one :
@@ -301,6 +318,63 @@ if $::circumstance {
   compliance_map('my_policy','POLICY_SECTION_ID','Note about this section')
   ...code that applies POLICY_SECTION_ID...
 }
+```
+
+## Enforcement
+
+This module also contains an **experimental** Hiera backend that can be used to
+enforce compliance profile settings on any module when it is included. It uses
+the compliance_markup::enforcement array to determine the profiles to use, and
+which profiles take priority. 
+
+Both a legacy v3 backend, and a modern Hiera v5 backend have been provided. It
+is highly recommended to use the Hiera v5 backend if the puppet agent on your 
+puppetservers are 4.9 or higher.
+
+
+### v5 Backend Configuration
+
+```ruby
+---
+version: 5
+hierarchy:
+  - name: Compliance
+    lookup_key: compliance_markup::enforcement
+  - name: Common
+    path: default.yaml
+defaults:
+  data_hash: yaml_data
+  datadir: "/etc/puppetlabs/code/environments/production/hieradata"
+
+```
+
+### v3 Backend Configurationa
+
+```ruby
+---
+:backends:
+  - yaml
+  - simp_compliance_enforcement
+:yaml:
+  :datadir: "/etc/puppetlabs/code/environments/%{environment}/hieradata"
+:simp_compliance_enforcement:
+  :datadir: "/etc/puppetlabs/code/environments/%{environment}/hieradata"
+:hierarchy:
+  - default
+:logger: console
+
+```
+
+### Configuring profiles to enforce
+
+To enforce disa stig + nist, with disa stig compliance settings taking priority,
+add the following to your hiera data files. This will work like any hiera setting,
+so you can set enforcement based on any factor, including host, hostgroup, kernel
+or specfic os version.
+
+```yaml
+---
+compliance_markup::enforcement: [ 'disa_stig', 'nist_800_53_rev4' ]
 ```
 
 ## Limitations

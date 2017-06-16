@@ -1,3 +1,6 @@
+Mon Jun 16 2017 Dylan Cochran <dylan.cocran@onyxpoint.com> - 2.2.0-0
+- Added a compliance enforcement hierav3 and hierav5 backend.
+
 * Sat Jun 10 2017 Trevor Vaughan <tvaughan@onyxpoint.com> - 2.1.0-0
   - Documented the report format in the README
   - Added the defaut SIMP compliance profiles to the module data
