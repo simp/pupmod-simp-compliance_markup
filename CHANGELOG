@@ -1,36 +1,32 @@
-Sat Jun 10 2017 Trevor Vaughan <tvaughan@onyxpoint.com> - 2.1.1-0
-- Documented the report format in the README
+* Sat Jun 10 2017 Trevor Vaughan <tvaughan@onyxpoint.com> - 2.1.0-0
+  - Documented the report format in the README
+  - Added the defaut SIMP compliance profiles to the module data
+  - Enhanced the lookup mapper function to take an optional default map
+  - Passed the internal data as the default map
+  - Added client metadata to the compliance report for easier analysis
+  - Fixed several minor processing bugs
+  - Added the documented, but missing, regular expression match capability
 
-Tue Mar 23 2017 Trevor Vaughan <tvaughan@onyxpoint.com> - 2.1.0-0
-- Added client metadata to the compliance report for easier analysis
-- Fixed several minor processing bugs
-- Added the documented, but missing, regular expression match capability
+* Tue Feb 28 2017 Nick Miller <nick.miller@onyxpoint.com> - 2.0.1-0
+  - travis.yml and gemfile updates
 
-Mon May 01 2017 Trevor Vaughan <tvaughan@onyxpoint.com> - 2.0.2-0
-- Added the defaut SIMP compliance profiles to the module data
-- Enhanced the lookup mapper function to take an optional default map
-- Passed the internal data as the default map
+* Fri Oct 28 2016 Trevor Vaughan <tvaughan@onyxpoint.com> - 2.0.0-0
+  - New map format
+  - New output format
+    - Added compliant values
+    - Added missed parameters
+    - Added missing class references
+    - Added server-side storage
+  - Added a conversion utility in the 'utils' directory
 
-Tue Feb 28 2017 Nick Miller <nick.miller@onyxpoint.com> - 2.0.1-0
-- travis.yml and gemfile updates
+* Wed Sep 28 2016 Chris Tessmer <ctessmer@onyxpoint.com> - 1.0.1-0
+  - Move GitHub org from `onyxpoint` to `simp`
 
-Fri Oct 28 2016 Trevor Vaughan <tvaughan@onyxpoint.com> - 2.0.0-0
-- New map format
-- New output format
-  - Added compliant values
-  - Added missed parameters
-  - Added missing class references
-  - Added server-side storage
-- Added a conversion utility in the 'utils' directory
+* Sun Jul 03 2016 Chris Tessmer <ctessmer@onyxpoint.com> - 1.0.0-0
+  - Move Forge org from `onyxpoint` to `simp`
+  - Provide Ruby 1.8.7 compatibility
+  - Ensure that a report is written on every run.
+  - Updated to properly handle the hash references
 
-Wed Sep 28 2016 Chris Tessmer <ctessmer@onyxpoint.com> - 1.0.1-0
-- Move GitHub org from `onyxpoint` to `simp`
-
-Sun Jul 03 2016 Chris Tessmer <ctessmer@onyxpoint.com> - 1.0.0-0
-- Move Forge org from `onyxpoint` to `simp`
-- Provide Ruby 1.8.7 compatibility
-- Ensure that a report is written on every run.
-- Updated to properly handle the hash references
-
-Mon Dec 07 2015 Trevor Vaughan <tvaughan@onyxpoint.com> - 0.0.1-0
-- Initial Release
+* Mon Dec 07 2015 Trevor Vaughan <tvaughan@onyxpoint.com> - 0.0.1-0
+  - Initial Release

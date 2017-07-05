@@ -352,10 +352,15 @@ module Puppet::Parser::Functions
       # If we don't know the filename, guess....
       # This is probably because we're running in Puppet 4
       if is_topscope?
-        if environment.manifest =~ /\.pp$/
-          file = environment.manifest
+        # Cast this to a string because it could potentially be a symbol from
+        # the bowels of Puppet, or 'nil', or whatever and is purely
+        # informative.
+        env_manifest = "#{environment.manifest}"
+
+        if env_manifest =~ /\.pp$/
+          file = env_manifest
         else
-          file = File.join(environment.manifest,'site.pp')
+          file = File.join(env_manifest,'site.pp')
         end
       else
         filename = @source.name.split('::')
