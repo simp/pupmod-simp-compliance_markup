@@ -6,6 +6,7 @@
   - Added client metadata to the compliance report for easier analysis
   - Fixed several minor processing bugs
   - Added the documented, but missing, regular expression match capability
+  - Confine puppet version in metadata.json
 
 * Tue Feb 28 2017 Nick Miller <nick.miller@onyxpoint.com> - 2.0.1-0
   - travis.yml and gemfile updates
