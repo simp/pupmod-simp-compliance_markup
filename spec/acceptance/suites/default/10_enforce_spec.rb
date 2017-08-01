@@ -1,4 +1,3 @@
-# vim: set expandtab ts=2 sw=2:
 require 'spec_helper_acceptance'
 require 'semantic_puppet'
 test_name 'compliance_markup class enforcement'
@@ -176,3 +175,4 @@ defaults:
   end
 end
 
+# vim: set expandtab ts=2 sw=2:

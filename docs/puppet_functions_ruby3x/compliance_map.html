@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>
+  Puppet Function: compliance_map (Ruby 3.x API)
+  
+    &mdash; Documentation by YARD 0.9.9
+  
+</title>
+
+  <link rel="stylesheet" href="../css/style.css" type="text/css" charset="utf-8" />
+
+  <link rel="stylesheet" href="../css/common.css" type="text/css" charset="utf-8" />
+
+<script type="text/javascript" charset="utf-8">
+  pathId = "puppet_functions_ruby3x::compliance_map";
+  relpath = '../';
+</script>
+
+
+  <script type="text/javascript" charset="utf-8" src="../js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="../js/app.js"></script>
+
+
+  </head>
+  <body>
+    <div class="nav_wrap">
+      <iframe id="nav" src="../puppet_function_list.html?1"></iframe>
+      <div id="resizer"></div>
+    </div>
+
+    <div id="main" tabindex="-1">
+      <div id="header">
+        <div id="menu">
+  
+    <a href="../_index.html">Index (c)</a> &raquo;
+    <span class='title'><span class='object_link'>Puppet Functions</span></span>
+     &raquo; 
+    <span class="title">compliance_map</span>
+  
+</div>
+
+        <div id="search">
+  
+    <a class="full_list_link" id="puppet_class_list_link"
+        href="../puppet_class_list.html">
+
+        <svg width="24" height="24">
+          <rect x="0" y="4" width="24" height="4" rx="1" ry="1"></rect>
+          <rect x="0" y="12" width="24" height="4" rx="1" ry="1"></rect>
+          <rect x="0" y="20" width="24" height="4" rx="1" ry="1"></rect>
+        </svg>
+    </a>
+  
+</div>
+        <div class="clear"></div>
+      </div>
+
+      <div id="content"><h1>Puppet Function: compliance_map</h1>
+<div class="box_info">
+  <dl>
+    <dt>Defined in:</dt>
+    <dd>
+      lib/puppet/parser/functions/compliance_map.rb
+    </dd>
+  </dl>
+  <dl>
+    <dt>Function type:</dt>
+    <dd>Ruby 3.x API</dd>
+  </dl>
+</div>
+
+<h2>Overview</h2>
+<div class="method_details first">
+  
+  <div class="tags overload overload_item">
+    <span class="overload">
+      <span class="overload_item">
+        <span class="signature first" style="margin-left: 0px;"><strong>compliance_map()</strong> &#x21d2; <tt>Any</tt> </span>
+      </span>
+    </span>
+  </div>
+  
+  <div class="docstring">
+    <div class="discussion">
+      
+<p>This function provides a mechanism for mapping compliance data to settings
+in Puppet.</p>
+
+<p>It should be used <strong>once</strong>, after all of your classes have
+been included and is designed for use in classes to validate that
+parameters are properly set.</p>
+
+<p>The easiest method for doing this is to add it as the <strong>last</strong>
+line of <code>site.pp</code>.</p>
+
+<p>When called, the parameters of all classes will be evaluated against global
+scope variables followed by data from lookup().</p>
+
+<p>The variable space against which the class parameters will be evaluated
+must be structured as the following hash:</p>
+
+<p>compliance_map :  &lt;compliance_profile&gt; : 
+&lt;class_name&gt;::&lt;parameter&gt; :  &#39;identifiers&#39; :  - &#39;ID
+String&#39;  &#39;value&#39; : &#39;Compliant Value&#39;</p>
+
+<p>For instance, if you were mapping to NIST 800-53 in the SSH class, you
+could use something like the following in Hiera:</p>
+
+<p>compliance_map :  nist_800_53 :  ssh::permit_root_login : 
+&#39;identifiers&#39; :  - &#39;CCE-1234&#39;  &#39;value&#39; : false</p>
+
+<p>&#39;value&#39; items have some special properties. Hashes and Arrays will
+be matched using &#39;==&#39; in Ruby.</p>
+
+<p>Everything else will be converted to a String and can be provided a Ruby
+regular expression of the following format: &#39;re:REGEX&#39; where
+&#39;REGEX&#39; does <strong>not</strong> include the starting and trailing
+slashes.</p>
+
+<p>Example:  &#39;value&#39; : &#39;re:oo&#39;</p>
+
+<pre class="code ruby"><code class="ruby">Matches: &#39;foo&#39; and &#39;boo&#39; but not &#39;bar&#39;</code></pre>
+
+<p>You may also add compliance data directly to your modules outside of a
+parameter mapping. This is useful if you have more advanced logic that is
+required to meet a particular internal requirement.</p>
+
+<p>NOTE: The parser does not know what line number and, possibly, what file
+the function is being called from based on the version of the Puppet parser
+being used.</p>
+
+<h2 id="label-Global+Options">Global Options</h2>
+
+<p>If a Hash is passed as the only argument, then this will configure the
+global report settings.</p>
+
+<p>The following options are supported:</p>
+
+<p><strong>:report_types</strong></p>
+
+<p>Default: [ &#39;non_compliant&#39;, &#39;unknown_parameters&#39;,
+&#39;custom_entries&#39; ]</p>
+
+<p>A String, or Array that denotes which types of reports should be 
+generated.</p>
+
+<p>Valid Types:  <strong>full</strong> =&gt; The full report, with all other
+types  included.  <strong>non_compliant</strong> =&gt; Items that differ
+from the reference  will be reported.  <strong>compliant</strong> =&gt;
+Compliant items will be reported.  <strong>unknown_resources</strong> =&gt;
+Reference resources without a  system value will be reported. 
+<strong>unknown_parameters</strong> =&gt; Reference parameters without a
+system  value will be reported.  <strong>custom_entries</strong> =&gt; Any
+one-off custom calls to  compliance_map will be reported.</p>
+
+<p><strong>:site_data</strong></p>
+
+<p>Default: None</p>
+
+<p>A valid <em>Hash</em> that will be converted <em>as passed</em> and emitted
+into your node compliance report.</p>
+
+<p>This can be used to add site-specific or other information to the  report
+that may be useful for post-processing.</p>
+
+<p><strong>:format</strong></p>
+
+<p>Default: &#39;json&#39;</p>
+
+<p>A String that indicates what output style to use. Valid values are 
+&#39;json&#39; and &#39;yaml&#39;.</p>
+
+<p><strong>:client_report</strong></p>
+
+<pre class="code ruby"><code class="ruby">Default: false
+
+A Boolean which, if set, will place a copy of the report on the
+client itself. This will ensure that PuppetDB will have a copy of the
+report for later processing.</code></pre>
+
+<p><strong>:server_report</strong></p>
+
+<pre class="code ruby"><code class="ruby">Default: true
+
+A Boolean which, if set, will store a copy of the
+report on the Server.</code></pre>
+
+<p><strong>:server_report_dir</strong></p>
+
+<pre class="code ruby"><code class="ruby">Default: Puppet[:vardir]/simp/compliance_reports
+
+An Absolute Path that specifies the location on
+the *server* where the reports should be stored.
+
+A directory will be created for each FQDN that
+has a report.</code></pre>
+
+<p><strong>:default_map</strong></p>
+
+<pre class="code ruby"><code class="ruby">Default: None
+
+The default map that should be used if no others can be found. This
+will probably never be manually set during normal usage via the
+compliance_markup module</code></pre>
+
+<p><strong>:catalog_to_compliance_map</strong></p>
+
+<pre class="code ruby"><code class="ruby">Default: false
+
+A Boolean which, if set, will dump a compatible compliance_map of
+*all* resources and defines that are in the current catalog.
+
+This will be written to ``server_report_dir`` prefaced by the unique catalog ID.
+
+NOTE: This is an experimental feature and subject to change without notice</code></pre>
+
+<p>Example:  # Only non-compilant entries and only store them on the client
+and the  # server  compliance_map({  :report_types =&gt; [
+&#39;non_compliant&#39;, &#39;unknown_parameters&#39;,
+&#39;custom_entries&#39; ],  :client_report =&gt; true,  :server_report
+=&gt; true  })</p>
+
+<h2 id="label-Custom+Content">Custom Content</h2>
+
+<p>The following optional <strong>ordered</strong> parameters may be used to
+add your own compliance data at any location:</p>
+
+<p>:compliance_profile =&gt; &#39;A String, or Array, that denotes the
+compliance  profile(s) to which you are mapping.&#39;  :identifier =&gt;
+&#39;A unique identifier String or Array for the  policy to which you are
+mapping.&#39;  :notes =&gt; &#39;An <em>optional</em> String that allows
+for arbitrary  notes to include in the compliance report&#39;</p>
+
+<p>Example:  if $circumstance { 
+compliance_map(&#39;nist_800_53&#39;,&#39;CCE-1234&#39;,&#39;Note about
+this section&#39;)  …code that applies CCE-1234…  }</p>
+
+    </div>
+  </div>
+  <div class="tags">
+  
+
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Any</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><div class="method_details_list">
+  <table class="source_code">
+    <tr>
+      <td>
+        <pre class="lines">
+
+
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184</pre>
+      </td>
+      <td>
+        <pre class="code"><span class="info file"># File 'lib/puppet/parser/functions/compliance_map.rb', line 2</span>
+
+<span class='id identifier rubyid_newfunction'>newfunction</span><span class='lparen'>(</span><span class='symbol'>:compliance_map</span><span class='comma'>,</span> <span class='symbol'>:doc</span> <span class='op'>=&gt;</span> <span class='heredoc_beg'>&lt;&lt;-&#39;ENDHEREDOC&#39;</span><span class='rparen'>)</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_args'>args</span><span class='op'>|</span>
+
+<span class='comment'>#
+</span><span class='tstring_content'>    This function provides a mechanism for mapping compliance data to
+    settings in Puppet.
+
+    It should be used **once**, after all of your classes have been included
+    and is designed for use in classes to validate that parameters are
+    properly set.
+
+    The easiest method for doing this is to add it as the **last** line of
+    ``site.pp``.
+
+    When called, the parameters of all classes will be evaluated against
+    global scope variables followed by data from lookup().
+
+    The variable space against which the class parameters will be evaluated
+    must be structured as the following hash:
+
+      compliance_map :
+        &lt;compliance_profile&gt; :
+          &lt;class_name&gt;::&lt;parameter&gt; :
+            &#39;identifiers&#39; :
+              - &#39;ID String&#39;
+            &#39;value&#39;      : &#39;Compliant Value&#39;
+
+    For instance, if you were mapping to NIST 800-53 in the SSH class, you
+    could use something like the following in Hiera:
+
+      compliance_map :
+        nist_800_53 :
+          ssh::permit_root_login :
+            &#39;identifiers&#39; :
+              - &#39;CCE-1234&#39;
+            &#39;value&#39;      : false
+
+    &#39;value&#39; items have some special properties. Hashes and Arrays will
+    be matched using &#39;==&#39; in Ruby.
+
+    Everything else will be converted to a String and can be provided a Ruby
+    regular expression of the following format: &#39;re:REGEX&#39; where &#39;REGEX&#39; does
+    **not** include the starting and trailing slashes.
+
+      Example:
+        &#39;value&#39; : &#39;re:oo&#39;
+
+        Matches: &#39;foo&#39; and &#39;boo&#39; but not &#39;bar&#39;
+
+    You may also add compliance data directly to your modules outside of a
+    parameter mapping. This is useful if you have more advanced logic that is
+    required to meet a particular internal requirement.
+
+    NOTE: The parser does not know what line number and, possibly, what file
+    the function is being called from based on the version of the Puppet
+    parser being used.
+
+    ## Global Options
+
+    If a Hash is passed as the only argument, then this will configure the
+    global report settings.
+
+    The following options are supported:
+
+      **:report_types**
+
+      Default: [ &#39;non_compliant&#39;, &#39;unknown_parameters&#39;, &#39;custom_entries&#39; ]
+
+      A String, or Array that denotes which types of reports should be
+      generated.
+
+      Valid Types:
+        **full**               =&gt; The full report, with all other types
+                                  included.
+        **non_compliant**      =&gt; Items that differ from the reference
+                                  will be reported.
+        **compliant**          =&gt; Compliant items will be reported.
+        **unknown_resources**  =&gt; Reference resources without a
+                                  system value will be reported.
+        **unknown_parameters** =&gt; Reference parameters without a system
+                                  value will be reported.
+        **custom_entries**     =&gt; Any one-off custom calls to
+                                  compliance_map will be reported.
+
+      **:site_data**
+
+      Default: None
+
+      A valid *Hash* that will be converted *as passed* and emitted
+      into your node compliance report.
+
+      This can be used to add site-specific or other information to the
+      report that may be useful for post-processing.
+
+      **:format**
+
+      Default: &#39;json&#39;
+
+      A String that indicates what output style to use. Valid values are
+      &#39;json&#39; and &#39;yaml&#39;.
+
+      **:client_report**
+
+        Default: false
+
+        A Boolean which, if set, will place a copy of the report on the
+        client itself. This will ensure that PuppetDB will have a copy of the
+        report for later processing.
+
+      **:server_report**
+
+        Default: true
+
+        A Boolean which, if set, will store a copy of the
+        report on the Server.
+
+      **:server_report_dir**
+
+        Default: Puppet[:vardir]/simp/compliance_reports
+
+        An Absolute Path that specifies the location on
+        the *server* where the reports should be stored.
+
+        A directory will be created for each FQDN that
+        has a report.
+
+     **:default_map**
+
+        Default: None
+
+        The default map that should be used if no others can be found. This
+        will probably never be manually set during normal usage via the
+        compliance_markup module
+
+      **:catalog_to_compliance_map**
+
+        Default: false
+
+        A Boolean which, if set, will dump a compatible compliance_map of
+        *all* resources and defines that are in the current catalog.
+
+        This will be written to ``server_report_dir`` prefaced by the unique catalog ID.
+
+        NOTE: This is an experimental feature and subject to change without notice
+
+    Example:
+      # Only non-compilant entries and only store them on the client and the
+      # server
+      compliance_map({
+        :report_types  =&gt; [
+          &#39;non_compliant&#39;,
+          &#39;unknown_parameters&#39;,
+          &#39;custom_entries&#39;
+        ],
+        :client_report =&gt; true,
+        :server_report =&gt; true
+      })
+
+    ## Custom Content
+
+    The following optional **ordered** parameters may be used to add your own
+    compliance data at any location:
+
+      :compliance_profile =&gt; &#39;A String, or Array, that denotes the compliance
+                              profile(s) to which you are mapping.&#39;
+      :identifier         =&gt; &#39;A unique identifier String or Array for the
+                              policy to which you are mapping.&#39;
+      :notes              =&gt; &#39;An *optional* String that allows for arbitrary
+                              notes to include in the compliance report&#39;
+
+    Example:
+      if $circumstance {
+        compliance_map(&#39;nist_800_53&#39;,&#39;CCE-1234&#39;,&#39;Note about this section&#39;)
+        ...code that applies CCE-1234...
+      }
+</span><span class='heredoc_end'>  ENDHEREDOC
+</span><span class='comment'># Dynamic per-environment code loader.
+</span><span class='comment'>#
+</span>  <span class='id identifier rubyid_object'>object</span> <span class='op'>=</span> <span class='const'>Object</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_myself'>myself</span> <span class='op'>=</span> <span class='kw'>__FILE__</span>
+  <span class='id identifier rubyid_filename'>filename</span> <span class='op'>=</span> <span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_dirname'>dirname</span><span class='lparen'>(</span><span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_dirname'>dirname</span><span class='lparen'>(</span><span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_dirname'>dirname</span><span class='lparen'>(</span><span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_dirname'>dirname</span><span class='lparen'>(</span><span class='id identifier rubyid_myself'>myself</span><span class='rparen'>)</span><span class='rparen'>)</span><span class='rparen'>)</span><span class='rparen'>)</span> <span class='op'>+</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>/puppetx/simp/compliance_map.rb</span><span class='tstring_end'>&quot;</span></span>
+  <span class='id identifier rubyid_object'>object</span><span class='period'>.</span><span class='id identifier rubyid_instance_eval'>instance_eval</span><span class='lparen'>(</span><span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_read'>read</span><span class='lparen'>(</span><span class='id identifier rubyid_filename'>filename</span><span class='rparen'>)</span><span class='comma'>,</span> <span class='id identifier rubyid_filename'>filename</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_object'>object</span><span class='period'>.</span><span class='id identifier rubyid_compliance_map'>compliance_map</span><span class='lparen'>(</span><span class='id identifier rubyid_args'>args</span><span class='comma'>,</span> <span class='kw'>self</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+      </td>
+    </tr>
+  </table>
+</div>
+
+</div>
+</div>
+
+      <div id="footer">
+  Generated on Tue Aug  1 15:41:50 2017 by
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  0.9.9 (ruby-2.1.9).
+</div>
+
+    </div>
+  </body>
+</html>

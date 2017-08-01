@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>
+  Puppet Class: compliance_markup
+  
+    &mdash; Documentation by YARD 0.9.9
+  
+</title>
+
+  <link rel="stylesheet" href="../css/style.css" type="text/css" charset="utf-8" />
+
+  <link rel="stylesheet" href="../css/common.css" type="text/css" charset="utf-8" />
+
+<script type="text/javascript" charset="utf-8">
+  pathId = "puppet_classes::compliance_markup";
+  relpath = '../';
+</script>
+
+
+  <script type="text/javascript" charset="utf-8" src="../js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="../js/app.js"></script>
+
+
+  </head>
+  <body>
+    <div class="nav_wrap">
+      <iframe id="nav" src="../puppet_class_list.html?1"></iframe>
+      <div id="resizer"></div>
+    </div>
+
+    <div id="main" tabindex="-1">
+      <div id="header">
+        <div id="menu">
+  
+    <a href="../_index.html">Index (c)</a> &raquo;
+    <span class='title'><span class='object_link'>Puppet Classes</span></span>
+     &raquo; 
+    <span class="title">compliance_markup</span>
+  
+</div>
+
+        <div id="search">
+  
+    <a class="full_list_link" id="puppet_class_list_link"
+        href="../puppet_class_list.html">
+
+        <svg width="24" height="24">
+          <rect x="0" y="4" width="24" height="4" rx="1" ry="1"></rect>
+          <rect x="0" y="12" width="24" height="4" rx="1" ry="1"></rect>
+          <rect x="0" y="20" width="24" height="4" rx="1" ry="1"></rect>
+        </svg>
+    </a>
+  
+</div>
+        <div class="clear"></div>
+      </div>
+
+      <div id="content"><h1>Puppet Class: compliance_markup</h1>
+<div class="box_info">
+  
+  
+  <dl>
+    <dt>Defined in:</dt>
+    <dd>
+      manifests/init.pp
+    </dd>
+  </dl>
+</div>
+
+<h2>Overview</h2>
+<div class="docstring">
+  <div class="discussion">
+    
+<p>The compliance markup helper class</p>
+
+<p>This class should be included <em>after</em> all other classes in your site
+so that the mapper can properly analyze the standing catalog.</p>
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>compliance_map</span>
+      
+      
+        <span class='type'>(<tt>Hash</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The compliance Hash to which to map</p>
+<ul><li>
+<p>This defaults to <em>Data In Modules</em></p>
+</li></ul>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>validate_profiles</span>
+      
+      
+        <span class='type'>(<tt>Optional[Array[String[1]]]</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>undef</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>Compliance profiles that you wish to validate against</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>report_types</span>
+      
+      
+        <span class='type'>(<tt>Array[
+    Enum[
+      'full',
+      'non_compliant',
+      'compliant',
+      'unknown_resources',
+      'unknown_parameters',
+      'custom_entries'
+    ]
+  ]</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>[&#39;non_compliant&#39;, &#39;unknown_parameters&#39;, &#39;custom_entries&#39;]</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The types of entries that you want to report on</p>
+<ul><li>
+<p>full =&gt; Include all report types*</p>
+</li><li>
+<p>non_compliant =&gt; Report on non-compliant parameters*</p>
+</li><li>
+<p>unknown_parameters =&gt; Report on parameters that are mapped but not
+included in the catalog*</p>
+</li><li>
+<p>custom_entries =&gt; Report custom calls to compliance_map() from the
+codebase</p>
+</li><li>
+<p>compliant =&gt; Report on compliant parameters</p>
+</li><li>
+<p>unknown_resources =&gt; Report on classes that are mapped but not included
+in the catalog</p>
+</li><li>
+<p>This is ignored if <code>options</code> is specified</p>
+</li></ul>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>report_format</span>
+      
+      
+        <span class='type'>(<tt>Enum['json','yaml']</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>&#39;json&#39;</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The output format for the report</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>report_on_client</span>
+      
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>false</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>Save a copy of the report on the client as a <code>File</code> resource</p>
+<ul><li>
+<p>This will make the report show up in PuppetDB but may also expose  unwanted
+vulnerability information</p>
+</li></ul>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>report_on_server</span>
+      
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>true</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>Save a copy of the report on the puppet server</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>server_report_dir</span>
+      
+      
+        <span class='type'>(<tt>Optional[Stdlib::Absolutepath]</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>undef</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The path where the server should store reports</p>
+<ul><li>
+<p>If you change this, you must make sure that the puppet <em>server</em> can
+write  to the location.</p>
+</li><li>
+<p>By default, this is written to <code>Puppet[:vardir]</code> as the Puppet
+<em>server</em>  sees it: 
+<code>/opt/puppetlabs/server/data/puppetserver/simp/compliance_reports</code></p>
+</li></ul>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>custom_report_entries</span>
+      
+      
+        <span class='type'></span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>A hash that will be included in the compliance report under the heading
+<code>site_data</code></p>
+<ul><li>
+<p>This can be used for adding <em>anything</em> to the compliance report. The
+hash  is simply processed with <code>to_yaml</code></p>
+</li></ul>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>options</span>
+      
+      
+        <span class='type'>(<tt>Optional[Hash]</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>undef</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The options to pass directly to the <code>compliance_map</code> validation
+function</p>
+<ul><li>
+<p>If specified, various other options may be ignored</p>
+</li></ul>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>custom_report_data</span>
+      
+      
+        <span class='type'>(<tt>Optional[Hash]</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>undef</tt>)</em>
+      
+      
+    </li>
+  
+</ul>
+
+
+</div><div class="method_details_list">
+  <table class="source_code">
+    <tr>
+      <td>
+        <pre class="lines">
+
+
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103</pre>
+      </td>
+      <td>
+        <pre class="code"><span class="info file"># File 'manifests/init.pp', line 58</span>
+
+class compliance_markup (
+  # $compliance_map is in module data
+  Hash                           $compliance_map,
+  Optional[Array[String[1]]]     $validate_profiles     = undef,
+  Array[
+    Enum[
+      &#39;full&#39;,
+      &#39;non_compliant&#39;,
+      &#39;compliant&#39;,
+      &#39;unknown_resources&#39;,
+      &#39;unknown_parameters&#39;,
+      &#39;custom_entries&#39;
+    ]
+  ]                              $report_types       = [&#39;non_compliant&#39;, &#39;unknown_parameters&#39;, &#39;custom_entries&#39;],
+  Enum[&#39;json&#39;,&#39;yaml&#39;]            $report_format      = &#39;json&#39;,
+  Boolean                        $report_on_client   = false,
+  Boolean                        $report_on_server   = true,
+  Optional[Stdlib::Absolutepath] $server_report_dir  = undef,
+  Optional[Hash]                 $custom_report_data = undef,
+  Optional[Hash]                 $options            = undef
+) {
+  $available_profiles = delete($compliance_map.keys, &#39;version&#39;)
+
+  if $options {
+    if $compliance_map and !$options[&#39;default_map&#39;] {
+      $_full_options = $options + { &#39;default_map&#39; =&gt; $compliance_map }
+    }
+    else {
+      $_full_options = $options
+    }
+
+    $_options = $_full_options
+  }
+  else {
+    $_options = {
+      &#39;report_types&#39;      =&gt; $report_types,
+      &#39;format&#39;            =&gt; $report_format,
+      &#39;client_report&#39;     =&gt; $report_on_client,
+      &#39;server_report&#39;     =&gt; $report_on_server,
+      &#39;server_report_dir&#39; =&gt; $server_report_dir,
+      &#39;site_data&#39;         =&gt; $custom_report_data
+    }
+  }
+
+  compliance_markup::map { &#39;execute&#39;: options =&gt; $_options }
+}</pre>
+      </td>
+    </tr>
+  </table>
+</div>
+</div>
+
+      <div id="footer">
+  Generated on Tue Aug  1 15:41:50 2017 by
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  0.9.9 (ruby-2.1.9).
+</div>
+
+    </div>
+  </body>
+</html>

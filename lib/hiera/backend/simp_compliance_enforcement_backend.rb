@@ -1,9 +1,8 @@
-# vim: set expandtab ts=2 sw=2:
 class Hiera
   module Backend
     class Simp_compliance_enforcement_backend
       def initialize
-        # 
+        #
         # Load the shared compliance_mapper codebase
         #
         filename = File.dirname(File.dirname(File.dirname(__FILE__))) + "/puppetx/simp/compliance_mapper.rb"
@@ -34,9 +33,8 @@ class Hiera
           @cache = scope.catalog._compliance_cache
         end
 
-
         answer = :not_found
-        
+
         begin
           answer = enforcement(key) do |lookup, default|
             rscope = scope.real
@@ -48,14 +46,13 @@ class Hiera
           end
           throw :no_such_key
         end
-        
+
         if (answer == :not_found)
           throw :no_such_key
         end
-        
+
         return answer
       end
-
 
       #
       # These functions are helpers for enforcement(), that implement
@@ -78,3 +75,5 @@ class Hiera
     end
   end
 end
+
+# vim: set expandtab ts=2 sw=2:

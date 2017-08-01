@@ -1,3 +1,9 @@
+[![License](https://img.shields.io/:license-apache-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
+[![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/73/badge)](https://bestpractices.coreinfrastructure.org/projects/73)
+[![Puppet Forge](https://img.shields.io/puppetforge/v/simp/compliance_markup.svg)](https://forge.puppetlabs.com/simp/compliance_markup)
+[![Puppet Forge Downloads](https://img.shields.io/puppetforge/dt/simp/compliance_markup.svg)](https://forge.puppetlabs.com/simp/compliance_markup)
+[![Build Status](https://travis-ci.org/simp/pupmod-simp-compliance_markup.svg)](https://travis-ci.org/simp/pupmod-simp-compliance_markup)
+
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 Table of Contents
@@ -30,8 +36,6 @@ Table of Contents
 - [Packaging](#packaging)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
-[![License](http://img.shields.io/:license-apache-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0.html) [![Build Status](https://travis-ci.org/simp/pupmod-simp-compliance_markup.svg)](https://travis-ci.org/simp/pupmod-simp-compliance_markup)
 
 ## Overview
 
@@ -268,6 +272,10 @@ Old versions will be overwritten.
 NOTE: This is an experimental feature and subject to change without notice.
 
 ## Reference
+
+The full module reference can be found in the
+[module docs](https://simp.github.io/pupmod-simp-compliance_markup) and in the
+local `docs/` directory.
 
 ### Example 1 - Standard Usage
 

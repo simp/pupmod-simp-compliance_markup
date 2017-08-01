@@ -1,4 +1,3 @@
-# vim: set expandtab ts=2 sw=2:
 Puppet::Functions.create_function(:'compliance_markup::enforcement') do
   dispatch :hiera_enforcement do
     param "String", :key
@@ -14,8 +13,8 @@ Puppet::Functions.create_function(:'compliance_markup::enforcement') do
     retval = nil
     @context = context
     begin
-      retval = enforcement(key) do |key, default|
-         call_function('lookup', key, { "default_value" => default})
+      retval = enforcement(key) do |k, default|
+         call_function('lookup', k, { "default_value" => default})
       end
     rescue => e
       unless (e.class.to_s == "ArgumentError")
@@ -38,3 +37,5 @@ Puppet::Functions.create_function(:'compliance_markup::enforcement') do
     @context.cache_has_key(key)
   end
 end
+
+# vim: set expandtab ts=2 sw=2:

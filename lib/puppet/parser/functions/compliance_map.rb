@@ -1,4 +1,3 @@
-# vim: set expandtab ts=2 sw=2:
 module Puppet::Parser::Functions
     newfunction(:compliance_map, :doc => <<-'ENDHEREDOC') do |args|
       This function provides a mechanism for mapping compliance data to
@@ -174,7 +173,7 @@ module Puppet::Parser::Functions
         }
     ENDHEREDOC
 
-# 
+#
 # Dynamic per-environment code loader.
 #
     object = Object.new()
@@ -184,3 +183,5 @@ module Puppet::Parser::Functions
     object.compliance_map(args, self)
   end
 end
+
+# vim: set expandtab ts=2 sw=2:

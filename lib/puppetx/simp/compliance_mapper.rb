@@ -1,9 +1,7 @@
-# vim: set expandtab ts=2 sw=2:
-# 
 # This is the shared codebase for the compliance_markup hiera
 # backend. Each calling object (either the hiera backend class
 # or the puppet lookup function) uses instance_eval to add these
-# functions to the object. 
+# functions to the object.
 #
 # Then the object can call enforcement like so:
 # enforcement('key::name') do |key, default|
@@ -152,3 +150,4 @@ def cached_lookup(key, default, &block)
   retval
 end
 
+# vim: set expandtab ts=2 sw=2:

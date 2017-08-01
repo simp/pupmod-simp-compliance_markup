@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>
+  File: README
+  
+    &mdash; Documentation by YARD 0.9.9
+  
+</title>
+
+  <link rel="stylesheet" href="css/style.css" type="text/css" charset="utf-8" />
+
+  <link rel="stylesheet" href="css/common.css" type="text/css" charset="utf-8" />
+
+<script type="text/javascript" charset="utf-8">
+  pathId = "";
+  relpath = '';
+</script>
+
+
+  <script type="text/javascript" charset="utf-8" src="js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="js/app.js"></script>
+
+
+  </head>
+  <body>
+    <div class="nav_wrap">
+      <iframe id="nav" src="file_list.html?1"></iframe>
+      <div id="resizer"></div>
+    </div>
+
+    <div id="main" tabindex="-1">
+      <div id="header">
+        <div id="menu">
+  
+    <a href="_index.html">Index</a> &raquo; 
+    <span class="title">File: README</span>
+  
+</div>
+
+        <div id="search">
+  
+    <a class="full_list_link" id="puppet_class_list_link"
+        href="puppet_class_list.html">
+
+        <svg width="24" height="24">
+          <rect x="0" y="4" width="24" height="4" rx="1" ry="1"></rect>
+          <rect x="0" y="12" width="24" height="4" rx="1" ry="1"></rect>
+          <rect x="0" y="20" width="24" height="4" rx="1" ry="1"></rect>
+        </svg>
+    </a>
+  
+</div>
+        <div class="clear"></div>
+      </div>
+
+      <div id="content"><div id='filecontents'>
+<p><a href="http://www.apache.org/licenses/LICENSE-2.0.html"><img
+src="https://img.shields.io/:license-apache-blue.svg"></a> <a
+href="https://bestpractices.coreinfrastructure.org/projects/73"><img
+src="https://bestpractices.coreinfrastructure.org/projects/73/badge"></a>
+<a href="https://forge.puppetlabs.com/simp/compliance_markup"><img
+src="https://img.shields.io/puppetforge/v/simp/compliance_markup.svg"></a>
+<a href="https://forge.puppetlabs.com/simp/compliance_markup"><img
+src="https://img.shields.io/puppetforge/dt/simp/compliance_markup.svg"></a>
+<a href="https://travis-ci.org/simp/pupmod-simp-compliance_markup"><img
+src="https://travis-ci.org/simp/pupmod-simp-compliance_markup.svg"></a></p>
+<!-- START doctoc generated TOC please keep comment here to allow auto update --><!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+<p>Table of Contents</p>
+<ul><li>
+<p><a href="#overview">Overview</a></p>
+</li><li>
+<p><a href="#module-description">Module Description</a></p>
+</li><li>
+<p><a href="#upgrading">Upgrading</a></p>
+</li><li>
+<p><a href="#reporting">Reporting</a></p>
+</li><li>
+<p><a href="#what-compliance_markup-affects">What compliance_markup
+affects</a></p>
+</li><li>
+<p><a href="#usage">Usage</a></p>
+</li><li>
+<p><a href="#report-format">Report Format</a></p>
+</li><li>
+<p><a href="#options">Options</a></p>
+<ul><li>
+<p><a href="#report_types">report_types</a></p>
+</li><li>
+<p><a href="#site_data">site_data</a></p>
+</li><li>
+<p><a href="#client_report">client_report</a></p>
+</li><li>
+<p><a href="#server_report">server_report</a></p>
+</li><li>
+<p><a href="#server_report_dir">server_report_dir</a></p>
+</li><li>
+<p><a href="#server_report_dir-1">server_report_dir</a></p>
+</li><li>
+<p><a href="#catalog_to_compliance_map">catalog_to_compliance_map</a></p>
+</li></ul>
+</li><li>
+<p><a href="#reference">Reference</a></p>
+</li><li>
+<p><a href="#example-1---standard-usage">Example 1 - Standard Usage</a></p>
+</li><li>
+<p><a href="#example-2---custom-compliance-map">Example 2 - Custom Compliance
+Map</a></p>
+</li><li>
+<p><a href="#enforcement">Enforcement</a></p>
+</li><li>
+<p><a href="#v5-backend-configuration">v5 Backend Configuration</a></p>
+</li><li>
+<p><a href="#v3-backend-configurationa">v3 Backend Configurationa</a></p>
+</li><li>
+<p><a href="#configuring-profiles-to-enforce">Configuring profiles to
+enforce</a></p>
+</li><li>
+<p><a href="#limitations">Limitations</a></p>
+</li><li>
+<p><a href="#development">Development</a></p>
+</li><li>
+<p><a href="#acceptance-tests">Acceptance tests</a></p>
+</li><li>
+<p><a href="#packaging">Packaging</a></p>
+</li></ul>
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+<h2 id="label-Overview">Overview</h2>
+
+<p>This module adds a function <code>compliance_map()</code> to the Puppet
+language. The <code>compliance_map()</code> function provides the ability
+for users to compare their in-scope class parameters against a set of
+<em>compliant</em> parameters, either in Hiera or at the global scope.
+Users may also provide custom inline policy documentation and mapping
+documentation.</p>
+
+<p>The goal of this module is to make it easier for users to both detect, and
+report on, deviations from a given policy inside their Puppet codebase.</p>
+
+<h2 id="label-Module+Description">Module Description</h2>
+
+<p>This module provides the function <code>compliance_map()</code> and a
+<code>compliance_markup</code> class for including the functionality into
+your stack at the global level.</p>
+
+<p>A utility for converting your old <code>compliance_map()</code> Hiera data
+has also been included in the <code>utils</code> directory.</p>
+
+<h2 id="label-Upgrading">Upgrading</h2>
+
+<p>A utility script, <code>compliance_map_migrate</code> has been included in
+the <code>utils</code> directory of the module to upgrade your old
+compliance data to newer formats.</p>
+
+<p>At minimum, you must pass to the script a compliance profile to migrate,
+the version of the API it <em>was</em> compatible with, and the version you
+wish to migrate it to. For instance, to upgrade a compliance map from API
+0.0.1 to 1.0.0:</p>
+
+<p><code>ruby compliance_map_migrate -i
+/etc/puppetlabs/code/environments/simp/hieradata/compliance_profiles/nist_800_53_rev4.yaml
+-s 0.0.1 -d 1.0.0</code></p>
+
+<p>Please validate that the migrated YAML files work as expected prior to
+deploying them into production.</p>
+
+<h2 id="label-Reporting">Reporting</h2>
+
+<h3 id="label-What+compliance_markup+affects">What compliance_markup affects</h3>
+
+<p>By default, the <code>compliance_map()</code> function creates a set of
+reports, one per node, on your Puppet Server at
+<code>/opt/puppetlabs/server/data/puppetserver/simp/compliance_reports/&lt;fqdn&gt;</code>.</p>
+
+<p>You may optionally enable the creation of a <code>File</code> resource on
+each of your clients if you wish to have changes in this data automatically
+exported into <code>PuppetDB</code>.</p>
+
+<h2 id="label-Usage">Usage</h2>
+
+<p>The <code>compliance_map()</code> function provides a mechanism for mapping
+compliance data to settings in Puppet and should be globally activated by
+<code>including</code> the <code>compliance_markup</code> class.</p>
+
+<p>It is primarily designed for use in classes to validate that parameters are
+properly set but may also be used to perform a <em>full</em> compliance
+report against multiple profiles across your code base at compile time.</p>
+
+<p>When the <code>compliance_markup</code> class is included, the parameters
+in all in-scope classes and defined types will be evaluated against top
+level parameters, <code>lookup()</code> values, or Hiera data, in that
+order.</p>
+
+<p>The variable space against which the parameters will be evaluated must be
+structured as the following hash:</p>
+
+<pre class="code ruby"><code class="ruby">compliance_map :
+    &lt;compliance_profile&gt; :
+      &lt;class_name&gt;::&lt;parameter&gt; :
+        &#39;identifiers&#39; :
+        - &#39;ID String&#39;
+        &#39;value&#39;      : &#39;Compliant Value&#39;
+        &#39;notes&#39;      : &#39;Optional Notes&#39;</code></pre>
+
+<p>For instance, if you were mapping to <code>NIST 800-53</code> in the
+<code>SSH</code> class, you would use something like the following:</p>
+
+<pre class="code ruby"><code class="ruby">compliance_map :
+    nist_800_53 :
+      ssh::permit_root_login :
+        &#39;identifiers&#39; :
+        - &#39;CCE-1234&#39;
+        &#39;value&#39;      : false</code></pre>
+
+<p>Alternatively, you may use the <code>compliance_map()</code> function to
+add compliance data to your modules outside of a parameter mapping. This is
+useful if you have more advanced logic that is required to meet a
+particular internal requirement.</p>
+
+<p><strong>NOTE:</strong> The parser does not know what line number and,
+possibly, what file the function is being called from based on the version
+of the Puppet parser being used.</p>
+
+<p>The following parameters may be used to add your own compliance data:</p>
+
+<pre class="code ruby"><code class="ruby">:compliance_profile =&gt; &#39;A String, or Array, that denotes the compliance
+                        profile(s) to which you are mapping.&#39;
+:identifiers        =&gt; &#39;An array of identifiers for the policy to which you
+                        are mapping.&#39;
+:notes              =&gt; &#39;An *optional* String that allows for arbitrary notes to
+                        include in the compliance report&#39;
+</code></pre>
+
+<h3 id="label-Report+Format">Report Format</h3>
+
+<p>The compliance report is formatted as follows (YAML Representation):</p>
+
+<pre class="code ruby"><code class="ruby">---
+# The API version of the report
+version: &quot;1.0.1&quot;
+fqdn: &quot;my.system.fqdn&quot;
+hostname: &quot;my&quot;
+ipaddress: &quot;1.2.3.4&quot;
+puppetserver_info: &quot;my.puppet.server&quot;
+compliance_profiles:
+  profile_name:
+    summary:
+      compliant: 80
+      non_compliant: 20
+      percent_compliant: 80
+      documented_missing_resources: 2
+      documented_missing_parameters: 1
+
+    compliant:
+      &quot;Class[ClassName]&quot;:
+        parameters:
+          param1:
+            identifiers:
+              - ID 1
+              - ID 2
+            compliant_value: &#39;foo&#39;
+            system_value: &#39;foo&#39;
+
+    non_compliant:
+      &quot;Class[BadClass]&quot;:
+        parameters:
+          bad_param:
+            identifiers:
+              - ID 3
+              - ID 4
+            compliant_value: &#39;bar&#39;
+            system_value: &#39;baz&#39;
+
+    documented_missing_resources:
+      - missing_class_one
+      - missing_class_two
+
+    documented_missing_parameters:
+      - &quot;classname::param2&quot;
+
+    custom_entries
+      &quot;Class[CustomClass]&quot;:
+        location: &quot;file.pp:123&quot;
+        identifiers:
+          - My ID
+
+site_data:
+  completely: random user input</code></pre>
+
+<h3 id="label-Options">Options</h3>
+
+<p>The <code>compliance_markup</code> class may take a number of options which
+must be passed as a <code>Hash</code>.</p>
+
+<h4 id="label-report_types">report_types</h4>
+
+<p><em>Default</em>: <code>[ &#39;non_compliant&#39;,
+&#39;unknown_parameters&#39;, &#39;custom_entries&#39; ]</code></p>
+
+<p>A String, or Array that denotes which types of reports should be generated.</p>
+
+<p><em>Valid Types</em>:  * <em>full</em>: The full report, with all other
+types included.  * <em>non_compliant</em>: Items that differ from the
+reference will be reported.  * <em>compliant</em>: Compliant items will be
+reported.  * <em>unknown_resources</em>: Reference resources without a
+system value will be  reported.  * <em>unknown_parameters</em>: Reference
+parameters without a system value will be  reported.  *
+<em>custom_entries</em>: Any one-off custom calls to compliance_map will be
+reported.</p>
+
+<h4 id="label-site_data">site_data</h4>
+
+<p><em>Default</em>: None</p>
+
+<p>A valid <em>Hash</em> that will be converted <em>as passed</em> and emitted
+into your node compliance report.</p>
+
+<p>This can be used to add site-specific or other information to the report
+that may be useful for post-processing.</p>
+
+<h4 id="label-client_report">client_report</h4>
+
+<p><em>Default</em>: <code>false</code></p>
+
+<p>A Boolean which, if set, will place a copy of the report on the client
+itself. This will ensure that PuppetDB will have a copy of the report for
+later processing.</p>
+
+<h4 id="label-server_report">server_report</h4>
+
+<p><em>Default</em>: true</p>
+
+<p>A Boolean which, if set, will store a copy of the report on the Server.</p>
+
+<h4 id="label-server_report_dir">server_report_dir</h4>
+
+<p><em>Default</em>: <code>Puppet[:vardir]/simp/compliance_reports</code></p>
+
+<p>An Absolute Path that specifies the location on</p>
+
+<h4 id="label-server_report_dir">server_report_dir</h4>
+
+<p><em>Default</em>: <code>Puppet[:vardir]/simp/compliance_reports</code></p>
+
+<p>An Absolute Path that specifies the location on the <em>server</em> where
+the reports should be stored.</p>
+
+<p>A directory will be created for each FQDN that has a report.</p>
+
+<h4 id="label-catalog_to_compliance_map">catalog_to_compliance_map</h4>
+
+<p><em>Default</em>: false</p>
+
+<p>A Boolean which, if set, will dump a compatible compliance_map of
+<em>all</em> resources and defines that are in the current catalog.</p>
+
+<p>This will be written to <code>server_report_dir/&lt;client_fqdn&gt;</code>
+as <code>catalog_compliance_map</code>. Old versions will be overwritten.</p>
+
+<p>NOTE: This is an experimental feature and subject to change without notice.</p>
+
+<h2 id="label-Reference">Reference</h2>
+
+<h3 id="label-Example+1+-+Standard+Usage">Example 1 - Standard Usage</h3>
+
+<p><strong>Manifest</strong></p>
+
+<pre class="code ruby"><code class="ruby">class foo (
+  $var_one =&gt; &#39;one&#39;,
+  $var_two =&gt; &#39;two&#39;
+) {
+  notify { &#39;Sample Class&#39;: }
+}
+
+$compliance_profile = &#39;my_policy&#39;
+
+include &#39;::foo&#39;
+include &#39;::compliance_markup&#39;
+</code></pre>
+
+<p><strong>Hiera.yaml</strong></p>
+
+<pre class="code ruby"><code class="ruby">:backends:
+  - &#39;yaml&#39;
+:yaml:
+  :datadir: &#39;/path/to/your/hieradata&#39;
+:hierarchy:
+  &quot;global&quot;</code></pre>
+
+<p><strong>Hieradata</strong></p>
+
+<pre class="code ruby"><code class="ruby">---
+# In file /path/to/your/hieradata/global.yaml
+compliance_map :
+  my_policy :
+    foo::var_one :
+      &#39;identifiers&#39; :
+      - &#39;POLICY_SECTION_ID&#39;
+      &#39;value&#39; : &#39;one&#39;</code></pre>
+
+<h3 id="label-Example+2+-+Custom+Compliance+Map">Example 2 - Custom Compliance Map</h3>
+
+<pre class="code ruby"><code class="ruby">if $::circumstance {
+  compliance_map(&#39;my_policy&#39;,&#39;POLICY_SECTION_ID&#39;,&#39;Note about this section&#39;)
+  ...code that applies POLICY_SECTION_ID...
+}
+</code></pre>
+
+<h2 id="label-Enforcement">Enforcement</h2>
+
+<p>This module also contains an <strong>experimental</strong> Hiera backend
+that can be used to enforce compliance profile settings on any module when
+it is included. It uses the compliance_markup::enforcement array to
+determine the profiles to use, and which profiles take priority.</p>
+
+<p>Both a legacy v3 backend, and a modern Hiera v5 backend have been provided.
+It is highly recommended to use the Hiera v5 backend if the puppet agent on
+your puppetservers are 4.9 or higher.</p>
+
+<h3 id="label-v5+Backend+Configuration">v5 Backend Configuration</h3>
+
+<pre class="code ruby"><code class="ruby">---
+version: 5
+hierarchy:
+  - name: Compliance
+    lookup_key: compliance_markup::enforcement
+  - name: Common
+    path: default.yaml
+defaults:
+  data_hash: yaml_data
+  datadir: &quot;/etc/puppetlabs/code/environments/production/hieradata&quot;
+</code></pre>
+
+<h3 id="label-v3+Backend+Configurationa">v3 Backend Configurationa</h3>
+
+<pre class="code ruby"><code class="ruby">---
+:backends:
+  - yaml
+  - simp_compliance_enforcement
+:yaml:
+  :datadir: &quot;/etc/puppetlabs/code/environments/%{environment}/hieradata&quot;
+:simp_compliance_enforcement:
+  :datadir: &quot;/etc/puppetlabs/code/environments/%{environment}/hieradata&quot;
+:hierarchy:
+  - default
+:logger: console
+</code></pre>
+
+<h3 id="label-Configuring+profiles+to+enforce">Configuring profiles to enforce</h3>
+
+<p>To enforce disa stig + nist, with disa stig compliance settings taking
+priority, add the following to your hiera data files. This will work like
+any hiera setting, so you can set enforcement based on any factor,
+including host, hostgroup, kernel or specfic os version.</p>
+
+<pre class="code ruby"><code class="ruby">---
+compliance_markup::enforcement: [ &#39;disa_stig&#39;, &#39;nist_800_53_rev4&#39; ]</code></pre>
+
+<h2 id="label-Limitations">Limitations</h2>
+
+<p>Depending on the version of Puppet being used, the
+<code>compliance_map()</code> function may not be able to precisely
+determine where the function has been called and a best guess may be
+provided.</p>
+
+<h2 id="label-Development">Development</h2>
+
+<p>Patches are welcome to the code on the <a
+href="https://github.com/simp/pupmod-simp-compliance_markup">SIMP Project
+Github</a> account. If you provide code, you are guaranteeing that you own
+the rights for the code or you have been given rights to contribute the
+code.</p>
+
+<h3 id="label-Acceptance+tests">Acceptance tests</h3>
+
+<p>To run the tests for this module perform the following actions after
+installing <code>bundler</code>:</p>
+
+<pre class="code ruby"><code class="ruby"><span class='id identifier rubyid_bundle'>bundle</span> <span class='id identifier rubyid_update'>update</span>
+<span class='id identifier rubyid_bundle'>bundle</span> <span class='id identifier rubyid_exec'>exec</span> <span class='id identifier rubyid_rake'>rake</span> <span class='id identifier rubyid_spec'>spec</span>
+<span class='id identifier rubyid_bundle'>bundle</span> <span class='id identifier rubyid_exec'>exec</span> <span class='id identifier rubyid_rake'>rake</span> <span class='label'>beaker:</span><span class='id identifier rubyid_suites'>suites</span></code></pre>
+
+<h2 id="label-Packaging">Packaging</h2>
+
+<p>Running <code>rake pkg:rpm[...]</code> will develop an RPM that is designed
+to be integrated into a <a href="https://github.com/simp">SIMP</a>
+environment. This module is not restricted to, or dependent on, the SIMP
+environment in any way.</p>
+</div></div>
+
+      <div id="footer">
+  Generated on Tue Aug  1 15:41:49 2017 by
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  0.9.9 (ruby-2.1.9).
+</div>
+
+    </div>
+  </body>
+</html>
