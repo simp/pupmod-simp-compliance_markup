@@ -11,7 +11,7 @@ compliance_markup::compliance_map:
         - CCI-001812
         - CCI-001813
         - CCI-001814
-      value: ''
+      value: ~
     aide::enable:
       identifiers:
         - RHEL-07-020940
@@ -29,7 +29,7 @@ compliance_markup::compliance_map:
         - SRG-OS-000341-GPOS-00132
         - CCI-001849
       notes: This value can be different than weekly but should be justified.
-      value: weekly
+      value: 'weekly'
     auditd::at_boot:
       identifiers:
         - RHEL-07-030310
@@ -159,7 +159,7 @@ compliance_markup::compliance_map:
         - RHEL-07-030340
         - SRG-OS-000342-GPOS-00133
         - CCI-001851
-      value: SUSPEND
+      value: 'SUSPEND'
     auditd::enable:
       identifiers:
         - RHEL-07-030010
@@ -183,7 +183,7 @@ compliance_markup::compliance_map:
         - SRG-OS-000042-GPOS-00020
         - CCI-002234
         - CCI-000135
-      value: basic
+      value: 'basic'
     auditd::service_name:
       identifiers:
         - RHEL-07-030010
@@ -199,7 +199,7 @@ compliance_markup::compliance_map:
         - SRG-OS-000343-GPOS-00134
         - CCI-001855
       notes: This value can be changed if there is a more ideal notification method for your systems
-      value: SYSLOG
+      value: 'SYSLOG'
     auditd::syslog:
       identifiers:
         - RHEL-07-030770
@@ -220,7 +220,7 @@ compliance_markup::compliance_map:
         - SRG-OS-000104-GPOS-00051
         - CCI-000764
         - CCI-000770
-      value: LOGIN
+      value: 'LOGIN'
     autofs::ldap_auth::tlsrequired:
       identifiers:
         - RHEL-07-040180
@@ -239,7 +239,7 @@ compliance_markup::compliance_map:
         - SRG-OS-000104-GPOS-00051
         - CCI-000764
         - CCI-000770
-      value: /etc/autofs_ldap_auth.conf
+      value: '/etc/autofs_ldap_auth.conf'
     clamav::enable:
       identifiers:
         - RHEL-07-030810
@@ -313,7 +313,7 @@ compliance_markup::compliance_map:
         - SRG-OS-000024-GPOS-00007
         - CCI-000048
       notes: The actual content should be manually validated to determine if it matches the need of the implementation
-      value: default
+      value: 'default'
     nsswitch::automount:
       identifiers:
         - RHEL-07-010000
@@ -403,7 +403,7 @@ compliance_markup::compliance_map:
         - RHEL-07-010130
         - SRG-OS-000072-GPOS-00040
         - CCI-000195
-      value: '8'
+      value: 8
     pam::cracklib_lcredit:
       identifiers:
         - RHEL-07-010100
@@ -415,29 +415,29 @@ compliance_markup::compliance_map:
         - RHEL-07-010160
         - SRG-OS-000072-GPOS-00040
         - CCI-000195
-      value: '2'
+      value: 2
     pam::cracklib_maxrepeat:
       identifiers:
         - RHEL-07-010150
         - SRG-OS-000072-GPOS-00040
         - CCI-000195
-      value: '2'
+      value: 2
     pam::cracklib_maxsequence:
       identifiers:
         - CCI-000195
-      value: '4'
+      value: 4
     pam::cracklib_minclass:
       identifiers:
         - RHEL-07-010140
         - SRG-OS-000072-GPOS-00040
         - CCI-000195
-      value: '4'
+      value: 4
     pam::cracklib_minlen:
       identifiers:
         - RHEL-07-010250
         - SRG-OS-000078-GPOS-00046
         - CCI-000205
-      value: '15'
+      value: 15
     pam::cracklib_ocredit:
       identifiers:
         - RHEL-07-010120
@@ -449,7 +449,7 @@ compliance_markup::compliance_map:
         - RHEL-07-010410
         - SRG-OS-000480-GPOS-00225
         - CCI-000366
-      value: '3'
+      value: 3
     pam::cracklib_ucredit:
       identifiers:
         - RHEL-07-010090
@@ -461,13 +461,13 @@ compliance_markup::compliance_map:
         - RHEL-07-010370
         - SRG-OS-000329-GPOS-00128
         - CCI-002238
-      value: '3'
+      value: 3
     pam::fail_interval:
       identifiers:
         - RHEL-07-010370
         - SRG-OS-000329-GPOS-00128
         - CCI-002238
-      value: '900'
+      value: 900
     pam::homedir_umask:
       identifiers:
         - RHEL-07-020230
@@ -479,19 +479,19 @@ compliance_markup::compliance_map:
         - RHEL-07-010240
         - SRG-OS-000077-GPOS-00045
         - CCI-000200
-      value: '24'
+      value: 24
     pam::uid:
       identifiers:
         - RHEL-07-010000
         - SRG-OS-000001-GPOS-00001
         - CCI-000015
-      value: '500'
+      value: 500
     pam::unlock_time:
       identifiers:
         - RHEL-07-010370
         - SRG-OS-000329-GPOS-00128
         - CCI-002238
-      value: '900'
+      value: 900
     pam::use_netgroups:
       identifiers:
         - RHEL-07-010000
@@ -531,7 +531,7 @@ compliance_markup::compliance_map:
         - SRG-OS-000038-GPOS-00016
         - CCI-000131
         - CCI-000126
-      value: /var/log/puppetlabs/puppet
+      value: '/var/log/puppetlabs/puppet'
     pupmod::master::firewall:
       identifiers:
         - RHEL-07-040920
@@ -559,7 +559,7 @@ compliance_markup::compliance_map:
     pupmod::vardir:
       identifiers:
         - CM-6
-      value: /opt/puppetlabs/puppet/cache
+      value: '/opt/puppetlabs/puppet/cache'
     rsyslog::config::enable_default_rules:
       identifiers:
         - RHEL-07-030320
@@ -685,7 +685,7 @@ compliance_markup::compliance_map:
         - SRG-OS-000027-GPOS-00008
         - CCI-000054
       notes: Setting this number higher than 10 should be justified
-      value: '10'
+      value: 10
     simp::server::allow_simp_user:
       identifiers:
         - RHEL-07-020290
@@ -754,49 +754,49 @@ compliance_markup::compliance_map:
         - RHEL-07-020180
         - SRG-OS-000433-GPOS-00192
         - CCI-002824
-      value: '1'
+      value: 1
     simp::sysctl::kernel__randomize_va_space:
       identifiers:
         - RHEL-07-020190
         - SRG-OS-000433-GPOS-00193
         - CCI-002824
-      value: '2'
+      value: 2
     simp::sysctl::net__ipv4__conf__all__accept_redirects:
       identifiers:
         - RHEL-07-040410
         - SRG-OS-000480-GPOS-00227
         - CCI-000366
-      value: '0'
+      value: 0
     simp::sysctl::net__ipv4__conf__all__accept_source_route:
       identifiers:
         - RHEL-07-040350
         - SRG-OS-000480-GPOS-00227
         - CCI-000366
-      value: '0'
+      value: 0
     simp::sysctl::net__ipv4__conf__all__send_redirects:
       identifiers:
         - RHEL-07-040420
         - SRG-OS-000480-GPOS-00227
         - CCI-000366
-      value: '0'
+      value: 0
     simp::sysctl::net__ipv4__conf__default__accept_redirects:
       identifiers:
         - RHEL-07-040410
         - SRG-OS-000480-GPOS-00227
         - CCI-000366
-      value: '0'
+      value: 0
     simp::sysctl::net__ipv4__icmp_echo_ignore_broadcasts:
       identifiers:
         - RHEL-07-040870
         - SRG-OS-000480-GPOS-00227
         - CCI-000366
-      value: '1'
+      value: 1
     simp::sysctl::net__ipv4__tcp_syncookies:
       identifiers:
         - RHEL-07-040430
         - SRG-OS-000480-GPOS-00227
         - CCI-000366
-      value: '1'
+      value: 1
     simp::yum::enable_auto_updates:
       identifiers:
         - RHEL-07-021810
@@ -829,7 +829,7 @@ compliance_markup::compliance_map:
         - SRG-OS-000038-GPOS-00016
         - CCI-000131
         - CCI-000126
-      value: /var/log/httpd
+      value: '/var/log/httpd'
     simp_apache::conf::user:
       identifiers:
         - RHEL-07-020400
@@ -847,7 +847,7 @@ compliance_markup::compliance_map:
         - RHEL-07-040030
         - SRG-OS-000066-GPOS-00034
         - CCI-000185
-      value: /etc/pki/simp_apps/simp_apache/x509/cacerts
+      value: '/etc/pki/simp_apps/simp_apache/x509/cacerts'
     simp_apache::ssl::firewall:
       identifiers:
         - RHEL-07-040920
@@ -894,13 +894,13 @@ compliance_markup::compliance_map:
         - RHEL-07-040030
         - SRG-OS-000066-GPOS-00034
         - CCI-000185
-      value: '10'
+      value: 10
     simp_openldap::client::app_pki_ca_dir:
       identifiers:
         - RHEL-07-040240
         - SRG-OS-000403-GPOS-00182
         - CCI-002470
-      value: /etc/pki/simp_apps/openldap/x509/cacerts
+      value: '/etc/pki/simp_apps/openldap/x509/cacerts'
     simp_openldap::client::tls_reqcert:
       identifiers:
         - RHEL-07-040240
@@ -924,19 +924,19 @@ compliance_markup::compliance_map:
         - RHEL-07-030310
         - SRG-OS-000327-GPOS-00127
         - CCI-002234
-      value: /var/log/slapd.audit
+      value: '/var/log/slapd.audit'
     simp_openldap::server::conf::auditlog_preserve:
       identifiers:
         - RHEL-07-030320
         - SRG-OS-000341-GPOS-00132
         - CCI-001849
-      value: '7'
+      value: 7
     simp_openldap::server::conf::auditlog_rotate:
       identifiers:
         - RHEL-07-030320
         - SRG-OS-000341-GPOS-00132
         - CCI-001849
-      value: daily
+      value: 'daily'
     simp_openldap::server::conf::authz_policy:
       identifiers:
         - RHEL-07-010000
@@ -960,13 +960,13 @@ compliance_markup::compliance_map:
         - RHEL-07-010370
         - SRG-OS-000329-GPOS-00128
         - CCI-002238
-      value: '900'
+      value: 900
     simp_openldap::server::conf::default_ldif::ppolicy_pwd_in_history:
       identifiers:
         - RHEL-07-010240
         - SRG-OS-000077-GPOS-00045
         - CCI-000200
-      value: '24'
+      value: 24
     simp_openldap::server::conf::default_ldif::ppolicy_pwd_lockout:
       identifiers:
         - RHEL-07-010370
@@ -978,25 +978,25 @@ compliance_markup::compliance_map:
         - RHEL-07-010370
         - SRG-OS-000329-GPOS-00128
         - CCI-002238
-      value: '900'
+      value: 900
     simp_openldap::server::conf::default_ldif::ppolicy_pwd_max_age:
       identifiers:
         - RHEL-07-010220
         - SRG-OS-000076-GPOS-00044
         - CCI-000199
-      value: '15552000'
+      value: 15552000
     simp_openldap::server::conf::default_ldif::ppolicy_pwd_max_failure:
       identifiers:
         - RHEL-07-010370
         - SRG-OS-000329-GPOS-00128
         - CCI-002238
-      value: '3'
+      value: 3
     simp_openldap::server::conf::default_ldif::ppolicy_pwd_min_length:
       identifiers:
         - RHEL-07-010250
         - SRG-OS-000078-GPOS-00046
         - CCI-000205
-      value: '15'
+      value: 15
     simp_openldap::server::conf::default_ldif::ppolicy_pwd_must_change:
       identifiers:
         - RHEL-07-010390
@@ -1036,7 +1036,7 @@ compliance_markup::compliance_map:
         - SRG-OS-000033-GPOS-00014
         - CCI-000068
         - CCI-002450
-      value: SSHA
+      value: 'SSHA'
     simp_openldap::server::conf::security:
       identifiers:
         - RHEL-07-021280
@@ -1121,14 +1121,14 @@ compliance_markup::compliance_map:
         - SRG-OS-000341-GPOS-00132
         - CCI-001849
       notes: This value can vary according to storage capacity of a log server
-      value: weekly
+      value: 'weekly'
     simp_rsyslog::server::rotate_preserve:
       identifiers:
         - RHEL-07-030320
         - SRG-OS-000341-GPOS-00132
         - CCI-001849
       notes: This value can vary according to storage capacity of a log server
-      value: '12'
+      value: 12
     ssh::client::add_default_entry:
       identifiers:
         - RHEL-07-040260
@@ -1177,14 +1177,14 @@ compliance_markup::compliance_map:
         - RHEL-07-040600
         - SRG-OS-000033-GPOS-00014
         - CCI-000068
-      value: /etc/ssh/local_keys/%u
+      value: '/etc/ssh/local_keys/%u'
     ssh::server::conf::banner:
       identifiers:
         - RHEL-07-010030
         - SRG-OS-000023-GPOS-00006
         - SRG-OS-000024-GPOS-00007
         - CCI-000048
-      value: /etc/issue.net
+      value: '/etc/issue.net'
     ssh::server::conf::enable_fallback_ciphers:
       identifiers:
         - RHEL-07-040600
@@ -1236,7 +1236,7 @@ compliance_markup::compliance_map:
         - RHEL-07-030770
         - SRG-OS-000480-GPOS-00227
         - CCI-000366
-      value: AUTHPRIV
+      value: 'AUTHPRIV'
     ssh::server::conf::tcpwrappers:
       identifiers:
         - RHEL-07-040810
@@ -1261,7 +1261,7 @@ compliance_markup::compliance_map:
         - RHEL-07-040240
         - SRG-OS-000403-GPOS-00182
         - CCI-002470
-      value: /etc/pki/simp_apps/sssd/x509
+      value: '/etc/pki/simp_apps/sssd/x509'
     sssd::auditd:
       identifiers:
         - RHEL-07-030010
@@ -1302,25 +1302,25 @@ compliance_markup::compliance_map:
         - RHEL-07-010000
         - SRG-OS-000001-GPOS-00001
         - CCI-000015
-      value: '3'
+      value: 3
     sssd::service::pam::offline_failed_login_delay:
       identifiers:
         - RHEL-07-010000
         - SRG-OS-000001-GPOS-00001
         - CCI-000015
-      value: '5'
+      value: 5
     sssd::service::pam::pam_id_timeout:
       identifiers:
         - RHEL-07-010000
         - SRG-OS-000001-GPOS-00001
         - CCI-000015
-      value: '5'
+      value: 5
     sssd::service::pam::pam_pwd_expiration_warning:
       identifiers:
         - RHEL-07-010000
         - SRG-OS-000001-GPOS-00001
         - CCI-000015
-      value: '7'
+      value: 7
     sssd::service::ssh::ssh_hash_known_hosts:
       identifiers:
         - RHEL-07-021830
@@ -1345,7 +1345,7 @@ compliance_markup::compliance_map:
         - RHEL-07-040030
         - SRG-OS-000066-GPOS-00034
         - CCI-000185
-      value: /etc/pki/simp_apps/stunnel/x509
+      value: '/etc/pki/simp_apps/stunnel/x509'
     stunnel::connection::firewall:
       identifiers:
         - RHEL-07-040920
@@ -1386,7 +1386,7 @@ compliance_markup::compliance_map:
         - RHEL-07-010070
         - SRG-OS-000029-GPOS-00010
         - CCI-000057
-      value: '15'
+      value: 15
     useradd::etc_profile::umask:
       identifiers:
         - RHEL-07-020230
@@ -1420,13 +1420,13 @@ compliance_markup::compliance_map:
         - RHEL-07-010170
         - SRG-OS-000073-GPOS-00041
         - CCI-000196
-      value: ''
+      value: ~
     useradd::libuser_conf::defaults_hash_rounds_min:
       identifiers:
         - RHEL-07-010170
         - SRG-OS-000073-GPOS-00041
         - CCI-000196
-      value: ''
+      value: ~
     useradd::libuser_conf::defaults_modules:
       identifiers:
         - RHEL-07-010170
@@ -1454,13 +1454,13 @@ compliance_markup::compliance_map:
         - SRG-OS-000073-GPOS-00041
         - SRG-OS-000073-GPOS-00041
         - CCI-000196
-      value: SHA512
+      value: 'SHA512'
     useradd::login_defs::fail_delay:
       identifiers:
         - RHEL-07-010420
         - SRG-OS-000480-GPOS-00226
         - CCI-000366
-      value: '4'
+      value: 4
     useradd::login_defs::faillog_enab:
       identifiers:
         - RHEL-07-030680
@@ -1472,20 +1472,20 @@ compliance_markup::compliance_map:
         - RHEL-07-020410
         - SRG-OS-000480-GPOS-00227
         - CCI-000366
-      value: '500000'
+      value: 500000
     useradd::login_defs::gid_min:
       identifiers:
         - RHEL-07-020410
         - SRG-OS-000480-GPOS-00227
         - CCI-000366
-      value: '500'
+      value: 500
     useradd::login_defs::issue_file:
       identifiers:
         - RHEL-07-010030
         - SRG-OS-000023-GPOS-00006
         - SRG-OS-000024-GPOS-00007
         - CCI-000048
-      value: /etc/issue
+      value: '/etc/issue'
     useradd::login_defs::lastlog_enab:
       identifiers:
         - RHEL-07-030490
@@ -1518,14 +1518,14 @@ compliance_markup::compliance_map:
         - RHEL-07-010410
         - SRG-OS-000480-GPOS-00225
         - CCI-000366
-      value: '3'
+      value: 3
     useradd::login_defs::login_timeout:
       identifiers:
         - RHEL-07-040160
         - SRG-OS-000163-GPOS-00072
         - CCI-001133
         - CCI-002361
-      value: '60'
+      value: 60
     useradd::login_defs::obscure_checks_enab:
       identifiers:
         - RHEL-07-010500
@@ -1538,25 +1538,25 @@ compliance_markup::compliance_map:
         - RHEL-07-010410
         - SRG-OS-000480-GPOS-00225
         - CCI-000366
-      value: '3'
+      value: 3
     useradd::login_defs::pass_max_days:
       identifiers:
         - RHEL-07-010220
         - SRG-OS-000076-GPOS-00044
         - CCI-000199
-      value: '180'
+      value: 180
     useradd::login_defs::pass_min_days:
       identifiers:
         - RHEL-07-010210
         - SRG-OS-000075-GPOS-00043
         - CCI-000198
-      value: '1'
+      value: 1
     useradd::login_defs::pass_min_len:
       identifiers:
         - RHEL-07-010250
         - SRG-OS-000078-GPOS-00046
         - CCI-000205
-      value: '15'
+      value: 15
     useradd::login_defs::umask:
       identifiers:
         - RHEL-07-020230
@@ -1595,14 +1595,14 @@ compliance_markup::compliance_map:
         - RHEL-07-021770
         - SRG-OS-000080-GPOS-00048
         - CCI-000213
-      value: /sbin/sulogin
+      value: '/sbin/sulogin'
     vsftpd::config::banner_file:
       identifiers:
         - RHEL-07-010030
         - SRG-OS-000023-GPOS-00006
         - SRG-OS-000024-GPOS-00007
         - CCI-000048
-      value: /etc/issue.net
+      value: '/etc/issue.net'
     vsftpd::config::force_local_data_ssl:
       identifiers:
         - RHEL-07-040030
@@ -1685,7 +1685,7 @@ compliance_markup::compliance_map:
         - SRG-OS-000023-GPOS-00006
         - SRG-OS-000024-GPOS-00007
         - CCI-000048
-      value: /etc/issue.net
+      value: '/etc/issue.net'
     xinetd::log_type:
       identifiers:
         - RHEL-07-030310
@@ -1694,7 +1694,7 @@ compliance_markup::compliance_map:
         - SRG-OS-000471-GPOS-00215
         - CCI-002234
         - CCI-000172
-      value: SYSLOG authpriv
+      value: 'SYSLOG authpriv'
     simp_options::auditd:
       identifiers:
         - RHEL-07-030310

@@ -16,7 +16,7 @@ compliance_markup::compliance_map:
         - SI-7(2)
         - SI-7(3)
         - SI-7(8)
-      value: ''
+      value: ~
     aide::enable:
       identifiers:
         - SI-7
@@ -37,14 +37,14 @@ compliance_markup::compliance_map:
         - AU-5(b)
         - AU-11
       notes: This value can be different than 4 but should be justified.
-      value: '4'
+      value: 4
     aide::logrotate::rotate_period:
       identifiers:
         - AU-4
         - AU-5(b)
         - AU-11
       notes: This value can be different than weekly but should be justified.
-      value: weekly
+      value: 'weekly'
     aide::syslog:
       identifiers:
         - AU-4
@@ -54,13 +54,13 @@ compliance_markup::compliance_map:
         - AU-4
         - AU-5(b)
         - AU-11
-      value: '50'
+      value: 50
     auditd::admin_space_left_action:
       identifiers:
         - AU-4
         - AU-5(b)
         - AU-11
-      value: SUSPEND
+      value: 'SUSPEND'
     auditd::at_boot:
       identifiers:
         - AU-14(1)
@@ -207,13 +207,13 @@ compliance_markup::compliance_map:
         - AU-4
         - AU-5(b)
         - AU-11
-      value: SUSPEND
+      value: 'SUSPEND'
     auditd::disk_full_action:
       identifiers:
         - AU-4
         - AU-5(b)
         - AU-11
-      value: SUSPEND
+      value: 'SUSPEND'
     auditd::enable:
       identifiers:
         - AU-8(b)
@@ -226,19 +226,19 @@ compliance_markup::compliance_map:
       identifiers:
         - AU-5(b)
       notes: This is set to '1' in SIMP by default since '2' was proven to be prone to random kernel panics in production.
-      value: '2'
+      value: 2
     auditd::max_log_file:
       identifiers:
         - AU-4
         - AU-11
       notes: This value can be different than 24 but should be justified.
-      value: '24'
+      value: 24
     auditd::num_logs:
       identifiers:
         - AU-4
         - AU-11
       notes: This value can be different than 5 but should be justified.
-      value: '5'
+      value: 5
     auditd::package_name:
       identifiers:
         - AU-3
@@ -258,7 +258,7 @@ compliance_markup::compliance_map:
         - AU-2(4)
         - AU-12(a)
         - AU-12(c)
-      value: basic
+      value: 'basic'
     auditd::service_name:
       identifiers:
         - AU-8(b)
@@ -273,7 +273,7 @@ compliance_markup::compliance_map:
         - AU-5(a)
         - AU-11
       notes: This value can be changed if there is a more ideal notification method for your systems
-      value: SYSLOG
+      value: 'SYSLOG'
     auditd::syslog:
       identifiers:
         - AU-3(2)
@@ -288,7 +288,7 @@ compliance_markup::compliance_map:
     autofs::ldap_auth::authtype:
       identifiers:
         - IA-2
-      value: LOGIN
+      value: 'LOGIN'
     autofs::ldap_auth::tlsrequired:
       identifiers:
         - SC-8
@@ -306,7 +306,7 @@ compliance_markup::compliance_map:
     autofs::ldap_auth_conf_file:
       identifiers:
         - IA-1
-      value: /etc/autofs_ldap_auth.conf
+      value: '/etc/autofs_ldap_auth.conf'
     chkrootkit::syslog:
       identifiers:
         - SI-3(a)
@@ -325,7 +325,7 @@ compliance_markup::compliance_map:
       identifiers:
         - SI-3(a)
       notes: 'If ClamAV is not used, alternate malicious code detection software should be implemented'
-      value: clamav
+      value: 'clamav'
     clamav::schedule_scan:
       identifiers:
         - SI-3(c)
@@ -370,7 +370,7 @@ compliance_markup::compliance_map:
       identifiers:
         - AC-8
       notes: This value is expected to change according to site requirements
-      value: default
+      value: 'default'
     logrotate::manage_wtmp:
       identifiers:
         - AU-4
@@ -380,11 +380,11 @@ compliance_markup::compliance_map:
     named::bind_dns_rsync:
       identifiers:
         - AC-6
-      value: default
+      value: 'default'
     named::chroot_path:
       identifiers:
         - AC-6
-      value: /var/named/chroot
+      value: '/var/named/chroot'
     named::service::chroot:
       identifiers:
         - AC-6
@@ -457,7 +457,7 @@ compliance_markup::compliance_map:
     pam::cracklib_difok:
       identifiers:
         - IA-5(1)(a)
-      value: '4'
+      value: 4
     pam::cracklib_enforce_for_root:
       identifiers:
         - IA-5
@@ -473,23 +473,23 @@ compliance_markup::compliance_map:
     pam::cracklib_maxclassrepeat:
       identifiers:
         - IA-5(1)(a)
-      value: '0'
+      value: 0
     pam::cracklib_maxrepeat:
       identifiers:
         - IA-5(1)(a)
-      value: '2'
+      value: 2
     pam::cracklib_maxsequence:
       identifiers:
         - IA-5(1)(a)
-      value: '4'
+      value: 4
     pam::cracklib_minclass:
       identifiers:
         - IA-5(1)(a)
-      value: '3'
+      value: 3
     pam::cracklib_minlen:
       identifiers:
         - IA-5(1)(a)
-      value: '15'
+      value: 15
     pam::cracklib_ocredit:
       identifiers:
         - IA-5(1)(a)
@@ -501,7 +501,7 @@ compliance_markup::compliance_map:
     pam::cracklib_retry:
       identifiers:
         - AC-7(a)
-      value: '3'
+      value: 3
     pam::cracklib_ucredit:
       identifiers:
         - IA-5(1)(a)
@@ -509,7 +509,7 @@ compliance_markup::compliance_map:
     pam::deny:
       identifiers:
         - IA-1
-      value: '5'
+      value: 5
     pam::deny_if_unknown:
       identifiers:
         - IA-1
@@ -521,7 +521,7 @@ compliance_markup::compliance_map:
     pam::fail_interval:
       identifiers:
         - AC-7(b)
-      value: '900'
+      value: 900
     pam::homedir_umask:
       identifiers:
         - AC-2
@@ -535,23 +535,23 @@ compliance_markup::compliance_map:
     pam::remember:
       identifiers:
         - IA-5(1)(e)
-      value: '24'
+      value: 24
     pam::root_unlock_time:
       identifiers:
         - AC-7(b)
-      value: '60'
+      value: 60
     pam::rounds:
       identifiers:
         - IA-5(c)
-      value: '10000'
+      value: 10000
     pam::uid:
       identifiers:
         - IA-1
-      value: '500'
+      value: 500
     pam::unlock_time:
       identifiers:
         - AC-7(b)
-      value: '900'
+      value: 900
     pam::use_netgroups:
       identifiers:
         - IA-1
@@ -563,7 +563,7 @@ compliance_markup::compliance_map:
     pam::wheel::wheel_group:
       identifiers:
         - IA-1
-      value: wheel
+      value: 'wheel'
     pki::auditd:
       identifiers:
         - AU-3(2)
@@ -618,7 +618,7 @@ compliance_markup::compliance_map:
       identifiers:
         - CM-3(3)
       notes: Changing this interval should not impact security unless the value is very low or very high.
-      value: '30'
+      value: 30
     pupmod::agent::cron::month:
       identifiers:
         - CM-3(3)
@@ -631,7 +631,7 @@ compliance_markup::compliance_map:
       identifiers:
         - CM-3(3)
       notes: Changing this interval should not impact security unless the value is very low or very high.
-      value: '60'
+      value: 60
     pupmod::agent::cron::weekday:
       identifiers:
         - CM-3(3)
@@ -648,11 +648,11 @@ compliance_markup::compliance_map:
         - SC-8(1)
         - SC-8(2)
         - SC-23
-      value: '2'
+      value: 2
     pupmod::confdir:
       identifiers:
         - CM-6
-      value: /etc/puppetlabs/puppet
+      value: '/etc/puppetlabs/puppet'
     pupmod::daemonize:
       identifiers:
         - CM-6
@@ -666,11 +666,11 @@ compliance_markup::compliance_map:
     pupmod::environmentpath:
       identifiers:
         - CM-6
-      value: /etc/puppetlabs/code/environments
+      value: '/etc/puppetlabs/code/environments'
     pupmod::logdir:
       identifiers:
         - AU-3
-      value: /var/log/puppetlabs/puppet
+      value: '/var/log/puppetlabs/puppet'
     pupmod::master::bind_address:
       identifiers:
         - CM-7
@@ -686,7 +686,7 @@ compliance_markup::compliance_map:
     pupmod::master::environmentpath:
       identifiers:
         - CM-6
-      value: /etc/puppetlabs/code/environments
+      value: '/etc/puppetlabs/code/environments'
     pupmod::master::firewall:
       identifiers:
         - CM-7
@@ -702,7 +702,7 @@ compliance_markup::compliance_map:
         - AU-4
         - AU-5(b)
         - AU-11
-      value: '7'
+      value: 7
     pupmod::master::ssl_protocols:
       identifiers:
         - SC-8
@@ -737,12 +737,12 @@ compliance_markup::compliance_map:
     pupmod::vardir:
       identifiers:
         - CM-6
-      value: /opt/puppetlabs/puppet/cache
+      value: '/opt/puppetlabs/puppet/cache'
     resolv::host_conf::spoof:
       identifiers:
         - SC-20
       notes: This only helps with "Secure Name/Address Resolution" but does not alone meet that control
-      value: warn
+      value: 'warn'
     rsync::server::global::address:
       identifiers:
         - CM-7
@@ -765,7 +765,7 @@ compliance_markup::compliance_map:
     rsyslog::config::main_msg_queue_type:
       identifiers:
         - AU-5(b)
-      value: LinkedList
+      value: 'LinkedList'
     rsyslog::config::preserve_fqdn:
       identifiers:
         - AU-3
@@ -786,7 +786,7 @@ compliance_markup::compliance_map:
       identifiers:
         - CM-6
       notes: Changing this value will move the location of the default simp rules
-      value: /etc/rsyslog.simp.d
+      value: '/etc/rsyslog.simp.d'
     rsyslog::server::enable_firewall:
       identifiers:
         - AU-4(1)
@@ -894,7 +894,7 @@ compliance_markup::compliance_map:
       identifiers:
         - AC-3
         - AC-6
-      value: '2'
+      value: 2
     simp::mountpoints::tmp::dev_shm_opts:
       identifiers:
         - AC-3
@@ -957,7 +957,7 @@ compliance_markup::compliance_map:
       identifiers:
         - CM-7
       notes: A run level other than 3 should be justified
-      value: '3'
+      value: 3
     simp::server::allow_simp_user:
       identifiers:
         - IA-1(a)(1)
@@ -1011,121 +1011,121 @@ compliance_markup::compliance_map:
       identifiers:
         - CP-12
         - SI-11
-      value: '0'
+      value: 0
     simp::sysctl::kernel__dmesg_restrict:
       identifiers:
         - AC-6
-      value: '1'
+      value: 1
     simp::sysctl::kernel__exec_shield:
       identifiers:
         - AC-6
-      value: '1'
+      value: 1
     simp::sysctl::kernel__randomize_va_space:
       identifiers:
         - SC-30(2)
-      value: '2'
+      value: 2
     simp::sysctl::net__ipv4__conf__all__accept_redirects:
       identifiers:
         - AC-4
         - CM-7
         - SC-5
-      value: '0'
+      value: 0
     simp::sysctl::net__ipv4__conf__all__accept_source_route:
       identifiers:
         - AC-4
         - CM-7
         - SC-5
-      value: '0'
+      value: 0
     simp::sysctl::net__ipv4__conf__all__log_martians:
       identifiers:
         - AC-3(10)
         - AU-2
         - SC-5
-      value: '1'
+      value: 1
     simp::sysctl::net__ipv4__conf__all__rp_filter:
       identifiers:
         - AC-4
         - CM-7
         - SC-5
-      value: '1'
+      value: 1
     simp::sysctl::net__ipv4__conf__all__secure_redirects:
       identifiers:
         - AC-4
         - CM-7
         - SC-5
-      value: '0'
+      value: 0
     simp::sysctl::net__ipv4__conf__all__send_redirects:
       identifiers:
         - AC-4
         - CM-7
         - SC-5
-      value: '0'
+      value: 0
     simp::sysctl::net__ipv4__conf__default__accept_redirects:
       identifiers:
         - AC-4
         - CM-7
         - SC-5
-      value: '0'
+      value: 0
     simp::sysctl::net__ipv4__icmp_echo_ignore_broadcasts:
       identifiers:
         - AC-4
         - CM-7
         - SC-5
-      value: '1'
+      value: 1
     simp::sysctl::net__ipv4__icmp_ignore_bogus_error_responses:
       identifiers:
         - AC-4
         - CM-7
         - SC-5
-      value: '1'
+      value: 1
     simp::sysctl::net__ipv4__tcp_syncookies:
       identifiers:
         - AC-4
         - CM-7
         - SC-5
-      value: '1'
+      value: 1
     simp::sysctl::net__ipv4__tcp_challenge_ack_limit:
       identifiers:
         - AC-4
         - CM-7
         - SC-5
-      value: '2147483647'
+      value: 2147483647
     simp::sysctl::net__ipv6__conf__default__accept_ra:
       identifiers:
         - CM-7
-      value: '0'
+      value: 0
     simp::sysctl::net__ipv6__conf__default__accept_ra_defrtr:
       identifiers:
         - CM-7
-      value: '0'
+      value: 0
     simp::sysctl::net__ipv6__conf__default__accept_ra_pinfo:
       identifiers:
         - CM-7
-      value: '0'
+      value: 0
     simp::sysctl::net__ipv6__conf__default__accept_ra_rtr_pref:
       identifiers:
         - CM-7
-      value: '0'
+      value: 0
     simp::sysctl::net__ipv6__conf__default__accept_redirects:
       identifiers:
         - CM-7
-      value: '0'
+      value: 0
     simp::sysctl::net__ipv6__conf__default__autoconf:
       identifiers:
         - CM-7
-      value: '0'
+      value: 0
     simp::sysctl::net__ipv6__conf__default__dad_transmits:
       identifiers:
         - CM-7
-      value: '0'
+      value: 0
     simp::sysctl::net__ipv6__conf__default__max_addresses:
       identifiers:
         - CM-7
-      value: '1'
+      value: 1
     simp::sysctl::net__ipv6__conf__default__router_solicitations:
       identifiers:
         - CM-7
-      value: '0'
+      value: 0
     simp::yum::enable_auto_updates:
       identifiers:
         - CM-3(3)
@@ -1157,7 +1157,7 @@ compliance_markup::compliance_map:
         - AU-3(2)
         - AU-4(1)
         - AU-9
-      value: /var/log/httpd
+      value: '/var/log/httpd'
     simp_apache::conf::user:
       identifiers:
         - AC-6
@@ -1175,7 +1175,7 @@ compliance_markup::compliance_map:
         - SC-8(1)
         - SC-8(2)
         - SC-23
-      value: /etc/pki/simp_apps/simp_apache/x509/cacerts
+      value: '/etc/pki/simp_apps/simp_apache/x509/cacerts'
     simp_apache::ssl::firewall:
       identifiers:
         - AC-4
@@ -1222,14 +1222,14 @@ compliance_markup::compliance_map:
         - SC-8(1)
         - SC-8(2)
         - SC-23
-      value: '10'
+      value: 10
     simp_openldap::client::app_pki_ca_dir:
       identifiers:
         - SC-8
         - SC-8(1)
         - SC-8(2)
         - SC-23
-      value: /etc/pki/simp_apps/openldap/x509/cacerts
+      value: '/etc/pki/simp_apps/openldap/x509/cacerts'
     simp_openldap::client::tls_reqcert:
       identifiers:
         - SC-8
@@ -1248,19 +1248,19 @@ compliance_markup::compliance_map:
     simp_openldap::server::conf::auditlog:
       identifiers:
         - AU-3
-      value: /var/log/slapd.audit
+      value: '/var/log/slapd.audit'
     simp_openldap::server::conf::auditlog_preserve:
       identifiers:
         - AU-4
         - AU-5(b)
         - AU-11
-      value: '7'
+      value: 7
     simp_openldap::server::conf::auditlog_rotate:
       identifiers:
         - AU-4
         - AU-5(b)
         - AU-11
-      value: daily
+      value: 'daily'
     simp_openldap::server::conf::authz_policy:
       identifiers:
         - IA-1
@@ -1272,11 +1272,11 @@ compliance_markup::compliance_map:
     simp_openldap::server::conf::conn_max_pending:
       identifiers:
         - SC-5
-      value: '100'
+      value: 100
     simp_openldap::server::conf::conn_max_pending_auth:
       identifiers:
         - SC-5
-      value: '1000'
+      value: 1000
     simp_openldap::server::conf::default_ldif::ppolicy_pwd_allow_user_change:
       identifiers:
         - AC-7
@@ -1284,15 +1284,15 @@ compliance_markup::compliance_map:
     simp_openldap::server::conf::default_ldif::ppolicy_pwd_check_quality:
       identifiers:
         - IA-5(1)(a)
-      value: '2'
+      value: 2
     simp_openldap::server::conf::default_ldif::ppolicy_pwd_expire_warning:
       identifiers:
         - IA-5(1)(d)
-      value: '1209600'
+      value: 1209600
     simp_openldap::server::conf::default_ldif::ppolicy_pwd_failure_count_interval:
       identifiers:
         - AC-7(b)
-      value: '900'
+      value: 900
     simp_openldap::server::conf::default_ldif::ppolicy_pwd_grace_authn_limit:
       identifiers:
         - IA-5(1)(d)
@@ -1300,7 +1300,7 @@ compliance_markup::compliance_map:
     simp_openldap::server::conf::default_ldif::ppolicy_pwd_in_history:
       identifiers:
         - IA-5(1)(e)
-      value: '24'
+      value: 24
     simp_openldap::server::conf::default_ldif::ppolicy_pwd_lockout:
       identifiers:
         - AC-7
@@ -1308,23 +1308,23 @@ compliance_markup::compliance_map:
     simp_openldap::server::conf::default_ldif::ppolicy_pwd_lockout_duration:
       identifiers:
         - AC-7(b)
-      value: '900'
+      value: 900
     simp_openldap::server::conf::default_ldif::ppolicy_pwd_max_age:
       identifiers:
         - IA-5(1)(d)
-      value: '15552000'
+      value: 15552000
     simp_openldap::server::conf::default_ldif::ppolicy_pwd_max_failure:
       identifiers:
         - AC-7(a)
-      value: '5'
+      value: 5
     simp_openldap::server::conf::default_ldif::ppolicy_pwd_min_age:
       identifiers:
         - IA-5(1)(d)
-      value: '86400'
+      value: 86400
     simp_openldap::server::conf::default_ldif::ppolicy_pwd_min_length:
       identifiers:
         - IA-5(1)(a)
-      value: '14'
+      value: 14
     simp_openldap::server::conf::default_ldif::ppolicy_pwd_must_change:
       identifiers:
         - AC-7(f)
@@ -1367,7 +1367,7 @@ compliance_markup::compliance_map:
       identifiers:
         - IA-5(c)
         - IA-1(c)
-      value: SSHA
+      value: 'SSHA'
     simp_openldap::server::conf::security:
       identifiers:
         - SC-8
@@ -1538,13 +1538,13 @@ compliance_markup::compliance_map:
         - AU-4
         - AU-11
       notes: This value can vary according to storage capacity of a log server
-      value: weekly
+      value: 'weekly'
     simp_rsyslog::server::rotate_preserve:
       identifiers:
         - AU-4
         - AU-11
       notes: This value can vary according to storage capacity of a log server
-      value: '12'
+      value: 12
     simplib::daemon_umask:
       identifiers:
         - AC-2
@@ -1594,11 +1594,11 @@ compliance_markup::compliance_map:
         - SC-8(1)
         - SC-8(2)
         - SC-23
-      value: /etc/ssh/local_keys/%u
+      value: '/etc/ssh/local_keys/%u'
     ssh::server::conf::banner:
       identifiers:
         - AC-8
-      value: /etc/issue.net
+      value: '/etc/issue.net'
     ssh::server::conf::challengeresponseauthentication:
       identifiers:
         - SC-8(1)
@@ -1638,7 +1638,7 @@ compliance_markup::compliance_map:
         - AU-3(2)
         - AU-4(1)
         - AU-9
-      value: AUTHPRIV
+      value: 'AUTHPRIV'
     ssh::server::conf::tcpwrappers:
       identifiers:
         - AC-4
@@ -1664,7 +1664,7 @@ compliance_markup::compliance_map:
         - SC-8(1)
         - SC-8(2)
         - SC-23
-      value: /etc/pki/simp_apps/sssd/x509
+      value: '/etc/pki/simp_apps/sssd/x509'
     sssd::auditd:
       identifiers:
         - AU-3(2)
@@ -1704,19 +1704,19 @@ compliance_markup::compliance_map:
     sssd::service::pam::offline_failed_login_attempts:
       identifiers:
         - AC-12
-      value: '3'
+      value: 3
     sssd::service::pam::offline_failed_login_delay:
       identifiers:
         - AC-7(b)
-      value: '5'
+      value: 5
     sssd::service::pam::pam_id_timeout:
       identifiers:
         - AC-7(b)
-      value: '5'
+      value: 5
     sssd::service::pam::pam_pwd_expiration_warning:
       identifiers:
         - IA-5(1)(d)
-      value: '7'
+      value: 7
     sssd::service::ssh::ssh_hash_known_hosts:
       identifiers:
         - IA-5(c)
@@ -1736,7 +1736,7 @@ compliance_markup::compliance_map:
         - SC-8(1)
         - SC-8(2)
         - SC-23
-      value: /etc/pki/simp_apps/stunnel/x509
+      value: '/etc/pki/simp_apps/stunnel/x509'
     stunnel::connection::firewall:
       identifiers:
         - AC-4
@@ -1790,7 +1790,7 @@ compliance_markup::compliance_map:
       identifiers:
         - AC-25
         - SI-7(9)
-      value: /sys/kernel/security
+      value: '/sys/kernel/security'
     useradd::etc_profile::append:
       identifiers:
         - IA-1
@@ -1807,7 +1807,7 @@ compliance_markup::compliance_map:
       identifiers:
         - AC-11
         - AC-12
-      value: '15'
+      value: 15
     useradd::etc_profile::umask:
       identifiers:
         - AC-2
@@ -1835,12 +1835,12 @@ compliance_markup::compliance_map:
       identifiers:
         - IA-5(c)
         - IA-5(h)
-      value: ''
+      value: ~
     useradd::libuser_conf::defaults_hash_rounds_min:
       identifiers:
         - IA-5(c)
         - IA-5(h)
-      value: ''
+      value: ~
     useradd::libuser_conf::defaults_modules:
       identifiers:
         - IA-1
@@ -1850,19 +1850,19 @@ compliance_markup::compliance_map:
     useradd::libuser_conf::defaults_skeleton:
       identifiers:
         - IA-1
-      value: ''
+      value: ~
     useradd::libuser_conf::groupdefaults:
       identifiers:
         - IA-2
-      value: LU_GROUPNAME = %n
+      value: 'LU_GROUPNAME = %n'
     useradd::libuser_conf::import_default_useradd:
       identifiers:
         - IA-1
-      value: /etc/default/useradd
+      value: '/etc/default/useradd'
     useradd::libuser_conf::import_login_defs:
       identifiers:
         - IA-1
-      value: /etc/login.defs
+      value: '/etc/login.defs'
     useradd::libuser_conf::userdefaults:
       identifiers:
         - IA-2
@@ -1886,12 +1886,12 @@ compliance_markup::compliance_map:
       identifiers:
         - AC-6(5)
       notes: SIMP restricts root console with other mechanisms.  Adding devices here only enhances security
-      value: ''
+      value: ~
     useradd::login_defs::console_groups:
       identifiers:
         - AC-6(5)
       notes: SIMP restricts root console with other mechanisms.  Adding devices here only enhances security
-      value: ''
+      value: ~
     useradd::login_defs::create_home:
       identifiers:
         - AC-3
@@ -1904,12 +1904,12 @@ compliance_markup::compliance_map:
       identifiers:
         - IA-5(c)
         - IA-5(h)
-      value: SHA512
+      value: 'SHA512'
     useradd::login_defs::fail_delay:
       identifiers:
         - AC-7
         - IA-11
-      value: '4'
+      value: 4
     useradd::login_defs::faillog_enab:
       identifiers:
         - AU-2
@@ -1917,15 +1917,15 @@ compliance_markup::compliance_map:
     useradd::login_defs::gid_max:
       identifiers:
         - IA-1
-      value: '500000'
+      value: 500000
     useradd::login_defs::gid_min:
       identifiers:
         - IA-1
-      value: '500'
+      value: 500
     useradd::login_defs::issue_file:
       identifiers:
         - AC-8
-      value: /etc/issue
+      value: '/etc/issue'
     useradd::login_defs::lastlog_enab:
       identifiers:
         - AC-9
@@ -1945,11 +1945,11 @@ compliance_markup::compliance_map:
     useradd::login_defs::login_retries:
       identifiers:
         - AC-12
-      value: '3'
+      value: 3
     useradd::login_defs::login_timeout:
       identifiers:
         - AC-12
-      value: '60'
+      value: 60
     useradd::login_defs::obscure_checks_enab:
       identifiers:
         - IA-5
@@ -1961,33 +1961,33 @@ compliance_markup::compliance_map:
     useradd::login_defs::pass_change_tries:
       identifiers:
         - AC-12
-      value: '3'
+      value: 3
     useradd::login_defs::pass_max_days:
       identifiers:
         - IA-5(f)
         - IA-5(1)(d)
-      value: '180'
+      value: 180
     useradd::login_defs::pass_max_len:
       identifiers:
         - IA-5(c)
         - IA-5(1)(d)
       notes: A value assigned here might conflict with other complexity settings
-      value: ''
+      value: ~
     useradd::login_defs::pass_min_days:
       identifiers:
         - IA-5(f)
         - IA-5(1)(d)
-      value: '1'
+      value: 1
     useradd::login_defs::pass_min_len:
       identifiers:
         - IA-5(c)
         - IA-5(1)(d)
-      value: '14'
+      value: 14
     useradd::login_defs::pass_warn_age:
       identifiers:
         - IA-5(f)
         - IA-5(1)(d)
-      value: '14'
+      value: 14
     useradd::login_defs::porttime_checks_enab:
       identifiers:
         - IA-1
@@ -1996,12 +1996,12 @@ compliance_markup::compliance_map:
       identifiers:
         - IA-5(c)
         - IA-5(h)
-      value: '10000'
+      value: 10000
     useradd::login_defs::sha_crypt_min_rounds:
       identifiers:
         - IA-5(c)
         - IA-5(h)
-      value: '5000'
+      value: 5000
     useradd::login_defs::su_name:
       identifiers:
         - IA-1
@@ -2019,13 +2019,13 @@ compliance_markup::compliance_map:
     useradd::login_defs::uid_max:
       identifiers:
         - IA-1
-      value: '1000000'
+      value: 1000000
     useradd::login_defs::umask:
       identifiers:
         - AC-2
         - AC-2(4)
         - AC-6
-      value: '007'
+      value: '0007'
     useradd::manage_etc_profile:
       identifiers:
         - IA-1
@@ -2059,7 +2059,7 @@ compliance_markup::compliance_map:
       identifiers:
         - IA-2(1)
         - AC-1(1)
-      value: /sbin/sulogin
+      value: '/sbin/sulogin'
     vsftpd::cipher_suite:
       identifiers:
         - SC-8
@@ -2071,7 +2071,7 @@ compliance_markup::compliance_map:
     vsftpd::config::banner_file:
       identifiers:
         - AC-8
-      value: /etc/issue.net
+      value: '/etc/issue.net'
     vsftpd::config::force_local_data_ssl:
       identifiers:
         - SC-8
@@ -2091,7 +2091,7 @@ compliance_markup::compliance_map:
         - AC-2
         - AC-2(4)
         - AC-6
-      value: '022'
+      value: '0022'
     vsftpd::config::ssl_tlsv1:
       identifiers:
         - SC-8
@@ -2149,10 +2149,10 @@ compliance_markup::compliance_map:
     xinetd::banner:
       identifiers:
         - AC-8
-      value: /etc/issue.net
+      value: '/etc/issue.net'
     xinetd::log_type:
       identifiers:
         - AU-3(2)
         - AU-4(1)
         - AU-9
-      value: SYSLOG authpriv
+      value: 'SYSLOG authpriv'
