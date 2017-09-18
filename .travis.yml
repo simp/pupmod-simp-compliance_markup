@@ -18,6 +18,7 @@ before_install:
   - rvm @global do gem uninstall bundler -a -x
   - rvm @global do gem install bundler -v '~> 1.14.0'
 script:
+  - bundle exec rake compare_latest_tag
   - bundle exec rake test
 notifications:
   email: false

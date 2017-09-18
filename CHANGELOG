@@ -1,3 +1,9 @@
+* Tue Sep 05 2017 Lucas Yamanishi <lucas.yamanishi@onyxpoint.com> - 2.3.0-0
+- Converted compliance profiles to JSON.  This allows non-string values
+  and faster deserialization.
+- Provided scripts in 'utils/' to convert the compliance profiles from
+  YAML to JSON and vice versa.
+
 * Mon Jun 16 2017 Dylan Cochran <dylan.cochran@onyxpoint.com> - 2.2.0-0
 - Added a compliance enforcement hierav3 and hierav5 backend.
 
