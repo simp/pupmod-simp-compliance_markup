@@ -10,6 +10,7 @@ spec/rp_env/
 .rspec_system
 .vagrant/
 .bundle/
+.idea/
 Gemfile.lock
 vendor/
 junit/

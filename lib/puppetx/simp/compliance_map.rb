@@ -1,88 +1,10 @@
 # vim: set expandtab ts=2 sw=2:
 
-#
-# XXX TODO: We need to replace this code with one that uses the abstract compiler
-# in the enforcement system. It also needs to be exportable because we have other
-# downstream consumers of the compliance profile compilation system
-#
-# If we have one single codebase that can parse and handle the compilance profile
-# system, it will be much easier for us to maintain moving forward
-#
+
 #
 # BEGIN COMPLIANCE_PROFILE
 #
 
-@profile_info = Class.new(Object) do
-
-  def ordered_hash
-    Hash.new
-  end
-
-  attr_reader :api_version
-  attr_accessor :config
-
-  def initialize(valid_profiles, config)
-    @err_msg = "Error: malformed compliance map, see the function documentation for details."
-
-    @config = config
-
-    @api_version = '1.0.1'
-
-    @valid_profiles ||= Array(valid_profiles)
-
-    # Collect all cache misses to sticking onto the end of the profile reports
-    @ref_misses = Hash.new()
-
-    # Collect any resources that are in our mapping but have not been included
-    @unmapped_resources = Hash.new()
-
-    # Static Information
-    @compliance_map = ordered_hash
-    @compliance_map['version'] = @api_version
-
-    @compliance_map.merge!(@config[:extra_data]) if @config[:extra_data]
-
-    @compliance_map['compliance_profiles'] = ordered_hash
-    @compliance_map['site_data'] = Hash.new()
-
-    @valid_profiles.each do |profile|
-      @compliance_map['compliance_profiles'][profile] ||= Hash.new()
-    end
-  end
-
-  # Set up the main data structures
-  #
-  # @param compliance_profiles (Array) Compliance_profile strings that are
-  #   valid for this ComplianceMap
-  #
-  # @param compliance_mapping (Hash) Data that represents the full compliance
-  #   mapping
-  #
-  #   Example:
-  #     {
-  #       'compliance' => {
-  #         '<profile>' => {
-  #           '<fully_qualified_class_parameter>' => '<value'
-  #         }
-  #       }
-  #     }
-  #
-  def setup_compliance_map(compliance_mapping)
-    @compliance_map['site_data'] = @config[:site_data] if @config[:site_data]
-
-    @valid_profiles.sort.each do |profile|
-      @compliance_map['compliance_profiles'][profile] ||= ordered_hash
-      @compliance_map['compliance_profiles'][profile]['summary'] ||= ordered_hash
-      @compliance_map['compliance_profiles'][profile]['compliant'] ||= ordered_hash
-      @compliance_map['compliance_profiles'][profile]['non_compliant'] ||= ordered_hash
-      @compliance_map['compliance_profiles'][profile]['documented_missing_resources'] ||= Array.new()
-      @compliance_map['compliance_profiles'][profile]['documented_missing_parameters'] ||= Array.new()
-      @compliance_map['compliance_profiles'][profile]['custom_entries'] ||= ordered_hash
-
-      @ref_misses[profile] ||= Array.new()
-      @unmapped_resources[profile] ||= Array.new()
-    end
-  end
 
   def catalog_to_map(catalog)
     catalog_map = Hash.new()
@@ -117,219 +39,6 @@
     return catalog_map.to_yaml
   end
 
-  # Get all of the parts together for proper reporting and return the
-  # result
-  def format_map
-    formatted_map = @compliance_map.dup
-    report_types = @config[:report_types]
-
-    @valid_profiles.each do |profile|
-
-      # Create the summary report
-      num_compliant     = formatted_map['compliance_profiles'][profile]['compliant'] ? formatted_map['compliance_profiles'][profile]['compliant'].keys.count : 0
-      num_non_compliant = formatted_map['compliance_profiles'][profile]['non_compliant'] ? formatted_map['compliance_profiles'][profile]['non_compliant'].keys.count : 0
-
-      total_checks = num_non_compliant + num_compliant
-      percent_compliant = total_checks == 0 ? 0 : ((num_compliant.to_f/total_checks) * 100).round(0)
-
-      formatted_map['compliance_profiles'][profile]['summary'] = {
-        'compliant'                     => num_compliant,
-        'non_compliant'                 => num_non_compliant,
-        'percent_compliant'             => percent_compliant,
-        'documented_missing_resources'  => @unmapped_resources[profile].count,
-        'documented_missing_parameters' => @ref_misses[profile].count
-      }
-
-      unless report_types.include?('full')
-        # Remove the built up content that does not apply to this system
-        ['compliant', 'non_compliant', 'custom_entries'].each do |report_type|
-          unless report_types.include?(report_type)
-            formatted_map['compliance_profiles'][profile][report_type] = {}
-          end
-        end
-      end
-
-      if report_types.include?('full') || report_types.include?('unknown_resources')
-        if @unmapped_resources[profile] && !@unmapped_resources[profile].empty?
-          formatted_map['compliance_profiles'][profile]['documented_missing_resources'] = @unmapped_resources[profile].sort
-        end
-      end
-
-      if report_types.include?('full') || report_types.include?('unknown_parameters')
-        if @ref_misses && !@ref_misses[profile].empty?
-          formatted_map['compliance_profiles'][profile]['documented_missing_parameters'] = @ref_misses[profile].sort
-        end
-      end
-
-      # Strip out anything not relevant to the report
-      formatted_map['compliance_profiles'][profile].delete_if{|k|
-        val = formatted_map['compliance_profiles'][profile][k]
-
-        val.nil? || val.empty?
-      }
-    end
-
-    return formatted_map
-  end
-
-  def to_hash
-    return format_map
-  end
-
-  def to_json
-    require 'json'
-
-    output = JSON.pretty_generate(format_map)
-
-    return output
-  end
-
-  def to_yaml
-    require 'yaml'
-
-    output = format_map.to_yaml
-
-    # Get rid of the ordered hash object information
-    output.gsub!(%r( !ruby/.+CMOrderedHash), '')
-
-    return output
-  end
-
-  # Add a custom entry to the Map
-  #
-  # @param resource_name (String) The name of the Puppet resource
-  #
-  # @param profile (String) The compliance profile under which this entry
-  #   falls. The entry will not be added if this is not included in
-  #   @valid_profiles
-  #
-  # @param identifiers (String) The compliance identifierss for the entry
-  #
-  # @param location (String) The 'file:line' formatted location of the
-  #   function call
-  #
-  # @param opts (String) Custom Options
-  #   * 'notes' (String) => Arbitrary notes about the entry
-  #
-  def add(resource_name, profile, identifiers, location, opts=ordered_hash)
-    if @valid_profiles.include?(profile)
-      data_hash = ordered_hash
-
-      data_hash['location'] = location
-      data_hash['identifiers'] = Array(identifiers)
-
-      data_hash.merge!(opts)
-
-      @compliance_map['compliance_profiles'][profile] ||= ordered_hash
-      @compliance_map['compliance_profiles'][profile]['custom_entries'] ||= ordered_hash
-      @compliance_map['compliance_profiles'][profile]['custom_entries'][resource_name] ||= []
-
-      @compliance_map['compliance_profiles'][profile]['custom_entries'][resource_name] << data_hash
-    end
-  end
-
-  def process_catalog(catalog, reference_map)
-    setup_compliance_map(reference_map)
-
-    target_resources = catalog.resources.select{|x| !x.parameters.empty?}
-
-    @valid_profiles.each do |profile|
-      next unless reference_map[profile]
-
-      @unmapped_resources[profile] = reference_map[profile].keys.collect do |x|
-        _tmp = x.split('::')
-        _tmp.pop
-        x = _tmp.join('::')
-      end.sort.uniq
-
-      # Gather up all of the possible keys in this profile
-      #
-      # Any items that remain are things that had a resource in Hiera but
-      # were not found on the system
-      @ref_misses[profile] = reference_map[profile].keys
-
-      target_resources.each do |resource|
-        human_name = resource.to_s
-        resource_name = resource.name.downcase
-
-        @unmapped_resources[profile].delete(resource_name)
-
-        resource.parameters.keys.sort.each do |param|
-          resource_ref = [resource_name, param].join('::')
-          ref_entry = reference_map[profile][resource_ref]
-
-          if ref_entry
-            @ref_misses[profile].delete(resource_ref)
-          else
-            # If we didn't find an entry for this parameter, just skip it
-            next
-          end
-
-          # Fail if the entry doesn't have the proper format
-          required_metadata = ['identifiers','value']
-          required_metadata.each do |md|
-            raise "#{@err_msg} Failed on #{profile} profile, #{resource_ref} #{ref_entry}, metadata #{md}" if ref_entry[md].nil?
-          end
-
-          # Perform the actual matching
-          ref_value = ref_entry['value']
-          tgt_value = resource.parameters[param].value
-
-          compliance_status = 'non_compliant'
-
-          # Regular expression match
-          if ref_value =~ /^re:(.+)/
-            comparator = Regexp.new($1)
-
-            if tgt_value =~ comparator
-              compliance_status = 'compliant'
-            end
-            # Default match
-          elsif ref_value.to_s.strip == tgt_value.to_s.strip
-            compliance_status = 'compliant'
-          end
-
-          report_data = ordered_hash
-          report_data['identifiers'] = Array(reference_map[profile][resource_ref]['identifiers'])
-          report_data['compliant_value'] = ref_value
-          report_data['system_value'] = tgt_value
-
-          # If we have other optional items, sort them, and stick them
-          # into the report data
-          (ref_entry.keys - required_metadata).sort.each do |extra_param|
-            next if extra_param.nil?
-            report_data[extra_param] = ref_entry[extra_param]
-          end
-
-          @compliance_map['compliance_profiles'][profile][compliance_status][human_name] ||= ordered_hash
-          @compliance_map['compliance_profiles'][profile][compliance_status][human_name]['parameters'] ||= ordered_hash
-          @compliance_map['compliance_profiles'][profile][compliance_status][human_name]['parameters'][resource_ref.split('::').last] = report_data
-        end
-      end
-
-      # Strip anything out of @ref_misses that has an immediate parent in
-      # @unmapped_resources
-
-      @unmapped_resources[profile].each do |to_check|
-        @ref_misses[profile].delete_if do |ref|
-          ref_parts = ref.split('::')
-          ref_parts.pop
-          ref_parts.join('::') == to_check
-        end
-      end
-    end
-  end
-
-  private
-
-end
-
-#
-# END COMPLIANCE PROFILE
-#
-def profile_info
-  @profile_info
-end
 
 # There is no way to silence the global warnings on looking up a qualified
 # variable, so we're going to hack around it here.
@@ -454,84 +163,6 @@ def get_compliance_profiles
   return compliance_profiles
 end
 
-def get_reference_map
-  reference_map = lookup_global_silent('compliance_map')
-  reference_map ||= Hash.new
-
-  if ( !reference_map || reference_map.empty? )
-    # If not using an ENC, need to dig deeper
-
-    # First, check the backwards-compatible lookup entry
-    if @context.respond_to?(:call_function)
-      reference_map = @context.call_function('lookup',['compliance_map', {'merge' => 'deep', 'default_value' => nil}])
-    end
-
-    # If lookup didn't find it, fish it out of the resource directly
-    if ( !reference_map || reference_map.empty? )
-      compliance_resource = @context.catalog.resource('Class[compliance_markup]')
-
-      unless compliance_resource
-        compliance_resource = @context.catalog.resource('Class[compliance_markup]')
-      end
-
-      if compliance_resource
-        catalog_resource_map = compliance_resource['compliance_map']
-
-        if catalog_resource_map && !catalog_resource_map.empty?
-          reference_map = catalog_resource_map
-        end
-      end
-    end
-  end
-
-  return reference_map
-end
-
-def validate_reference_map(reference_map)
-  # If we still don't have a reference map, we need to let the user know!
-  if !reference_map || (reference_map.respond_to?(:empty) && reference_map.empty?)
-    if main_config[:default_map] && !main_config[:default_map].empty?
-      reference_map = main_config[:default_map]
-    else
-      raise(Puppet::ParseError, %(compliance_map(): Could not find the 'compliance_map' Hash at the global level or via Lookup))
-    end
-  end
-end
-
-def custom_call_file_info
-  file_info = {
-    :file => @context.source.file,
-    # We may not know the line number if this is at Top Scope
-    :line => @context.source.line || '<unknown>',
-  }
-
-  # If we don't know the filename, guess....
-  # This is probably because we're running in Puppet 4
-  if @context.is_topscope?
-    # Cast this to a string because it could potentially be a symbol from
-    # the bowels of Puppet, or 'nil', or whatever and is purely
-    # informative.
-    env_manifest = "#{@context.environment.manifest}"
-
-    if env_manifest =~ /\.pp$/
-      file = env_manifest
-    else
-      file = File.join(env_manifest,'site.pp')
-    end
-  else
-    filename = @context.source.name.split('::')
-    filename[-1] = filename[-1] + '.pp'
-
-    file = File.join(
-      '<estimate>',
-      "#{@context.environment.modulepath.first}",
-      filename
-    )
-  end
-
-  return file_info
-end
-
 def add_file_to_client(config, compliance_map)
   if config[:client_report]
     client_vardir = @context.lookupvar('puppet_vardir')
@@ -584,92 +215,239 @@ def add_file_to_client(config, compliance_map)
   end
 end
 
-def write_server_report(config, compliance_map)
+
+def write_server_report(config, report)
   report_dir = File.join(config[:server_report_dir], @context.lookupvar('fqdn'))
   FileUtils.mkdir_p(report_dir)
 
   if config[:server_report]
     File.open(File.join(report_dir,"compliance_report.#{config[:format]}"),'w') do |fh|
       if config[:format] == 'json'
-        fh.puts(compliance_map.to_json)
+        fh.puts(report.to_json)
       elsif config[:format] == 'yaml'
-        fh.puts(compliance_map.to_yaml)
+        fh.puts(report.to_yaml)
       end
     end
   end
-
   if config[:catalog_to_compliance_map]
     File.open(File.join(report_dir,'catalog_compliance_map.yaml'),'w') do |fh|
-      fh.puts(compliance_map.catalog_to_map(@context.resource.scope.catalog))
+      fh.puts(catalog_to_map(@context.resource.scope.catalog))
     end
   end
 end
 
 def compliance_map(args, context)
-  ### BEGIN MAIN PROCESSING ###
   @context = context
+  if (@custom_entries == nil)
+    @custom_entries = {}
+  end
+  @catalog = @context.resource.scope.catalog
+  profile_compiler = compiler_class.new(self)
+  profile_compiler.load do |key, default|
+    @context.call_function('lookup', [key, {"default_value" => default}])
+  end
+
   main_config = process_options(args)
-
-  # Pick up our compiler hitchhiker
-  # This is only needed when passing arguments. Users should no longer call
-  # compliance_map() without arguments directly inside their classes or
-  # definitions.
-  hitchhiker = @context.compiler.instance_variable_get(:@compliance_map_function_data)
-
-  if hitchhiker
-    compliance_map = hitchhiker
-
-    # Need to update the config for further processing options
-    compliance_map.config = main_config
-  else
-    compliance_profiles = get_compliance_profiles
-
-    # If we didn't find any profiles to map, bail
-    return unless compliance_profiles
-
-    # Create the validation report object
-    # Have to break things out because jruby can't handle '::' in const_get
-    compliance_map = profile_info.new(compliance_profiles, main_config)
-  end
-
-  # If we've gotten this far, we're ready to process *everything* and update
-  # the file object.
   if main_config[:custom_call]
-    # Here, we will only be adding custom items inside of classes or defined
-    # types.
-
-    resource_name = %(#{@context.resource.type}::#{@context.resource.title})
-
-    # Add in custom materials if they exist
-
-    _entry_opts = {}
-    if main_config[:custom][:notes]
-      _entry_opts['notes'] = main_config[:custom][:notes]
-    end
-
-    file_info = custom_call_file_info
-
-    compliance_map.add(
-      resource_name,
-      main_config[:custom][:profile],
-      main_config[:custom][:identifier],
-      %(#{file_info[:file]}:#{file_info[:line]}),
-      _entry_opts
-    )
+    add_custom_entries(main_config);
   else
-    reference_map = get_reference_map
-    validate_reference_map(reference_map)
+    report_types = main_config[:report_types]
+    if report_types.include?('full')
+      report_types << 'unknown_resources'
+      report_types << 'unknown_parameters'
+      report_types << 'compliant'
+      report_types << 'non_compliant'
+      report_types << 'custom_entries'
+    end
+    report = main_config[:extra_data].dup
+    report["version"] = '1.0.1';
+    report["compliance_profiles"] = {}
+    profile_list = get_compliance_profiles
+    if profile_list.class.to_s == "Array"
+      profile_list.each do |profile|
+        profile_report = {}
+        report["compliance_profiles"][profile] = profile_report
+        profile_report["documented_missing_parameters"] = []
+        profile_report["compliant"] = {}
+        profile_report["non_compliant"] = {}
+        profile_map = profile_compiler.list_puppet_params([profile]).cook do |data|
+          {"value" => data["value"], "identifiers" => data["identifiers"]}
+        end
+        parameters = {}
+        classes = {}
+        @catalog.resources.each do |obj|
+          classname = obj.title.downcase
+          obj.parameters.each do |parameter, data|
+            fully_qualified_parameter = classname + "::" + parameter.to_s
+            if (profile_map.key?(fully_qualified_parameter))
+              profile_settings = profile_map[fully_qualified_parameter]
+              current_value = data.value
+              # XXX ToDo This should be improved to allow for validators to be specified
+              # instead of forcing regexes to be in values (as it breaks enforcement)
+              # ie, functions or built ins.
+              if (profile_settings.key?("value"))
+                expected_value = profile_settings["value"]
+                result = {
+                    "compliant_value" => expected_value,
+                    "system_value" => current_value,
+                }
+                if (profile_settings.key?("identifiers"))
+                 result["identifiers"] = profile_settings["identifiers"]
+                end
+                classkey = "#{obj.type}[#{obj.title}]"
+                if (expected_value =~ /^re:(.+)/)
+                  if (current_value =~ Regexp.new($1))
+                    section = "compliant"
+                  else
+                    section = "non_compliant"
+                  end
+                else
+                  if (current_value == expected_value)
+                    section = "compliant"
+                  else
+                    section = "non_compliant"
+                  end
+                end
+                if report_types.include?(section)
+                  unless (profile_report[section].key?(classkey))
+                    profile_report[section][classkey] = {}
+                    profile_report[section][classkey]["parameters"] = {}
+                  end
+                    profile_report[section][classkey]["parameters"][parameter.to_s] = result
 
-    compliance_map.process_catalog(@context.resource.scope.catalog, reference_map)
+                end
+              end
+            else
+               parameters[fully_qualified_parameter] = true
+               classes[classname] = true
+            end
+          end
+        end
 
-    # Drop an entry on the server so that it can be processed when applicable.
-    write_server_report(main_config, compliance_map)
+        {
+            'unknown_parameters' => 'documented_missing_parameters',
+            'unknown_resources' => 'documented_missing_resources'
+        }.each do |type, name|
+          if report_types.include?(type)
+            profile_report[name] = []
+            profile_map.select do |key, value|
+              unless parameters.key?(key)
+                profile_report[name] << key
+              end
+            end
+          end
+        end
 
-    # Embed a File resource that will place the report on the client.
-    add_file_to_client(main_config, compliance_map)
+        profile_report["custom_entries"] = @custom_entries[profile]
+
+        profile_report['summary'] = summary(profile_report)
+
+        # Clean up empty arrays and hashes
+        [ 'non_compliant', 'compliant', 'documented_missing_parameters', "documented_missing_resources"].each do |key|
+          if profile_report[key] == {}
+            profile_report.delete(key);
+          end
+          if profile_report[key] == []
+            profile_report.delete(key);
+          end
+        end
+      end
+    end
+    write_server_report(main_config, report)
+    add_file_to_client(main_config, report)
+  end
+end
+
+#
+# Create a summary from a profile report.
+#
+
+def summary(profile_report)
+  num_compliant = profile_report['compliant'] ? profile_report['compliant'].keys.count : 0
+  num_non_compliant = profile_report['non_compliant'] ? profile_report['non_compliant'].keys.count : 0
+
+  total_checks = num_non_compliant + num_compliant
+  percent_compliant = total_checks == 0 ? 0 : ((num_compliant.to_f/total_checks) * 100).round(0)
+
+  {
+      'compliant' => num_compliant,
+      'non_compliant' => num_non_compliant,
+      'percent_compliant' => percent_compliant,
+      'documented_missing_parameters' => profile_report["documented_missing_parameters"].count
+  }
+end
+
+def add_custom_entries(main_config)
+  # XXX ToDo
+  # We need to decide if this is actually necessary. If the compliance profiles are authoritative
+  # then having to evaluate a catalog to get all values makes no sense
+  file_info = custom_call_file_info
+  value = {
+      "identifiers" => main_config[:custom][:identifier],
+      "location" => %(#{file_info[:file]}:#{file_info[:line]})
+  }
+  if main_config[:custom][:notes]
+    value['notes'] = main_config[:custom][:notes]
+  end
+  profile = main_config[:custom][:profile]
+  resource_name = %(#{@context.resource.type}::#{@context.resource.title})
+  unless (@custom_entries.key?(profile))
+    @custom_entries[profile] = {}
+  end
+  unless (@custom_entries[profile].key?(resource_name))
+    @custom_entries[profile][resource_name] = []
+  end
+  @custom_entries[profile][resource_name] << value
+end
+
+def custom_call_file_info
+  file_info = {
+      :file => @context.source.file,
+      # We may not know the line number if this is at Top Scope
+      :line => @context.source.line || '<unknown>',
+  }
+
+  # If we don't know the filename, guess....
+  # This is probably because we're running in Puppet 4
+  if @context.is_topscope?
+    # Cast this to a string because it could potentially be a symbol from
+    # the bowels of Puppet, or 'nil', or whatever and is purely
+    # informative.
+    env_manifest = "#{@context.environment.manifest}"
+
+    if env_manifest =~ /\.pp$/
+      file = env_manifest
+    else
+      file = File.join(env_manifest,'site.pp')
+    end
+  else
+    filename = @context.source.name.split('::')
+    filename[-1] = filename[-1] + '.pp'
+
+    file = File.join(
+        '<estimate>',
+        "#{@context.environment.modulepath.first}",
+        filename
+    )
   end
 
-  # This gets a little hairy, we need to persist the compliance map across
-  # the entire compilation so we hitch a ride on the compiler.
-  @context.compiler.instance_variable_set(:@compliance_map_function_data, compliance_map)
+  return file_info
+end
+def cache(key, value)
+  if @hash == nil
+    @hash = {}
+  end
+  @hash[key] = value
+end
+def cached_value(key)
+  if @hash == nil
+    @hash = {}
+  end
+  @hash[key]
+end
+def cache_has_key(key)
+  if @hash == nil
+    @hash = {}
+  end
+  @hash.key?(key)
 end

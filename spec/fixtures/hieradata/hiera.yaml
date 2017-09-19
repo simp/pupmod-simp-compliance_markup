@@ -3,9 +3,9 @@
 - yaml
 - simp_compliance_enforcement
 :yaml:
-  :datadir: "/home/thanos/Work/SIMP/6.X/src/puppet/modules/compliance_markup/spec/fixtures/hieradata"
+  :datadir: "/data/helio/enterprise/pupmod-simp-compliance_markup/spec/fixtures/hieradata"
 :simp_compliance_enforcement:
-  :datadir: "/home/thanos/Work/SIMP/6.X/src/puppet/modules/compliance_markup/spec/fixtures/hieradata"
+  :datadir: "/data/helio/enterprise/pupmod-simp-compliance_markup/spec/fixtures/hieradata"
 :hierarchy:
 - "%{custom_hiera}"
 - "%{module_name}"

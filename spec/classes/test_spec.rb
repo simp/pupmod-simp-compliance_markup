@@ -20,9 +20,21 @@ describe 'compliance_markup::test' do
                   let(:hieradata){ "#{profile}_spec" }
 
                   it "should return #{profile}" do
-                    is_expected.to(create_notify('compliance_markup::test').with_message("compliance_markup::test::testvariable = #{profile}"))
+                    is_expected.to(create_notify('compliance_markup::test::testvariable').with_message("compliance_markup::test::testvariable = #{profile}"))
                   end
                 end
+              end
+            end
+          end
+          profiles = [ 'disa', 'nist']
+          profiles.each do |profile|
+            order = ([ profile ] + (profiles - [ profile ])).to_s
+            context "when order = #{order} and data file is vendored" do
+              let(:facts) { facts }
+              let(:hieradata){ "#{profile}_spec" }
+
+              it "should return #{profile}" do
+                is_expected.to(create_notify('compliance_markup::test::vendoredvariable').with_message("compliance_markup::test::vendoredvariable = #{profile}"))
               end
             end
           end

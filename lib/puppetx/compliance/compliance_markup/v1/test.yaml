@@ -1,0 +1,8 @@
+---
+version: 1.0.0
+disa:
+        compliance_markup::test::vendoredvariable:
+                value: 'disa'
+nist:
+        compliance_markup::test::vendoredvariable:
+                value: 'nist'
