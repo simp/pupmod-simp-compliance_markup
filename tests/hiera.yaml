@@ -5,7 +5,7 @@ defaults:
         data_hash: yaml_data
 hierarchy:
         - name: "compliance_markup"
-          lookup_key: "compliance_markup::hiera_backend"
+          lookup_key: "compliance_markup::enforcement"
         - name: "common"
           path: "common.yaml"
 
