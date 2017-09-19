@@ -1,3 +1,6 @@
+* Tue Sep 19 2017 Liz Nemsick <lnemsick.simp@gmail.com> - 2.3.1-0
+- Remove test link to allow module to be published to PuppetForge
+
 * Tue Sep 05 2017 Lucas Yamanishi <lucas.yamanishi@onyxpoint.com> - 2.3.0-0
 - Converted compliance profiles to JSON.  This allows non-string values
   and faster deserialization.
