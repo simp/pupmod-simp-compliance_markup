@@ -279,13 +279,16 @@ describe 'compliance_markup' do
                 end
 
                 it "should have a valid #{report_format} report" do
+                  file = nil;
                   if report_format == 'yaml'
-                    expect(YAML.load(compliance_file_resource[:content])['version']).to eq(report_version)
+                    file = YAML.load(compliance_file_resource[:content]);
                   elsif report_format == 'json'
-                    expect(JSON.load(compliance_file_resource[:content])['version']).to eq(report_version)
+                    file = JSON.load(compliance_file_resource[:content]);
                   else
                     fail("Invalid report type '#{report_format}' specified")
                   end
+                  version = file['version'];
+                  expect(version).to eq(report_version)
                 end
               end
 
@@ -355,7 +358,6 @@ describe 'compliance_markup' do
                 it 'should have custom_entries for the "other" profile that have identifiers and notes' do
 
                   entry = report['compliance_profiles']['other_profile']['custom_entries']['One_off_inline::one off'].first
-
                   expect(entry['identifiers']).to_not be_empty
                   expect(entry['notes']).to_not be_empty
                 end
