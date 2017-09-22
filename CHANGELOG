@@ -1,3 +1,7 @@
+* Fri Sep 22 2017 Dylan Cochran <dylan.cochran@onyxpoint.com> - 2.3.2-0
+- Refactor report generator to use a shared file format parser/compiler.
+- Add vendored 'profiles-in-modules' support
+
 * Tue Sep 19 2017 Liz Nemsick <lnemsick.simp@gmail.com> - 2.3.1-0
 - Remove test link to allow module to be published to PuppetForge
 

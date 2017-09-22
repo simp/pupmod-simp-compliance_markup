@@ -138,7 +138,6 @@ def compiler_class()
         end
       end
     end
-
     def control_list()
       Class.new do
         include Enumerable
