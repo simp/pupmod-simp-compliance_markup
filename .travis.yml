@@ -31,10 +31,12 @@ jobs:
   include:
     - stage: lint
       rvm: 2.1.9
+      script:
         - bundle exec rake metadata_lint
 
     - stage: compare_tag
       rvm: 2.1.9
+      script:
         - bundle exec rake compare_latest_tag
 
     - stage: spec
