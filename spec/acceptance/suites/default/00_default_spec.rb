@@ -52,10 +52,10 @@ EOS
 
       let(:fqdn) { fact_on(host, 'fqdn') }
 
-      tmpdir = Dir.mktmpdir
-      begin
-        Dir.chdir(tmpdir) do
-          it 'should have a report' do
+      it 'should have a report' do
+        tmpdir = Dir.mktmpdir
+        begin
+          Dir.chdir(tmpdir) do
             if host[:hypervisor] == 'docker'
               %x(docker cp "#{host.hostname}:/opt/puppetlabs/puppet/cache/simp/compliance_reports/#{fqdn}/compliance_report.json" .)
             else
@@ -66,9 +66,9 @@ EOS
               @compliance_data[:report] = JSON.load(File.read('compliance_report.json'))
             }.to_not raise_error
           end
+        ensure
+          FileUtils.remove_entry_secure tmpdir
         end
-      ensure
-        FileUtils.remove_entry_secure tmpdir
       end
 
       it 'should have host metadata' do
