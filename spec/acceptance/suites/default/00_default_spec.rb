@@ -43,6 +43,43 @@ EOS
   }
 
   hosts.each do |host|
+    shared_examples 'a valid report' do
+      before(:all) do
+        @compliance_data = {
+          :report => {}
+        }
+      end
+
+      let(:fqdn) { fact_on(host, 'fqdn') }
+
+      tmpdir = Dir.mktmpdir
+      begin
+        Dir.chdir(tmpdir) do
+          it 'should have a report' do
+            if host[:hypervisor] == 'docker'
+              %x(docker cp "#{host.hostname}:/opt/puppetlabs/puppet/cache/simp/compliance_reports/#{fqdn}/compliance_report.json" .)
+            else
+              scp_from(host, "/opt/puppetlabs/puppet/cache/simp/compliance_reports/#{fqdn}/compliance_report.json", '.')
+            end
+
+            expect {
+              @compliance_data[:report] = JSON.load(File.read('compliance_report.json'))
+            }.to_not raise_error
+          end
+        end
+      ensure
+        FileUtils.remove_entry_secure tmpdir
+      end
+
+      it 'should have host metadata' do
+        expect(@compliance_data[:report]['fqdn']).to eq(fqdn)
+      end
+
+      it 'should have a compliance profile report' do
+        expect(@compliance_data[:report]['compliance_profiles']).to_not be_empty
+      end
+    end
+
     context 'default parameters' do
       # Using puppet_apply as a helper
       it 'should work with no errors' do
@@ -53,6 +90,8 @@ EOS
       it 'should be idempotent' do
         apply_manifest_on(host,manifest, :catch_changes => true)
       end
+
+      it_behaves_like 'a valid report'
     end
 
     context 'non-compliant parameters' do
@@ -65,6 +104,8 @@ EOS
       it 'should be idempotent' do
         apply_manifest_on(host,manifest, :catch_changes => true)
       end
+
+      it_behaves_like 'a valid report'
     end
   end
 end
