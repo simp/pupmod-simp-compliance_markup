@@ -129,61 +129,115 @@ describe 'compliance_markup' do
             end
           end
         end
-
-        context 'with a fabricated test profile' do
+        [ {
+            :profile_type => 'Array'
+          },
+        {
+            :profile_type => 'String'
+          }
+        ].each do |data|
+          context "with a fabricated test profile #{data[:profile_type]}" do
 
           profile_name = 'test_profile'
-
-          let(:pre_condition) {
-            <<-EOM
-              $compliance_profile = [
-                '#{profile_name}',
-                'other_profile'
-              ]
-
-              class test1 (
-                $arg1_1 = 'foo1_1',
-                $arg1_2 = 'foo1_2'
-              ){
-                notify { 'bar': message => $arg1_1 }
+          case data[:profile_type]
+            when 'Array'
+              let(:pre_condition) {
+                <<-EOM
+                  $compliance_profile = [
+                    '#{profile_name}',
+                    'other_profile'
+                  ]
+    
+                  class test1 (
+                    $arg1_1 = 'foo1_1',
+                    $arg1_2 = 'foo1_2'
+                  ){
+                    notify { 'bar': message => $arg1_1 }
+                  }
+    
+                  class test2 {
+                    class test3 (
+                      $arg3_1 = 'foo3_1'
+                    ) { }
+                  }
+    
+                  define testdef1 (
+                    $defarg1_1 = 'deffoo1_1'
+                  ) {
+                    notify { 'testdef1': message => $defarg1_1}
+                  }
+    
+                  define testdef2 (
+                    $defarg1_2 = 'deffoo1_2',
+                    $defarg2_2 = 'foo'
+                  ) {
+                    notify { 'testdef2': message => $defarg1_2}
+                  }
+    
+                  define one_off_inline {
+                    compliance_map('other_profile', 'ONE_OFF', 'This is awesome')
+    
+                    notify { $name: }
+                  }
+    
+                  include '::test1'
+                  include '::test2::test3'
+    
+                  testdef1 { 'test_definition': }
+                  testdef2 { 'test_definition': defarg1_2 => 'test_bad' }
+                  one_off_inline { 'one off': }
+    
+                  compliance_map('other_profile', 'TOP_LEVEL', 'Top level call')
+                EOM
               }
-
-              class test2 {
-                class test3 (
-                  $arg3_1 = 'foo3_1'
-                ) { }
+            when 'String'
+              let(:pre_condition) {
+                <<-EOM
+                  $compliance_profile = '#{profile_name}'
+    
+                  class test1 (
+                    $arg1_1 = 'foo1_1',
+                    $arg1_2 = 'foo1_2'
+                  ){
+                    notify { 'bar': message => $arg1_1 }
+                  }
+    
+                  class test2 {
+                    class test3 (
+                      $arg3_1 = 'foo3_1'
+                    ) { }
+                  }
+    
+                  define testdef1 (
+                    $defarg1_1 = 'deffoo1_1'
+                  ) {
+                    notify { 'testdef1': message => $defarg1_1}
+                  }
+    
+                  define testdef2 (
+                    $defarg1_2 = 'deffoo1_2',
+                    $defarg2_2 = 'foo'
+                  ) {
+                    notify { 'testdef2': message => $defarg1_2}
+                  }
+    
+                  define one_off_inline {
+                    compliance_map('other_profile', 'ONE_OFF', 'This is awesome')
+    
+                    notify { $name: }
+                  }
+    
+                  include '::test1'
+                  include '::test2::test3'
+    
+                  testdef1 { 'test_definition': }
+                  testdef2 { 'test_definition': defarg1_2 => 'test_bad' }
+                  one_off_inline { 'one off': }
+    
+                  compliance_map('other_profile', 'TOP_LEVEL', 'Top level call')
+                EOM
               }
-
-              define testdef1 (
-                $defarg1_1 = 'deffoo1_1'
-              ) {
-                notify { 'testdef1': message => $defarg1_1}
-              }
-
-              define testdef2 (
-                $defarg1_2 = 'deffoo1_2',
-                $defarg2_2 = 'foo'
-              ) {
-                notify { 'testdef2': message => $defarg1_2}
-              }
-
-              define one_off_inline {
-                compliance_map('other_profile', 'ONE_OFF', 'This is awesome')
-
-                notify { $name: }
-              }
-
-              include '::test1'
-              include '::test2::test3'
-
-              testdef1 { 'test_definition': }
-              testdef2 { 'test_definition': defarg1_2 => 'test_bad' }
-              one_off_inline { 'one off': }
-
-              compliance_map('other_profile', 'TOP_LEVEL', 'Top level call')
-            EOM
-          }
-
+          end
           let(:facts) { facts }
 
           ['yaml','json'].each do |report_format|
@@ -330,37 +384,38 @@ describe 'compliance_markup' do
                 it 'should have a documented_missing_parameters section' do
                   expect( report['compliance_profiles'][profile_name]['documented_missing_parameters'] ).to_not be_empty
                 end
+                if (data[:profile_type] == 'Array')
+                  it 'should note the "other" profile' do
+                    expect( report['compliance_profiles']['other_profile'] ).to_not be_empty
+                  end
 
-                it 'should note the "other" profile' do
-                  expect( report['compliance_profiles']['other_profile'] ).to_not be_empty
-                end
+                  it 'should not include an empty compliant section for the "other" profile' do
+                    expect( report['compliance_profiles']['other_profile']['compliant'] ).to be_nil
+                  end
 
-                it 'should not include an empty compliant section for the "other" profile' do
-                  expect( report['compliance_profiles']['other_profile']['compliant'] ).to be_nil
-                end
+                  it 'should not include an empty non_compliant section for the "other" profile' do
+                    expect( report['compliance_profiles']['other_profile']['non_compliant'] ).to be_nil
+                  end
 
-                it 'should not include an empty non_compliant section for the "other" profile' do
-                  expect( report['compliance_profiles']['other_profile']['non_compliant'] ).to be_nil
-                end
+                  it 'should not include an empty documented_missing_resources section for the "other" profile' do
+                    expect( report['compliance_profiles']['other_profile']['documented_missing_resources'] ).to be_nil
+                  end
 
-                it 'should not include an empty documented_missing_resources section for the "other" profile' do
-                  expect( report['compliance_profiles']['other_profile']['documented_missing_resources'] ).to be_nil
-                end
+                  it 'should not include an empty documented_missing_parameters section for the "other" profile' do
+                    expect( report['compliance_profiles']['other_profile']['documented_missing_parameters'] ).to be_nil
+                  end
 
-                it 'should not include an empty documented_missing_parameters section for the "other" profile' do
-                  expect( report['compliance_profiles']['other_profile']['documented_missing_parameters'] ).to be_nil
-                end
+                  it 'should have a custom_entries section for the "other" profile' do
+                    expect( report['compliance_profiles']['other_profile']['custom_entries'] ).to_not be_empty
+                  end
 
-                it 'should have a custom_entries section for the "other" profile' do
-                  expect( report['compliance_profiles']['other_profile']['custom_entries'] ).to_not be_empty
-                end
+                  it 'should have custom_entries for the "other" profile that have identifiers and notes' do
 
-                it 'should have custom_entries for the "other" profile that have identifiers and notes' do
-
-                  entry = report['compliance_profiles']['other_profile']['custom_entries']['One_off_inline::one off'].first
-                  expect(entry['identifiers']).to_not be_empty
-                  expect(entry['notes']).to_not be_empty
-                end
+                    entry = report['compliance_profiles']['other_profile']['custom_entries']['One_off_inline::one off'].first
+                    expect(entry['identifiers']).to_not be_empty
+                    expect(entry['notes']).to_not be_empty
+                  end
+                  end
               end
 
               context 'when running with the default options' do
@@ -476,6 +531,7 @@ describe 'compliance_markup' do
 =end
             end
           end
+        end
         end
       end
     end

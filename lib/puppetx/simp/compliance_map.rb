@@ -263,7 +263,9 @@ def compliance_map(args, context)
     report["version"] = '1.0.1';
     report["compliance_profiles"] = {}
     profile_list = get_compliance_profiles
-    if profile_list.class.to_s == "Array"
+    unless profile_list.class.to_s == "Array"
+      profile_list = [ profile_list ]
+    end
       profile_list.each do |profile|
         profile_report = {}
         report["compliance_profiles"][profile] = profile_report
@@ -351,7 +353,6 @@ def compliance_map(args, context)
             profile_report.delete(key);
           end
         end
-      end
     end
     write_server_report(main_config, report)
     add_file_to_client(main_config, report)
