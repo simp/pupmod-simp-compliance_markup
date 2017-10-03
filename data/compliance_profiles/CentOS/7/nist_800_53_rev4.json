@@ -637,7 +637,7 @@
         "identifiers": [
           "IA-5(1)(a)"
         ],
-        "value": 4
+        "value": 8
       },
       "pam::cracklib_enforce_for_root": {
         "identifiers": [
@@ -661,7 +661,7 @@
         "identifiers": [
           "IA-5(1)(a)"
         ],
-        "value": 0
+        "value": 4
       },
       "pam::cracklib_maxrepeat": {
         "identifiers": [
@@ -679,7 +679,7 @@
         "identifiers": [
           "IA-5(1)(a)"
         ],
-        "value": 3
+        "value": 4
       },
       "pam::cracklib_minlen": {
         "identifiers": [
@@ -715,7 +715,7 @@
         "identifiers": [
           "IA-1"
         ],
-        "value": 5
+        "value": 3
       },
       "pam::deny_if_unknown": {
         "identifiers": [
@@ -1312,7 +1312,7 @@
           "AC-10"
         ],
         "notes": "Setting this number higher than 10 should be justified",
-        "value": 11
+        "value": 10
       },
       "simp:root_user::manage_group": {
         "identifiers": [
@@ -1841,7 +1841,7 @@
         "identifiers": [
           "AC-7(a)"
         ],
-        "value": 5
+        "value": 3
       },
       "simp_openldap::server::conf::default_ldif::ppolicy_pwd_min_age": {
         "identifiers": [
@@ -1853,7 +1853,7 @@
         "identifiers": [
           "IA-5(1)(a)"
         ],
-        "value": 14
+        "value": 15
       },
       "simp_openldap::server::conf::default_ldif::ppolicy_pwd_must_change": {
         "identifiers": [
@@ -2775,7 +2775,7 @@
           "IA-5(c)",
           "IA-5(1)(d)"
         ],
-        "value": 14
+        "value": 15
       },
       "useradd::login_defs::pass_warn_age": {
         "identifiers": [
@@ -2836,7 +2836,7 @@
           "AC-2(4)",
           "AC-6"
         ],
-        "value": "0007"
+        "value": "0077"
       },
       "useradd::manage_etc_profile": {
         "identifiers": [

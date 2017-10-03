@@ -1,3 +1,6 @@
+* Mon Oct 03 2017 Dylan Cochran <dylan.cochran@onyxpoint.com> - 2.3.2-0
+- Fix discrepencies between nist and disa compliance profiles
+
 * Fri Sep 22 2017 Dylan Cochran <dylan.cochran@onyxpoint.com> - 2.3.1-0
 - Refactor report generator to use a shared file format parser/compiler.
 - Add vendored 'profiles-in-modules' support
