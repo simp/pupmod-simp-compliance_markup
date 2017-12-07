@@ -1,3 +1,11 @@
+* Wed Dec 13 2017 Nick Markowski <nicholas.markowski@onyxpoint.com> - 2.3.4-0
+- Further aligned the EL7 disa_stig profile with scap-security-guide 0.1.33-5
+  - Added oval-ids to map puppet parameters to openscap tests and SIMP
+    remediations.  Note this mapping is NOT complete.
+- Added a policy evaluation response report for CentOS 7
+  - Includes remedies and justifications to address failures in
+    the openscap scan
+
 * Wed Nov 15 2017 Trevor Vaughan <tvaughan@onyxpoint.com> - 2.3.3-0
 - Aligned the EL7 disa_stig profile with the latest SSG content
 - Fixed several parameters with incorrect data types
