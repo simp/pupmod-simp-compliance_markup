@@ -2,7 +2,7 @@
 - Further aligned the EL7 disa_stig profile with scap-security-guide 0.1.33-5
   - Added oval-ids to map puppet parameters to openscap tests and SIMP
     remediations.  Note this mapping is NOT complete.
-- Added a policy evaluation response report for CentOS 7
+- See simp/doc for a policy evaluation response report for CentOS 7
   - Includes remedies and justifications to address failures in
     the openscap scan
 
