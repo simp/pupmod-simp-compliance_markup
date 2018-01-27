@@ -16,3 +16,5 @@ vendor/
 junit/
 log/
 doc/
+.gem_date
+.gem_version
