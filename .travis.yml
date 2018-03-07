@@ -25,8 +25,13 @@ before_install:
   - rm -f Gemfile.lock
 
 jobs:
+  allow_failures:
+    - env: STRICT_VARIABLES=yes TRUSTED_NODE_DATA=yes PUPPET_VERSION="~> 5.0"
+    # SIMP-4516 has been entered to fix the test that won't run in docker
+    - stage: acceptance
+
   include:
-    - stage: spec
+    - stage: check
       rvm: 2.4.1
       env: STRICT_VARIABLES=yes TRUSTED_NODE_DATA=yes PUPPET_VERSION="~> 5"
       script:
@@ -34,7 +39,7 @@ jobs:
         - bundle exec rake check:test_file
         - bundle exec rake pkg:check_version
         - bundle exec rake metadata_lint
-        - bundle exec rake compare_latest_tag
+        - bundle exec rake pkg:compare_latest_tag
 
     - stage: spec
       rvm: 2.4.1
@@ -67,7 +72,7 @@ jobs:
         - docker
       script:
         - bundle exec rake beaker:suites[default,docker]
-      env: PUPPET_VERSION"~> 4.8.2"
+      env: PUPPET_VERSION="4.8.2"
 
     # This needs to be last since we have an acceptance test
     - stage: deploy

@@ -1,4 +1,13 @@
-* Wed Dec 13 2017 Nick Markowski <nicholas.markowski@onyxpoint.com> - 2.3.4-0
+* Tue Mar 06 2018 Liz Nemsick <lnemsick.simp@gmail.com> - 2.3.3-0
+- Updated TMOUT setting in /etc/profile.d/simp.sh to match EL7 STIG
+  setting (Reference: RHEL-07-040160)
+- Added missing audispd program to simp_rsyslog::default_logs
+- Added missing ' IPT:' message start to simp_ryslog::default_logs.
+  This is required for iptables violation messages because some
+  versions of rsyslog add a space separating the message
+  timestamp/id and the message.
+
+* Wed Dec 13 2017 Nick Markowski <nicholas.markowski@onyxpoint.com> - 2.3.3-0
 - Further aligned the EL7 disa_stig profile with scap-security-guide 0.1.33-5
   - Added oval-ids to map puppet parameters to openscap tests and SIMP
     remediations.  Note this mapping is NOT complete.

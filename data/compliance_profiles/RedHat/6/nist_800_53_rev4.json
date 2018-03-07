@@ -2109,6 +2109,7 @@
             "sudo",
             "sudosh",
             "yum",
+            "audispd",
             "auditd",
             "audit",
             "systemd",
@@ -2122,6 +2123,7 @@
             "*.emerg"
           ],
           "msg_starts": [
+            " IPT:",
             "IPT:"
           ],
           "msg_regex": [

@@ -711,6 +711,7 @@
         "identifiers": [
           "RHEL-07-010370",
           "SRG-OS-000329-GPOS-00128",
+          "SRG-OS-000021-GPOS-00005",
           "CCI-002238"
         ],
         "value": 900
@@ -749,17 +750,6 @@
           "xccdf_org:ssgproject:content_rule_accounts_passwords_pam_faillock_unlock_time"
         ],
         "value": "never"
-      },
-      "pam::fail_interval": {
-        "identifiers": [
-          "SRG-OS-000329-GPOS-00128",
-          "SRG-OS-000021-GPOS-00005",
-          "CCI-002238"
-        ],
-        "oval-ids": [
-          "xccdf_org:ssgproject:content_rule_accounts_passwords_pam_faillock_interval"
-        ],
-        "value": 900
       },
       "pam::use_netgroups": {
         "identifiers": [
@@ -1565,6 +1555,7 @@
             "sudo",
             "sudosh",
             "yum",
+            "audispd",
             "auditd",
             "audit",
             "systemd",
@@ -1578,6 +1569,7 @@
             "*.emerg"
           ],
           "msg_starts": [
+            " IPT:",
             "IPT:"
           ],
           "msg_regex": [
@@ -1976,8 +1968,12 @@
       "useradd::etc_profile::session_timeout": {
         "identifiers": [
           "RHEL-07-010070",
+          "RHEL-07-040160",
           "SRG-OS-000029-GPOS-00010",
-          "CCI-000057"
+          "SRG-OS-000163-GPOS-00072",
+          "CCI-000057",
+          "CCI-000361",
+          "CCI-001133"
         ],
         "oval-ids": [
           "xccdf_org:ssgproject:content_rule_accounts_tmout"
@@ -2226,17 +2222,6 @@
           "xccdf_org:ssgproject:content_rule_accounts_umask_etc_login_defs"
         ],
         "value": "077"
-      },
-      "useradd::etc_profile::session_timeout": {
-        "identifiers": [
-          "SRG-OS-000163-GPOS-00072",
-          "CCI-001133",
-          "CCI-000361"
-        ],
-        "oval-ids": [
-          "xccdf_org:ssgproject:content_rule_accounts_tmout"
-        ],
-        "value": 10
       },
       "useradd::shells_default": {
         "identifiers": [
