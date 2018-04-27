@@ -1963,7 +1963,7 @@
         "oval-ids": [
           "xccdf_org:ssgproject:content_rule_account_disable_post_pw_expiration"
         ],
-        "value": 35
+        "value": 0
       },
       "useradd::etc_profile::session_timeout": {
         "identifiers": [
