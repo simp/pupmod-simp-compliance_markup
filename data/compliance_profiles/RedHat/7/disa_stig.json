@@ -1692,6 +1692,32 @@
         ],
         "value": "/etc/issue"
       },
+      "ssh::server::conf::clientalivecountmax": {
+        "identifiers": [
+          "RHEL-07-040340",
+          "SRG-OS-000163-GPOS-00072",
+          "CCI-001133",
+          "CCI-002361"
+        ],
+        "value": 0
+      },
+      "ssh::server::conf::clientaliveinterval": {
+        "identifiers": [
+          "RHEL-07-040320",
+          "SRG-OS-000163-GPOS-00072",
+          "SRG-OS-000279-GPOS-00109",
+          "CCI-000366"
+        ],
+        "value": 600
+      },
+      "ssh::server::conf::compression": {
+        "identifiers": [
+          "RHEL-07-040470",
+          "SRG-OS-000480-GPOS-00227",
+          "CCI-000366"
+        ],
+        "value": false
+      },
       "ssh::server::conf::enable_fallback_ciphers": {
         "identifiers": [
           "RHEL-07-040600",
@@ -1714,6 +1740,53 @@
           "CCI-001814"
         ],
         "value": false
+      },
+      "ssh::server::conf::hostbasedauthentication": {
+        "identifiers": [
+          "RHEL-07-010470",
+          "SRG-OS-000480-GPOS-00229",
+          "CCI-000366"
+        ],
+        "value": false
+      },
+      "ssh::server::conf::ignorerhosts": {
+        "identifiers": [
+          "RHEL-07-040350",
+          "SRG-OS-000480-GPOS-00227",
+          "CCI-000366"
+        ],
+        "value": true
+      },
+      "ssh::server::conf::ignoreuserknownhosts": {
+        "identifiers": [
+          "RHEL-07-040380",
+          "SRG-OS-000480-GPOS-00222",
+          "CCI-000366"
+        ],
+        "value": true
+      },
+      "ssh::server::conf::kerberosauthentication": {
+        "identifiers": [
+          "RHEL-07-040440",
+          "SRG-OS-000364-GPOS-00151",
+          "CCI-000318",
+          "CCI-000368",
+          "CCI-001812",
+          "CCI-001813",
+          "CCI-001814"
+        ],
+        "value": false
+      },
+      "ssh::server::conf::macs": {
+        "identifiers": [
+          "RHEL-07-040400",
+          "SRG-OS-000250-GPOS-00093",
+          "CCI-001453"
+        ],
+        "value": [
+          "hmac-sha2-256",
+          "hmac-sha2-512"
+        ]
       },
       "ssh::server::conf::pam": {
         "identifiers": [
@@ -1739,6 +1812,14 @@
         ],
         "value": false
       },
+      "ssh::server::conf::permituserenvironment": {
+        "identifiers": [
+          "RHEL-07-010460",
+          "SRG-OS-000480-GPOS-00229",
+          "CCI-000366"
+        ],
+        "value": false
+      },
       "ssh::server::conf::pki": {
         "identifiers": [
           "RHEL-07-040260",
@@ -1750,6 +1831,30 @@
           "CCI-002421",
           "CCI-002420",
           "CCI-002422"
+        ],
+        "value": true
+      },
+      "ssh::server::conf::protocol": {
+        "identifiers": [
+          "CCI-000366",
+          "CCI-000197",
+          "SRG-OS-000074-GPOS-00042"
+        ],
+        "value": [2]
+      },
+      "ssh::server::conf::rhostsrsaauthentication": {
+        "identifiers": [
+          "RHEL-07-040330",
+          "SRG-OS-000480-GPOS-00227",
+          "CCI-000366"
+        ],
+        "value": false
+      },
+      "ssh::server::conf::strictmodes": {
+        "identifiers": [
+          "RHEL-07-040450",
+          "SRG-OS-000480-GPOS-00227",
+          "CCI-000366"
         ],
         "value": true
       },
@@ -1779,7 +1884,7 @@
         "oval-ids": [
           "xccdf_org:ssgproject:content_rule_sshd_use_priv_separation"
         ],
-        "value": true
+        "value": "sandbox"
       },
       "ssh::server::conf::printlastlog": {
         "identifiers": [

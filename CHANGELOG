@@ -1,3 +1,6 @@
+* Fri May 04 2018 Jeanne Greulich <jeanne.greulich@onyxpoint.com> - 2.3.4-0
+- Added and updated ssh::server::conf entries for DISA STIG
+ 
 * Mon Apr 30 2018 Trevor Vaughan <tvaughan@onyxpoint.com> - 2.3.4-0
 - Added 'svckill::mode' to be 'enforcing' in STIG and 800-53 modes
 
