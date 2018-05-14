@@ -1716,7 +1716,7 @@
           "SRG-OS-000480-GPOS-00227",
           "CCI-000366"
         ],
-        "value": false
+        "value": "delayed"
       },
       "ssh::server::conf::enable_fallback_ciphers": {
         "identifiers": [

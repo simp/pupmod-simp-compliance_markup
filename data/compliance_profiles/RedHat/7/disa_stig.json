@@ -1716,7 +1716,7 @@
           "SRG-OS-000480-GPOS-00227",
           "CCI-000366"
         ],
-        "value": false
+        "value": "delayed"
       },
       "ssh::server::conf::enable_fallback_ciphers": {
         "identifiers": [
@@ -1834,14 +1834,6 @@
         ],
         "value": true
       },
-      "ssh::server::conf::protocol": {
-        "identifiers": [
-          "CCI-000366",
-          "CCI-000197",
-          "SRG-OS-000074-GPOS-00042"
-        ],
-        "value": [2]
-      },
       "ssh::server::conf::rhostsrsaauthentication": {
         "identifiers": [
           "RHEL-07-040330",
@@ -1885,6 +1877,14 @@
           "xccdf_org:ssgproject:content_rule_sshd_use_priv_separation"
         ],
         "value": "sandbox"
+      },
+      "ssh::server::conf::protocol": {
+        "identifiers": [
+          "CCI-000366",
+          "CCI-000197",
+          "SRG-OS-000074-GPOS-00042"
+        ],
+        "value": [2]
       },
       "ssh::server::conf::printlastlog": {
         "identifiers": [
