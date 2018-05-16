@@ -1576,7 +1576,7 @@
         ],
         "value": 0
       },
-      "simp::yum::enable_auto_updates": {
+      "simp::yum::schedule::enable": {
         "identifiers": [
           "CM-3(3)",
           "CM-11(b)",

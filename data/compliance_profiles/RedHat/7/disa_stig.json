@@ -1178,14 +1178,32 @@
         ],
         "value": 1
       },
-      "simp::yum::enable_auto_updates": {
+      "simp::yum::schedule::enable": {
         "identifiers": [
-          "RHEL-07-021810",
-          "SRG-OS-000191-GPOS-00080",
-          "CCI-001233"
+          "RHEL-07-020260",
+          "SRG-OS-000480-GPOS-00227",
+          "CCI-000366"
         ],
-        "notes": "Enabled for internal repos only. Updated packages still need to be applied to the configured yum repos",
+        "notes": "For this control to be fully applied, updated packages need to be applied to the configured yum repos",
         "value": true
+      },
+      "simp::yum::schedule::hour": {
+        "identifiers": [
+          "RHEL-07-020260",
+          "SRG-OS-000480-GPOS-00227",
+          "CCI-000366"
+        ],
+        "notes": "The actual hour value can differ, as long as it does not disable the update cron job.",
+        "value": 0
+      },
+      "simp::yum::schedule::minute": {
+        "identifiers": [
+          "RHEL-07-020260",
+          "SRG-OS-000480-GPOS-00227",
+          "CCI-000366"
+        ],
+        "notes": "The actual minute value can differ, as long as it does not disable the update cron job.",
+        "value": 12
       },
       "simp_apache::conf::group": {
         "identifiers": [
