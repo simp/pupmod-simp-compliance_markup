@@ -1182,6 +1182,22 @@
         ],
         "value": 0
       },
+      "simp::sysctl::net__ipv4__conf__default__accept_source_route": {
+        "identifiers": [
+          "RHEL-07-040620",
+          "SRG-OS-000480-GPOS-00227",
+          "CCI-000366"
+        ],
+        "value": 0
+      },
+      "simp::sysctl::net__ipv4__conf__default__send_redirects": {
+        "identifiers": [
+          "RHEL-07-040650",
+          "SRG-OS-000480-GPOS-00227",
+          "CCI-000366"
+        ],
+        "value": 0
+      },
       "simp::sysctl::net__ipv4__icmp_echo_ignore_broadcasts": {
         "identifiers": [
           "RHEL-07-040870",
@@ -1198,14 +1214,40 @@
         ],
         "value": 1
       },
-      "simp::yum::enable_auto_updates": {
+      "simp::sysctl::net__ipv6__conf__all__accept_source_route": {
         "identifiers": [
-          "RHEL-07-021810",
-          "SRG-OS-000191-GPOS-00080",
-          "CCI-001233"
+          "RHEL-07-040830",
+          "SRG-OS-000480-GPOS-00227",
+          "CCI-000366"
         ],
-        "notes": "Enabled for internal repos only. Updated packages still need to be applied to the configured yum repos",
+        "value": 0
+      },
+      "simp::yum::schedule::enable": {
+        "identifiers": [
+          "RHEL-07-020260",
+          "SRG-OS-000480-GPOS-00227",
+          "CCI-000366"
+        ],
+        "notes": "For this control to be fully applied, updated packages need to be applied to the configured yum repos",
         "value": true
+      },
+      "simp::yum::schedule::hour": {
+        "identifiers": [
+          "RHEL-07-020260",
+          "SRG-OS-000480-GPOS-00227",
+          "CCI-000366"
+        ],
+        "notes": "The actual hour value can differ, as long as it does not disable the update cron job.",
+        "value": 0
+      },
+      "simp::yum::schedule::minute": {
+        "identifiers": [
+          "RHEL-07-020260",
+          "SRG-OS-000480-GPOS-00227",
+          "CCI-000366"
+        ],
+        "notes": "The actual minute value can differ, as long as it does not disable the update cron job.",
+        "value": 12
       },
       "simp_apache::conf::group": {
         "identifiers": [
