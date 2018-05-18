@@ -10,7 +10,7 @@
           "CCI-000366"
         ],
         "value": [
-          "R = p+i+l+n+u+g+s+m+c+sha1+sha256",
+          "R = p+i+l+n+u+g+s+m+c+acl+sha1+sha256",
           "L = p+i+l+n+u+g+acl+xattrs",
           "> = p+i+l+n+u+g+S+acl+xattrs",
           "ALLXTRAHASHES = sha1+sha256",
