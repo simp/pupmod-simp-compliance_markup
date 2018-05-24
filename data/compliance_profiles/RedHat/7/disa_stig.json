@@ -3,6 +3,26 @@
   "compliance_markup::compliance_map": {
     "version": "1.0.0",
     "disa_stig": {
+      "aide::aliases": {
+        "identifiers": [
+          "RHEL-07-021600",
+          "SRG-OS-000480-GPOS-00227",
+          "CCI-000366"
+        ],
+        "value": [
+          "R = p+i+l+n+u+g+s+m+c+acl+sha1+sha256",
+          "L = p+i+l+n+u+g+acl+xattrs",
+          "> = p+i+l+n+u+g+S+acl+xattrs",
+          "ALLXTRAHASHES = sha1+sha256",
+          "EVERYTHING = R+ALLXTRAHASHES",
+          "NORMAL = R",
+          "DIR = p+i+n+u+g+acl+xattrs",
+          "PERMS = p+i+u+g+acl",
+          "LOG = >",
+          "LSPP = R",
+          "DATAONLY = p+n+u+g+s+acl+selinux+xattrs+sha1+sha256"
+        ]
+      },
       "aide::default_rules": {
         "identifiers": [
           "RHEL-07-021820",
