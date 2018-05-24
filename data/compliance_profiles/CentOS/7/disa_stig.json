@@ -830,10 +830,12 @@
           "CCI-000366"
         ],
         "value": {
-          "smtpd_client_restrictions": [
-            "permit_mynetworks",
-            "reject"
-          ]
+          "smtpd_client_restrictions":  {
+            "value": [
+              "permit_mynetworks",
+              "reject"
+            ]
+          }
         }
       },
       "pupmod::master::auditd": {
