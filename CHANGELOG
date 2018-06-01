@@ -1,3 +1,6 @@
+* Fri Jun 01 2018 Liz Nemsick <lnemsick.simp@gmail.com> - 2.3.4-0
+- Added auditd::action_mail_acct entries for DISA STIG
+
 * Fri May 18 2018 Jeanne Greulich <jeanne.greulich@onyxpoint.com> - 2.3.4-0
 - Added postfix main.cf settings to el7 DISA STIG.
  
