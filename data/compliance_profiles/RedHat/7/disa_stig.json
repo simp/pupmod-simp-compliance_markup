@@ -240,6 +240,18 @@
         ],
         "value": true
       },
+      "auditd::config::audit_profiles::simp::audit_selinux_cmds": {
+        "identifiers": [
+          "SRG-OS-000392-GPOS-00172",
+          "SRG-OS-000463-GPOS-00207",
+          "SRG-OS-000465-GPOS-00209",
+          "RHEL-07-030560",
+          "RHEL-07-030570",
+          "RHEL-07-030580",
+          "RHEL-07-030590"
+        ],
+        "value": true
+      },
       "auditd::config::audit_profiles::simp::audit_su_root_activity": {
         "identifiers": [
           "SRG-OS-000327-GPOS-00127",
