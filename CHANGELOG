@@ -1,4 +1,4 @@
-* Wed Jun 06 2018 Chris Tessmer <chris.tessmer@onyxpoint.com> - 2.3.5-0
+* Wed Jun 06 2018 Chris Tessmer <chris.tessmer@onyxpoint.com> - 2.3.4-0
 - Added auditd::config::audit_profiles::simp::audit_session_files and
   auditd::config::audit_profiles::simp::audit_session_files_tag entries
   for DISA STIG
