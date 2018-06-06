@@ -1,6 +1,10 @@
-* Tue Jun 05 2018 Liz Nemsick <lnemsick.simp@gmail.com> - 2.3.4-0
+* Wed Jun 06 2018 Liz Nemsick <lnemsick.simp@gmail.com> - 2.3.4-0
 - Added auditd::config::audit_profiles::simp::audit_sudoers entries
   for DISA STIG
+- Added auditd::failure_mode entries for DISA STIG
+- Added auditd::config::audit_profiles::simp::audit_selinux_cmds
+  entries for DISA STIG.
+- Corrected auditd::enable identifiers in DISA STIG profiles 
 
 * Fri May 18 2018 Jeanne Greulich <jeanne.greulich@onyxpoint.com> - 2.3.4-0
 - Added postfix main.cf settings to el7 DISA STIG.
