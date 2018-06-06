@@ -197,6 +197,7 @@ acceptance-default:
   <<: *cache_bundler
   <<: *setup_env_beaker
   script:
+    - bundle exec rake spec_clean
     - bundle exec rake beaker:suites[default]
 
 acceptance-fips-default:
@@ -208,4 +209,5 @@ acceptance-fips-default:
   variables:
     BEAKER_fips: 'yes'
   script:
+    - bundle exec rake spec_clean
     - bundle exec rake beaker:suites[default]
