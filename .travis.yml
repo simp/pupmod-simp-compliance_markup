@@ -42,8 +42,8 @@ jobs:
         - bundle exec rake pkg:check_version
         - bundle exec rake pkg:compare_latest_tag
         - bundle exec rake pkg:create_tag_changelog
-        - bundle exec ruby -r json -e 'Dir.glob("**/*.json").map{|j| puts "Attempting to load #{j}";JSON.load(File.new(j))}'
-        - bundle exec ruby -r yaml -e 'Dir.glob("**/*.y{,a}ml").map{|y| puts "Attempting to load #{y}";YAML.load(File.new(y))}'
+        - bundle exec ruby -r json -e 'Dir.glob("**/*.json").map{|j| puts "Attempting to load \#{j}";JSON.load(File.new(j))}'
+        - bundle exec ruby -r yaml -e 'Dir.glob("**/*.y{,a}ml").map{|y| puts "Attempting to load \#{y}";YAML.load(File.new(y))}'
         - bundle exec puppet module build
 
     - stage: spec
