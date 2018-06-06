@@ -48,8 +48,8 @@
     - bundle exec rake pkg:compare_latest_tag
     - bundle exec rake lint
     - bundle exec rake clean
-    - bundle ruby -r json -e 'Dir.glob("**/*.json").map{|j| puts "Attempting to load #{j}";JSON.load(File.new(j))}'
-    - bundle ruby -r yaml -e 'Dir.glob("**/*.y{,a}ml").map{|y| puts "Attempting to load #{y}";YAML.load(File.new(y))}'
+    - ruby -r json -e 'Dir.glob("**/*.json").map{|j| puts "Attempting to load "+j;JSON.load(File.new(j))}'
+    - ruby -r yaml -e 'Dir.glob("**/*.y{,a}ml").map{|y| puts "Attempting to load "+y;YAML.load(File.new(y))}'
     - bundle exec puppet module build
 
 .spec_tests: &spec_tests

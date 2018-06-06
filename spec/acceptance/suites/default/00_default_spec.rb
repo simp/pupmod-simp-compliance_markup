@@ -56,11 +56,7 @@ EOS
         tmpdir = Dir.mktmpdir
         begin
           Dir.chdir(tmpdir) do
-            if host[:hypervisor] == 'docker'
-              %x(docker cp "#{host.hostname}:/opt/puppetlabs/puppet/cache/simp/compliance_reports/#{fqdn}/compliance_report.json" .)
-            else
-              scp_from(host, "/opt/puppetlabs/puppet/cache/simp/compliance_reports/#{fqdn}/compliance_report.json", '.')
-            end
+            scp_from(host, "/opt/puppetlabs/puppet/cache/simp/compliance_reports/#{fqdn}/compliance_report.json", '.')
 
             expect {
               @compliance_data[:report] = JSON.load(File.read('compliance_report.json'))
