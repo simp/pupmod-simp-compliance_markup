@@ -42,6 +42,8 @@ jobs:
         - bundle exec rake pkg:check_version
         - bundle exec rake pkg:compare_latest_tag
         - bundle exec rake pkg:create_tag_changelog
+        - ruby -r json -e 'Dir.glob("**/*.json").map{|j| puts "Attempting to load #{j}";JSON.load(File.new(j))}'
+        - ruby -r yaml -e 'Dir.glob("**/*.y{,a}ml").map{|y| puts "Attempting to load #{y}";YAML.load(File.new(y))}'
         - bundle exec puppet module build
 
     - stage: spec
@@ -71,6 +73,7 @@ jobs:
     - stage: acceptance
       sudo: required
       rvm: 2.1.9
+      bundler_args: --without development --path .vendor
       services:
         - docker
       script:
