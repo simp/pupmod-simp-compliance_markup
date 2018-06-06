@@ -37,9 +37,14 @@ jobs:
       script:
         - bundle exec rake check:dot_underscore
         - bundle exec rake check:test_file
-        - bundle exec rake pkg:check_version
+        - bundle exec rake lint
         - bundle exec rake metadata_lint
+        - bundle exec rake pkg:check_version
         - bundle exec rake pkg:compare_latest_tag
+        - bundle exec rake pkg:create_tag_changelog
+        - ruby -r json -e 'Dir.glob("**/*.json").map{|j| puts "Attempting to load "+j;JSON.load(File.new(j))}'
+        - ruby -r yaml -e 'Dir.glob("**/*.y{,a}ml").map{|y| puts "Attempting to load "+y;YAML.load(File.new(y))}'
+        - bundle exec puppet module build
 
     - stage: spec
       rvm: 2.4.1
@@ -68,10 +73,13 @@ jobs:
     - stage: acceptance
       sudo: required
       rvm: 2.1.9
+      bundler_args: --without development --path .vendor
       services:
         - docker
       script:
+        - bundle exec rake spec_clean
         - bundle exec rake beaker:suites[default,docker]
+      # PUPPET_VERSION can't handle a '~' here due to code in the test
       env: PUPPET_VERSION="4.8.2"
 
     # This needs to be last since we have an acceptance test

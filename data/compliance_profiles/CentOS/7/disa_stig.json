@@ -102,6 +102,14 @@
         ],
         "value": 0
       },
+      "auditd::action_mail_acct": {
+        "identifiers": [
+          "RHEL-07-030350",
+          "SRG-OS-000343-GPOS-00134",
+          "CCI-001855"
+        ],
+        "value": "root"
+      },
       "auditd::at_boot": {
         "identifiers": [
           "RHEL-07-030310",
