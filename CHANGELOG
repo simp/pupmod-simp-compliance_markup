@@ -1,6 +1,10 @@
+* Wed Jun 06 2018 Liz Nemsick <lnemsick.simp@gmail.com> - 2.3.4-0
+- Added auditd::failure_mode entries for DISA STIG
+- Corrected auditd::enable identifiers in DISA STIG profiles 
+
 * Fri May 18 2018 Jeanne Greulich <jeanne.greulich@onyxpoint.com> - 2.3.4-0
 - Added postfix main.cf settings to el7 DISA STIG.
- 
+
 * Wed May 16 2018 Liz Nemsick <lnemsick.simp@gmail.com> - 2.3.4-0
 - Added aide::aliases entries for DISA STIG
 - Replaced OBE simp::yum::enable_auto_updates entries with

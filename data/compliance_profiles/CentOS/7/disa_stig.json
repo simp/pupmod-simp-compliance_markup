@@ -306,14 +306,24 @@
       },
       "auditd::enable": {
         "identifiers": [
-          "RHEL-07-030010",
+          "RHEL-07-030000",
           "SRG-OS-000038-GPOS-00016",
           "SRG-OS-000039-GPOS-00017",
           "SRG-OS-000042-GPOS-00021",
-          "CCI-000131",
+          "SRG-OS-000254-GPOS-00095",
+          "SRG-OS-000255-GPOS-00096",
           "CCI-000126"
         ],
         "value": true
+      },
+      "auditd::failure_mode": {
+        "identifiers": [
+          "RHEL-07-030010",
+          "SRG-OS-000046-GPOS-00022",
+          "SRG-OS-000047-GPOS-00023",
+          "CCI: CCI-000139"
+        ],
+        "value": 2
       },
       "auditd::package_name": {
         "identifiers": [
