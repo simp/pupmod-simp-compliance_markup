@@ -37,9 +37,12 @@ jobs:
       script:
         - bundle exec rake check:dot_underscore
         - bundle exec rake check:test_file
-        - bundle exec rake pkg:check_version
+        - bundle exec rake lint
         - bundle exec rake metadata_lint
+        - bundle exec rake pkg:check_version
         - bundle exec rake pkg:compare_latest_tag
+        - bundle exec rake pkg:create_tag_changelog
+        - bundle exec puppet module build
 
     - stage: spec
       rvm: 2.4.1
@@ -71,7 +74,9 @@ jobs:
       services:
         - docker
       script:
+        - bundle exec rake spec_clean
         - bundle exec rake beaker:suites[default,docker]
+      # PUPPET_VERSION can't handle a '~' here due to code in the test
       env: PUPPET_VERSION="4.8.2"
 
     # This needs to be last since we have an acceptance test
