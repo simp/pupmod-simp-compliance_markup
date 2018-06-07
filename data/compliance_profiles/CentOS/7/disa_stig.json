@@ -265,10 +265,10 @@
           "SRG-OS-000392-GPOS-00172",
           "SRG-OS-000470-GPOS-00214",
           "SRG-OS-000473-GPOS-00218",
-          "RHEL-07-030610"
+          "RHEL-07-030600"
         ],
         "oval-ids": [
-          "xccdf_org:ssgproject:content_rule_audit_rules_login_events_faillock"
+          "xccdf_org:ssgproject:content_rule_audit_rules_login_events_tallylog"
         ],
         "notes": "The SIMP profile applies a base set of audit rules that adhere to guidance from several sources",
         "value": true
@@ -278,10 +278,10 @@
           "SRG-OS-000392-GPOS-00172",
           "SRG-OS-000470-GPOS-00214",
           "SRG-OS-000473-GPOS-00218",
-          "RHEL-07-030610"
+          "RHEL-07-030600"
         ],
         "oval-ids": [
-          "xccdf_org:ssgproject:content_rule_audit_rules_login_events_faillock"
+          "xccdf_org:ssgproject:content_rule_audit_rules_login_events_tallylog"
         ],
         "notes": "The SIMP profile applies a base set of audit rules that adhere to guidance from several sources",
         "value": "logins"
