@@ -215,6 +215,16 @@
         ],
         "value": true
       },
+      "auditd::config::audit_profiles::simp::audit_crontab_cmd": {
+        "identifiers": [
+          "AU-2",
+          "SRG-OS-000042-GPOS-00020",
+          "SRG-OS-000392-GPOS-00172",
+          "SRG-OS-000471-GPOS-00215",
+          "CCI-000135"
+        ],
+        "value": true
+      },
       "auditd::config::audit_profiles::simp::audit_kernel_modules": {
         "identifiers": [
           "SRG-OS-000471-GPOS-00216",
@@ -245,6 +255,45 @@
         ],
         "oval-ids": [
           "xccdf_org:ssgproject:content_rule_audit_rules_login_events_faillock"
+        ],
+        "value": true
+      },
+      "auditd::config::audit_profiles::simp::audit_pam_timestamp_check_cmd": {
+        "identifiers": [
+          "AU-2",
+          "SRG-OS-000471-GPOS-00215",
+          "CCI-000172"
+        ],
+        "value": true
+      },
+      "auditd::config::audit_profiles::simp::audit_passwd_cmds": {
+        "identifiers": [
+          "AU-2",
+          "SRG-OS-000042-GPOS-00020",
+          "SRG-OS-000392-GPOS-00172",
+          "SRG-OS-000471-GPOS-00215",
+          "CCI-000135"
+        ],
+        "value": true
+      },
+      "auditd::config::audit_profiles::simp::audit_postfix_cmds": {
+        "identifiers": [
+          "AU-2",
+          "SRG-OS-000042-GPOS-00020",
+          "SRG-OS-000392-GPOS-00172",
+          "CCI-000135"
+        ],
+        "value": true
+      },
+      "auditd::config::audit_profiles::simp::audit_priv_cmds": {
+        "identifiers": [
+          "AU-2",
+          "SRG-OS-000037-GPOS-00015",
+          "SRG-OS-000042-GPOS-00020",
+          "SRG-OS-000392-GPOS-00172",
+          "SRG-OS-000462-GPOS-00206",
+          "SRG-OS-000471-GPOS-00215",
+          "CCI-000130"
         ],
         "value": true
       },
@@ -285,6 +334,16 @@
         ],
         "notes": "The SIMP profile applies a base set of audit rules that adhere to guidance from several sources",
         "value": "logins"
+      },
+      "auditd::config::audit_profiles::simp::audit_ssh_keysign_cmd": {
+        "identifiers": [
+          "AU-2",
+          "SRG-OS-000042-GPOS-00020",
+          "SRG-OS-000392-GPOS-00172",
+          "SRG-OS-000471-GPOS-00215",
+          "CCI-000135"
+        ],
+        "value": true
       },
       "auditd::config::audit_profiles::simp::audit_su_root_activity": {
         "identifiers": [

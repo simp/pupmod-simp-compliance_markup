@@ -1,16 +1,24 @@
+* Mon Jun 11 2018 Nick Miller <nick.miller@onyxpoint.com> - 2.3.4-0
+- DISA STIG changes:
+  - Added auditd::config::audit_profiles::simp::audit_crontab_cmd
+  - Added auditd::config::audit_profiles::simp::audit_pam_timestamp_check_cmd
+  - Added auditd::config::audit_profiles::simp::audit_passwd_cmds
+  - Added auditd::config::audit_profiles::simp::audit_postfix_cmds
+  - Added auditd::config::audit_profiles::simp::audit_priv_cmds
+  - Added auditd::config::audit_profiles::simp::audit_ssh_keysign_cmd
+
 * Wed Jun 06 2018 Chris Tessmer <chris.tessmer@onyxpoint.com> - 2.3.4-0
-- Added auditd::config::audit_profiles::simp::audit_session_files and
-  auditd::config::audit_profiles::simp::audit_session_files_tag entries
-  for DISA STIG
+- DISA STIG changes:
+  - Added auditd::config::audit_profiles::simp::audit_session_files
+  - Added auditd::config::audit_profiles::simp::audit_session_files_tag
 
 * Wed Jun 06 2018 Liz Nemsick <lnemsick.simp@gmail.com> - 2.3.4-0
-- Added auditd::action_mail_acct entries for DISA STIG
-- Added auditd::config::audit_profiles::simp::audit_sudoers entries
-  for DISA STIG
-- Added auditd::config::audit_profiles::simp::audit_selinux_cmds
-  entries for DISA STIG.
-- Added auditd::failure_mode entries for DISA STIG
-- Corrected auditd::enable identifiers in DISA STIG profiles 
+- DISA STIG changes:
+  - Added auditd::action_mail_acct entries
+  - Added auditd::config::audit_profiles::simp::audit_sudoers
+  - Added auditd::config::audit_profiles::simp::audit_selinux_cmds
+  - Added auditd::failure_mode
+  - Corrected auditd::enable identifiers
 
 * Fri May 18 2018 Jeanne Greulich <jeanne.greulich@onyxpoint.com> - 2.3.4-0
 - Added postfix main.cf settings to el7 DISA STIG.
