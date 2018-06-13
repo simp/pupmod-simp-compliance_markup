@@ -1,0 +1,54 @@
+{
+  "$schema": "http://json-schema.org/draft-06/schema#",
+  "description": "",
+  "type": "object",
+  "properties": {
+    "compliance_markup::compliance_map::percent_sign": {
+      "type": "string",
+      "minLength": 1
+    },
+    "compliance_markup::compliance_map": {
+      "type": "object",
+      "properties": {
+        "version": {
+          "type": "string",
+          "minLength": 5
+        }
+      },
+      "patternProperties": {
+        "^((?!version).)*$": {
+          "type": "object",
+          "additionalProperties": false,
+          "patternProperties": {
+            "^\\w+(?:::\\w+)+$": {
+              "type": "object",
+              "properties": {
+                "value": {},
+                "identifiers": {
+                  "type": "array"
+                },
+                "notes": {
+                  "type": "string"
+                },
+                "oval-ids": {
+                  "type": "array"
+                }
+              },
+              "required": [
+                "identifiers",
+                "value"
+              ]
+            }
+          }
+        }
+      },
+      "required": [
+        "version"
+      ]
+    }
+  },
+  "required": [
+    "compliance_markup::compliance_map::percent_sign",
+    "compliance_markup::compliance_map"
+  ]
+}
