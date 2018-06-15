@@ -1,9 +1,9 @@
 require 'json'
 require 'json-schema'
 
-task :validate => 'schema:validate'
+task :validate => 'compliance:schema:validate'
 
-namespace :schema do
+namespace :'compliance:schema' do
   desc 'Validate data against the schema'
   task :validate do
     schema = JSON.load(File.read('data/compliance_profiles/schema.json'))
