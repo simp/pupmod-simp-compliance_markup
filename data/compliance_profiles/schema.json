@@ -2,6 +2,7 @@
   "$schema": "http://json-schema.org/draft-06/schema#",
   "description": "",
   "type": "object",
+  "additionalProperties": false,
   "properties": {
     "compliance_markup::compliance_map::percent_sign": {
       "type": "string",
