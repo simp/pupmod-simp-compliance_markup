@@ -121,35 +121,17 @@
         ],
         "value": true
       },
-      "auditd::config::audit_profiles::simp::audit_mount": {
-        "identifiers": [
-          "SRG-OS-000042-GPOS-00020",
-          "SRG-OS-000392-GPOS-00172",
-          "CCI-002884"
-        ],
-        "oval-ids": [
-          "xccdf_org:ssgproject:content_rule_audit_rules_media_export"
-        ],
-        "value": true
-      },
-      "auditd::config::audit_profiles::simp::audit_attr": {
+      "auditd::config::audit_profiles::stig::audit_attr": {
         "identifiers": [
           "SRG-OS-000064-GPOS-00033",
           "SRG-OS-000392-GPOS-00172",
           "SRG-OS-000458-GPOS-00203",
-          "RHEL-07-030390",
-          "RHEL-07-030381",
-          "SRG-OS-000474-GPOS-00219",
-          "SRG-OS-000474-GPOS-00219",
-          "RHEL-07-030383",
-          "RHEL-07-030404",
-          "RHEL-07-030401",
-          "SRG-OS-000474-GPOS-00219",
-          "RHEL-07-030382",
-          "RHEL-07-030405",
-          "RHEL-07-030402",
-          "RHEL-07-030403",
-          "RHEL-07-030400"
+          "RHEL-07-030440",
+          "RHEL-07-030450",
+          "RHEL-07-030460",
+          "RHEL-07-030470",
+          "RHEL-07-030480",
+          "RHEL-07-030490"
         ],
         "oval-ids": [
           "xccdf_org:ssgproject:content_rule_audit_rules_dac_modification_fremovexattr",
@@ -161,26 +143,60 @@
         ],
         "value": true
       },
-      "auditd::config::audit_profiles::simp::audit_chmod": {
+      "auditd::config::audit_profiles::stig::audit_attr_tag": {
         "identifiers": [
           "SRG-OS-000064-GPOS-00033",
           "SRG-OS-000392-GPOS-00172",
           "SRG-OS-000458-GPOS-00203",
-          "RHEL-07-030390",
-          "RHEL-07-030381",
-          "SRG-OS-000474-GPOS-00219",
-          "SRG-OS-000474-GPOS-00219",
-          "RHEL-07-030383",
-          "RHEL-07-030404",
-          "RHEL-07-030401",
-          "SRG-OS-000474-GPOS-00219",
-          "RHEL-07-030382",
-          "RHEL-07-030405",
-          "RHEL-07-030402",
-          "RHEL-07-030403",
-          "RHEL-07-030400"
+          "RHEL-07-030440",
+          "RHEL-07-030450",
+          "RHEL-07-030460",
+          "RHEL-07-030470",
+          "RHEL-07-030480",
+          "RHEL-07-030490"
         ],
-        "notes": "SIMP disables this by default due to the excessive number of audit records generated. Enable with caution.",
+        "oval-ids": [
+          "xccdf_org:ssgproject:content_rule_audit_rules_dac_modification_fremovexattr",
+          "xccdf_org:ssgproject:content_rule_audit_rules_dac_modification_fsetxattr",
+          "xccdf_org:ssgproject:content_rule_audit_rules_dac_modification_lremovexattr",
+          "xccdf_org:ssgproject:content_rule_audit_rules_dac_modification_lsetxattr",
+          "xccdf_org:ssgproject:content_rule_audit_rules_dac_modification_removexattr",
+          "xccdf_org:ssgproject:content_rule_audit_rules_dac_modification_setxattr"
+        ],
+        "value": "perm_mod"
+      },
+      "auditd::config::audit_profiles::stig::audit_cfg_sudoers": {
+        "identifiers": [
+          "SRG-OS-000037-GPOS-00015",
+          "SRG-OS-000042-GPOS-00020",
+          "SRG-OS-000392-GPOS-00172",
+          "SRG-OS-000462-GPOS-00206",
+          "SRG-OS-000471-GPOS-00215",
+          "RHEL-07-030700"
+        ],
+        "value": true
+      },
+      "auditd::config::audit_profiles::stig::audit_cfg_sudoers_tag": {
+        "identifiers": [
+          "SRG-OS-000037-GPOS-00015",
+          "SRG-OS-000042-GPOS-00020",
+          "SRG-OS-000392-GPOS-00172",
+          "SRG-OS-000462-GPOS-00206",
+          "SRG-OS-000471-GPOS-00215",
+          "RHEL-07-030700"
+        ],
+        "value": "privileged-actions"
+      },
+      "auditd::config::audit_profiles::stig::audit_chmod": {
+        "identifiers": [
+          "SRG-OS-000064-GPOS-00033",
+          "SRG-OS-000392-GPOS-00172",
+          "SRG-OS-000458-GPOS-00203",
+          "RHEL-07-030410",
+          "RHEL-07-030420",
+          "RHEL-07-030430"
+        ],
+        "notes": "When enabled an excessive number of audit records may be generated. Enable with caution.",
         "oval-ids": [
           "xccdf_org:ssgproject:content_rule_audit_rules_dac_modification_chmod",
           "xccdf_org:ssgproject:content_rule_audit_rules_dac_modification_fchmod",
@@ -188,23 +204,32 @@
         ],
         "value": true
       },
-      "auditd::config::audit_profiles::simp::audit_chown": {
+      "auditd::config::audit_profiles::stig::audit_chmod_tag": {
         "identifiers": [
           "SRG-OS-000064-GPOS-00033",
           "SRG-OS-000392-GPOS-00172",
           "SRG-OS-000458-GPOS-00203",
+          "RHEL-07-030410",
+          "RHEL-07-030420",
+          "RHEL-07-030430"
+        ],
+        "notes": "When enabled an excessive number of audit records may be generated. Enable with caution.",
+        "oval-ids": [
+          "xccdf_org:ssgproject:content_rule_audit_rules_dac_modification_chmod",
+          "xccdf_org:ssgproject:content_rule_audit_rules_dac_modification_fchmod",
+          "xccdf_org:ssgproject:content_rule_audit_rules_dac_modification_fchmodat"
+        ],
+        "value": "perm_mod"
+      },
+      "auditd::config::audit_profiles::stig::audit_chown": {
+        "identifiers": [
+          "SRG-OS-000064-GPOS-00033",
+          "SRG-OS-000392-GPOS-00172",
+          "SRG-OS-000458-GPOS-00203",
+          "SRG-OS-000474-GPOS-00219",
+          "RHEL-07-030370",
+          "RHEL-07-030380",
           "RHEL-07-030390",
-          "RHEL-07-030381",
-          "SRG-OS-000474-GPOS-00219",
-          "SRG-OS-000474-GPOS-00219",
-          "RHEL-07-030383",
-          "RHEL-07-030404",
-          "RHEL-07-030401",
-          "SRG-OS-000474-GPOS-00219",
-          "RHEL-07-030382",
-          "RHEL-07-030405",
-          "RHEL-07-030402",
-          "RHEL-07-030403",
           "RHEL-07-030400"
         ],
         "oval-ids": [
@@ -215,77 +240,226 @@
         ],
         "value": true
       },
-      "auditd::config::audit_profiles::simp::audit_crontab_cmd": {
+      "auditd::config::audit_profiles::stig::audit_chown_tag": {
+        "identifiers": [
+          "SRG-OS-000064-GPOS-00033",
+          "SRG-OS-000392-GPOS-00172",
+          "SRG-OS-000458-GPOS-00203",
+          "SRG-OS-000474-GPOS-00219",
+          "RHEL-07-030370",
+          "RHEL-07-030380",
+          "RHEL-07-030390",
+          "RHEL-07-030400"
+        ],
+        "oval-ids": [
+          "xccdf_org:ssgproject:content_rule_audit_rules_dac_modification_chown",
+          "xccdf_org:ssgproject:content_rule_audit_rules_dac_modification_fchown",
+          "xccdf_org:ssgproject:content_rule_audit_rules_dac_modification_fchownat",
+          "xccdf_org:ssgproject:content_rule_audit_rules_dac_modification_lchown"
+        ],
+        "value": "perm_mod"
+      },
+      "auditd::config::audit_profiles::stig::audit_crontab_cmd": {
         "identifiers": [
           "AU-2",
           "SRG-OS-000042-GPOS-00020",
           "SRG-OS-000392-GPOS-00172",
           "SRG-OS-000471-GPOS-00215",
-          "CCI-000135"
+          "CCI-000135",
+          "RHEL-07-030800"
         ],
         "value": true
       },
-      "auditd::config::audit_profiles::simp::audit_kernel_modules": {
+      "auditd::config::audit_profiles::stig::audit_crontab_cmd_tag": {
+        "identifiers": [
+          "AU-2",
+          "SRG-OS-000042-GPOS-00020",
+          "SRG-OS-000392-GPOS-00172",
+          "SRG-OS-000471-GPOS-00215",
+          "CCI-000135",
+          "RHEL-07-030800"
+        ],
+        "value": "privileged-cron"
+      },
+      "auditd::config::audit_profiles::stig::audit_kernel_modules": {
         "identifiers": [
           "SRG-OS-000471-GPOS-00216",
-          "SRG-OS-000477",
-          "GPOS-00222",
-          "RHEL-07-030670"
+          "SRG-OS-000477-GPOS-00222",
+          "RHEL-07-030819",
+          "RHEL-07-030820",
+          "RHEL-07-030821",
+          "RHEL-07-030830",
+          "RHEL-07-030840",
+          "RHEL-07-030850",
+          "RHEL-07-030860"
         ],
         "value": true
       },
-      "auditd::config::audit_profiles::simp::audit_local_account": {
+      "auditd::config::audit_profiles::stig::audit_kernel_modules_tag": {
         "identifiers": [
-          " RHEL-07-030710",
+          "SRG-OS-000471-GPOS-00216",
+          "SRG-OS-000477-GPOS-00222",
+          "RHEL-07-030819",
+          "RHEL-07-030820",
+          "RHEL-07-030821",
+          "RHEL-07-030830",
+          "RHEL-07-030840",
+          "RHEL-07-030850",
+          "RHEL-07-030860"
+        ],
+        "value": "module-change"
+      },
+      "auditd::config::audit_profiles::stig::audit_local_account": {
+        "identifiers": [
           "SRG–OS–000004–GPOS–00004",
           "SRG–OS–000239–GPOS–00089",
           "SRG–OS–000241–GPOS–00090",
           "SRG–OS–000241–GPOS–00091",
           "SRG–OS–000303–GPOS–00120",
-          "SRG–OS–000476–GPOS–00221"
+          "SRG–OS–000476–GPOS–00221",
+          "RHEL-07-030870",
+          "RHEL-07-030871",
+          "RHEL-07-030872",
+          "RHEL-07-030873",
+          "RHEL-07-030874"
         ],
         "value": true
       },
-      "auditd::config::audit_profiles::simp::audit_login_files": {
+      "auditd::config::audit_profiles::stig::audit_local_account_tag": {
+        "identifiers": [
+          "SRG–OS–000004–GPOS–00004",
+          "SRG–OS–000239–GPOS–00089",
+          "SRG–OS–000241–GPOS–00090",
+          "SRG–OS–000241–GPOS–00091",
+          "SRG–OS–000303–GPOS–00120",
+          "SRG–OS–000476–GPOS–00221",
+          "RHEL-07-030870",
+          "RHEL-07-030871",
+          "RHEL-07-030872",
+          "RHEL-07-030873",
+          "RHEL-07-030874"
+        ],
+        "value": "identity"
+      },
+      "auditd::config::audit_profiles::stig::audit_login_files": {
         "identifiers": [
           "SRG-OS-000392-GPOS-00172",
           "SRG-OS-000470-GPOS-00214",
           "SRG-OS-000473-GPOS-00218",
-          "RHEL-07-030490"
+          "RHEL-07-030600",
+          "RHEL-07-030610",
+          "RHEL-07-030620"
         ],
         "oval-ids": [
-          "xccdf_org:ssgproject:content_rule_audit_rules_login_events_faillock"
+          "xccdf_org:ssgproject:content_rule_audit_rules_login_events_faillock",
+          "xccdf_org:ssgproject:content_rule_audit_rules_login_events_tallylog"
         ],
         "value": true
       },
-      "auditd::config::audit_profiles::simp::audit_pam_timestamp_check_cmd": {
+      "auditd::config::audit_profiles::stig::audit_login_files_tag": {
+        "identifiers": [
+          "SRG-OS-000392-GPOS-00172",
+          "SRG-OS-000470-GPOS-00214",
+          "SRG-OS-000473-GPOS-00218",
+          "RHEL-07-030600",
+          "RHEL-07-030610",
+          "RHEL-07-030620"
+        ],
+        "oval-ids": [
+          "xccdf_org:ssgproject:content_rule_audit_rules_login_events_faillock",
+          "xccdf_org:ssgproject:content_rule_audit_rules_login_events_tallylog"
+        ],
+        "value": "logins"
+      },
+      "auditd::config::audit_profiles::stig::audit_mount": {
+        "identifiers": [
+          "SRG-OS-000042-GPOS-00020",
+          "SRG-OS-000392-GPOS-00172",
+          "RHEL-07-030740",
+          "RHEL-07-030750"
+        ],
+        "value": true
+      },
+      "auditd::config::audit_profiles::stig::audit_mount_tag": {
+        "identifiers": [
+          "SRG-OS-000042-GPOS-00020",
+          "SRG-OS-000392-GPOS-00172",
+          "RHEL-07-030740",
+          "RHEL-07-030750"
+        ],
+        "value": "privileged-mount"
+      },
+      "auditd::config::audit_profiles::stig::audit_pam_timestamp_check_cmd": {
         "identifiers": [
           "AU-2",
           "SRG-OS-000471-GPOS-00215",
-          "CCI-000172"
+          "CCI-000172",
+          "RHEL-07-030810"
         ],
         "value": true
       },
-      "auditd::config::audit_profiles::simp::audit_passwd_cmds": {
+      "auditd::config::audit_profiles::stig::audit_pam_timestamp_check_cmd_tag": {
+        "identifiers": [
+          "AU-2",
+          "SRG-OS-000471-GPOS-00215",
+          "CCI-000172",
+          "RHEL-07-030810"
+        ],
+        "value": "privileged-pam"
+      },
+      "auditd::config::audit_profiles::stig::audit_passwd_cmds": {
         "identifiers": [
           "AU-2",
           "SRG-OS-000042-GPOS-00020",
           "SRG-OS-000392-GPOS-00172",
           "SRG-OS-000471-GPOS-00215",
-          "CCI-000135"
+          "CCI-000135",
+          "RHEL-07-030630",
+          "RHEL-07-030640",
+          "RHEL-07-030650",
+          "RHEL-07-030660",
+          "RHEL-07-030670"
         ],
         "value": true
       },
-      "auditd::config::audit_profiles::simp::audit_postfix_cmds": {
+      "auditd::config::audit_profiles::stig::audit_passwd_cmds_tag": {
         "identifiers": [
           "AU-2",
           "SRG-OS-000042-GPOS-00020",
           "SRG-OS-000392-GPOS-00172",
-          "CCI-000135"
+          "SRG-OS-000471-GPOS-00215",
+          "CCI-000135",
+          "RHEL-07-030630",
+          "RHEL-07-030640",
+          "RHEL-07-030650",
+          "RHEL-07-030660",
+          "RHEL-07-030670"
+        ],
+        "value": "privileged-passwd"
+      },
+      "auditd::config::audit_profiles::stig::audit_postfix_cmds": {
+        "identifiers": [
+          "AU-2",
+          "SRG-OS-000042-GPOS-00020",
+          "SRG-OS-000392-GPOS-00172",
+          "CCI-000135",
+          "RHEL-07-030760",
+          "RHEL-07-030770"
         ],
         "value": true
       },
-      "auditd::config::audit_profiles::simp::audit_priv_cmds": {
+      "auditd::config::audit_profiles::stig::audit_postfix_cmds_tag": {
+        "identifiers": [
+          "AU-2",
+          "SRG-OS-000042-GPOS-00020",
+          "SRG-OS-000392-GPOS-00172",
+          "CCI-000135",
+          "RHEL-07-030760",
+          "RHEL-07-030770"
+        ],
+        "value": "privileged-postfix"
+      },
+      "auditd::config::audit_profiles::stig::audit_priv_cmds": {
         "identifiers": [
           "AU-2",
           "SRG-OS-000037-GPOS-00015",
@@ -293,11 +467,75 @@
           "SRG-OS-000392-GPOS-00172",
           "SRG-OS-000462-GPOS-00206",
           "SRG-OS-000471-GPOS-00215",
-          "CCI-000130"
+          "CCI-000130",
+          "RHEL-07-030680",
+          "RHEL-07-030690",
+          "RHEL-07-030710",
+          "RHEL-07-030720",
+          "RHEL-07-030730"
         ],
         "value": true
       },
-      "auditd::config::audit_profiles::simp::audit_selinux_cmds": {
+      "auditd::config::audit_profiles::stig::audit_priv_cmds_tag": {
+        "identifiers": [
+          "AU-2",
+          "SRG-OS-000037-GPOS-00015",
+          "SRG-OS-000042-GPOS-00020",
+          "SRG-OS-000392-GPOS-00172",
+          "SRG-OS-000462-GPOS-00206",
+          "SRG-OS-000471-GPOS-00215",
+          "CCI-000130",
+          "RHEL-07-030680",
+          "RHEL-07-030690",
+          "RHEL-07-030710",
+          "RHEL-07-030720",
+          "RHEL-07-030730"
+        ],
+        "value": "privileged-priv_change"
+      },
+      "auditd::config::audit_profiles::stig::audit_rename_remove": {
+        "identifiers": [
+          "SRG-OS-000392-GPOS-00172",
+          "SRG-OS-000466-GPOS-00210",
+          "SRG-OS-000467-GPOS-00210",
+          "SRG-OS-000468-GPOS-00212",
+          "RHEL-07-030880",
+          "RHEL-07-030890",
+          "RHEL-07-030900",
+          "RHEL-07-030910",
+          "RHEL-07-030920"
+        ],
+        "oval-ids": [
+          "xccdf_org:ssgproject:content_rule_audit_rules_file_deletion_events_rmdir",
+          "xccdf_org:ssgproject:content_rule_audit_rules_file_deletion_events_unlink",
+          "xccdf_org:ssgproject:content_rule_audit_rules_file_deletion_events_unlinkat",
+          "xccdf_org:ssgproject:content_rule_audit_rules_file_deletion_events_rename",
+          "xccdf_org:ssgproject:content_rule_audit_rules_file_deletion_events_renameat"
+        ],
+        "value": true
+      },
+      "auditd::config::audit_profiles::stig::audit_rename_remove_tag": {
+        "identifiers": [
+          "SRG-OS-000392-GPOS-00172",
+          "SRG-OS-000466-GPOS-00210",
+          "SRG-OS-000467-GPOS-00210",
+          "SRG-OS-000468-GPOS-00212",
+          "RHEL-07-030880",
+          "RHEL-07-030890",
+          "RHEL-07-030900",
+          "RHEL-07-030910",
+          "RHEL-07-030920"
+        ],
+        "oval-ids": [
+          "xccdf_org:ssgproject:content_rule_audit_rules_file_deletion_events_rmdir",
+          "xccdf_org:ssgproject:content_rule_audit_rules_file_deletion_events_unlink",
+          "xccdf_org:ssgproject:content_rule_audit_rules_file_deletion_events_unlinkat",
+          "xccdf_org:ssgproject:content_rule_audit_rules_file_deletion_events_rename",
+          "xccdf_org:ssgproject:content_rule_audit_rules_file_deletion_events_renameat"
+        ],
+        "value": "delete"
+      },
+      "auditd::config::audit_profiles::stig::audit_selinux_cmds": {
         "identifiers": [
           "SRG-OS-000392-GPOS-00172",
           "SRG-OS-000463-GPOS-00207",
@@ -309,82 +547,66 @@
         ],
         "value": true
       },
-      "auditd::config::audit_profiles::simp::audit_session_files": {
+      "auditd::config::audit_profiles::stig::audit_selinux_cmds_tag": {
         "identifiers": [
           "SRG-OS-000392-GPOS-00172",
-          "SRG-OS-000470-GPOS-00214",
-          "SRG-OS-000473-GPOS-00218",
-          "RHEL-07-030600"
+          "SRG-OS-000463-GPOS-00207",
+          "SRG-OS-000465-GPOS-00209",
+          "RHEL-07-030560",
+          "RHEL-07-030570",
+          "RHEL-07-030580",
+          "RHEL-07-030590"
         ],
-        "oval-ids": [
-          "xccdf_org:ssgproject:content_rule_audit_rules_login_events_tallylog"
-        ],
-        "notes": "The SIMP profile applies a base set of audit rules that adhere to guidance from several sources",
-        "value": true
+        "value": "privileged-priv_change"
       },
-      "auditd::config::audit_profiles::simp::audit_session_files_tag": {
-        "identifiers": [
-          "SRG-OS-000392-GPOS-00172",
-          "SRG-OS-000470-GPOS-00214",
-          "SRG-OS-000473-GPOS-00218",
-          "RHEL-07-030600"
-        ],
-        "oval-ids": [
-          "xccdf_org:ssgproject:content_rule_audit_rules_login_events_tallylog"
-        ],
-        "notes": "The SIMP profile applies a base set of audit rules that adhere to guidance from several sources",
-        "value": "logins"
-      },
-      "auditd::config::audit_profiles::simp::audit_ssh_keysign_cmd": {
+      "auditd::config::audit_profiles::stig::audit_ssh_keysign_cmd": {
         "identifiers": [
           "AU-2",
           "SRG-OS-000042-GPOS-00020",
           "SRG-OS-000392-GPOS-00172",
           "SRG-OS-000471-GPOS-00215",
-          "CCI-000135"
+          "CCI-000135",
+          "RHEL-07-030780"
         ],
         "value": true
       },
-      "auditd::config::audit_profiles::simp::audit_su_root_activity": {
+      "auditd::config::audit_profiles::stig::audit_ssh_keysign_cmd_tag": {
+        "identifiers": [
+          "AU-2",
+          "SRG-OS-000042-GPOS-00020",
+          "SRG-OS-000392-GPOS-00172",
+          "SRG-OS-000471-GPOS-00215",
+          "CCI-000135",
+          "RHEL-07-030780"
+        ],
+        "value": "privileged-ssh"
+      },
+      "auditd::config::audit_profiles::stig::audit_suid_sgid": {
         "identifiers": [
           "SRG-OS-000327-GPOS-00127",
-          "RHEL-07-030310"
+          "RHEL-07-030360"
         ],
         "value": true
       },
-      "auditd::config::audit_profiles::simp::audit_sudoers": {
+      "auditd::config::audit_profiles::stig::audit_suid_sgid_tag": {
         "identifiers": [
-          "SRG-OS-000037-GPOS-00015",
-          "SRG-OS-000042-GPOS-00020",
-          "SRG-OS-000392-GPOS-00172",
-          "SRG-OS-000462-GPOS-00206",
-          "SRG-OS-000471-GPOS-00215",
-          "RHEL-07-030700"
+          "SRG-OS-000327-GPOS-00127",
+          "RHEL-07-030360"
         ],
-        "value": true
+        "value": "setuid/setgid"
       },
-      "auditd::config::audit_profiles::simp::audit_suid_sgid": {
-        "identifiers": [
-          "SRG-OS-000042-GPOS-00020",
-          "SRG-OS-000392-GPOS-00172",
-          "RHEL-07-030530"
-        ],
-        "value": true
-      },
-      "auditd::config::audit_profiles::simp::audit_time": {
-        "identifiers": [
-          "SRG-OS-000255-GPOS-00096",
-          "CCI-001487"
-        ],
-        "value": true
-      },
-      "auditd::config::audit_profiles::simp::audit_unsuccessful_file_operations": {
+      "auditd::config::audit_profiles::stig::audit_unsuccessful_file_operations": {
         "identifiers": [
           "SRG-OS-000064-GPOS-00033",
           "SRG-OS-000392-GPOS-00172",
           "SRG-OS-000458-GPOS-00203",
-          "RHEL-07-030420",
-          "RHEL-07-030750"
+          "SRG-OS-000461-GPOS-00205",
+          "RHEL-07-030500",
+          "RHEL-07-030510",
+          "RHEL-07-030520",
+          "RHEL-07-030530",
+          "RHEL-07-030540",
+          "RHEL-07-030550"
         ],
         "oval-ids": [
           "xccdf_org:ssgproject:content_rule_audit_rules_unsuccessful_file_modification_creat",
@@ -392,25 +614,50 @@
           "xccdf_org:ssgproject:content_rule_audit_rules_unsuccessful_file_modification_openat",
           "xccdf_org:ssgproject:content_rule_audit_rules_unsuccessful_file_modification_open_by_handle_at",
           "xccdf_org:ssgproject:content_rule_audit_rules_unsuccessful_file_modification_truncate",
-          "xccdf_org:ssgproject:content_rule_audit_rules_unsuccessful_file_modification_ftruncate",
-          "xccdf_org:ssgproject:content_rule_audit_rules_file_deletion_events_rmdir",
-          "xccdf_org:ssgproject:content_rule_audit_rules_file_deletion_events_unlink",
-          "xccdf_org:ssgproject:content_rule_audit_rules_file_deletion_events_unlinkat",
-          "xccdf_org:ssgproject:content_rule_audit_rules_file_deletion_events_rename",
-          "xccdf_org:ssgproject:content_rule_audit_rules_file_deletion_events_renameat"
+          "xccdf_org:ssgproject:content_rule_audit_rules_unsuccessful_file_modification_ftruncate"
         ],
         "value": true
       },
+      "auditd::config::audit_profiles::stig::audit_unsuccessful_file_operations_tag": {
+        "identifiers": [
+          "SRG-OS-000064-GPOS-00033",
+          "SRG-OS-000392-GPOS-00172",
+          "SRG-OS-000458-GPOS-00203",
+          "SRG-OS-000461-GPOS-00205",
+          "RHEL-07-030500",
+          "RHEL-07-030510",
+          "RHEL-07-030520",
+          "RHEL-07-030530",
+          "RHEL-07-030540",
+          "RHEL-07-030550"
+        ],
+        "oval-ids": [
+          "xccdf_org:ssgproject:content_rule_audit_rules_unsuccessful_file_modification_creat",
+          "xccdf_org:ssgproject:content_rule_audit_rules_unsuccessful_file_modification_open",
+          "xccdf_org:ssgproject:content_rule_audit_rules_unsuccessful_file_modification_openat",
+          "xccdf_org:ssgproject:content_rule_audit_rules_unsuccessful_file_modification_open_by_handle_at",
+          "xccdf_org:ssgproject:content_rule_audit_rules_unsuccessful_file_modification_truncate",
+          "xccdf_org:ssgproject:content_rule_audit_rules_unsuccessful_file_modification_ftruncate"
+        ],
+        "value": "access"
+      },
       "auditd::default_audit_profile": {
         "identifiers": [
-          "RHEL-07-030240",
+        ],
+        "notes": "Deprecated parameter that must be undef",
+        "value": null
+      },
+      "auditd::default_audit_profiles": {
+        "identifiers": [
           "SRG-OS-000239-GPOS-00089",
           "SRG-OS-000241-GPOS-00090",
           "SRG-OS-000241-GPOS-00091",
           "CCI-001403"
         ],
-        "notes": "The SIMP profile applies a base set of audit rules that adhere to guidance from several sources",
-        "value": "simp"
+        "notes": "The can be set to an array of profiles, as long as the 'stig' profile is one of the profiles listed",
+        "value":  [
+          "stig"
+        ]
       },
       "auditd::disk_full_action": {
         "identifiers": [
@@ -2405,7 +2652,6 @@
       },
       "useradd::login_defs::faillog_enab": {
         "identifiers": [
-          "RHEL-07-030680",
           "SRG-OS-000472-GPOS-00217",
           "CCI-000172"
         ],

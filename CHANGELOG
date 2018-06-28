@@ -1,3 +1,8 @@
+* Thu Jun 28 2018 Liz Nemsick <lnemsick.simp@gmail.com> - 2.3.4-0
+- DISA STIG changes:
+  - Updated for pupmod-simp-auditd 8.0.0.  This enforces the
+    'stig' audit profile, instead of the 'simp' audit profile.
+
 * Mon Jun 11 2018 Nick Miller <nick.miller@onyxpoint.com> - 2.3.4-0
 - DISA STIG changes:
   - Added auditd::config::audit_profiles::simp::audit_crontab_cmd
