@@ -38,4 +38,13 @@ Puppet::Functions.create_function(:'compliance_markup::telemetry') do
   def cache_has_key(key)
     false
   end
+  def cached_file_data(path)
+    File.read(path)
+  end
+  def lookup_fact(fact)
+    closure_scope.lookupvar("facts")[fact]
+  end
+  def module_list
+    closure_scope.environment.modules.map { |obj| { "name" => obj.metadata["name"], "version" => obj.metadata["version"] } }
+  end
 end
