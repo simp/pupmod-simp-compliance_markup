@@ -1,3 +1,8 @@
+* Fri Oct 19 2018 Liz Nemsick <lnemsick.simp@gmail.com> - 2.4.1-0
+- Fixed the following incorrect parameter types
+  - simp::yum::schedule::minute
+  - simp::yum::schedule::hour
+
 * Thu Sep 20 2018 Dylan Cochran <dylan.cochran@onyxpoint.com> - 2.4.0-0
 - Open-Source SCE version 2.0
   - Add bugfix for environments that are just Strings vs Environment objects.

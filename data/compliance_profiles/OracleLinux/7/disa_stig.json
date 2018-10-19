@@ -1783,7 +1783,7 @@
           "CCI-000366"
         ],
         "notes": "The actual hour value can differ, as long as it does not disable the update cron job.",
-        "value": 0
+        "value": "0"
       },
       "simp::yum::schedule::minute": {
         "identifiers": [
@@ -1792,7 +1792,7 @@
           "CCI-000366"
         ],
         "notes": "The actual minute value can differ, as long as it does not disable the update cron job.",
-        "value": 12
+        "value": "12"
       },
       "simp_apache::conf::group": {
         "identifiers": [
