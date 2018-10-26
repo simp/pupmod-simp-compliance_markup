@@ -11,19 +11,19 @@ HOSTS:
       - server
       - default
     platform:   el-7-x86_64
-    box:        bento/oracle-7.5
+    box:        onyxpoint/oel-7-x86_64
     hypervisor: <%= hypervisor %>
 
   oel6:
     roles:
       - client
     platform:   el-6-x86_64
-    box:        bento/oracle-6.10
+    box:        onyxpoint/oel-6-x86_64
     hypervisor: <%= hypervisor %>
 
 CONFIG:
   log_level: verbose
   type: aio
-<% if ENV['BEAKER_PUPPET_ENVIRONMENT'] -%>
-  puppet_environment: <%= ENV['BEAKER_PUPPET_ENVIRONMENT'] %>
+<% if ENV['BEAKER_PUPPET_COLLECTION'] -%>
+  puppet_collection: <%= ENV['BEAKER_PUPPET_COLLECTION'] %>
 <% end -%>
