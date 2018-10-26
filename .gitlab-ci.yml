@@ -148,7 +148,7 @@ default:
   <<: *cache_bundler
   <<: *setup_bundler_env
   variables:
-    PUPPET_VERSION: '4.10.11'
+    PUPPET_VERSION: '~> 4.10.11'
   script:
     - bundle exec rake spec_clean
     - bundle exec rake beaker:suites[default]
@@ -173,7 +173,7 @@ default-puppet5:
   <<: *cache_bundler
   <<: *setup_bundler_env
   variables:
-    PUPPET_VERSION: '5.4.0'
+    PUPPET_VERSION: '~> 5.4.0'
     BEAKER_PUPPET_COLLECTION: 'puppet5'
   script:
     - bundle exec rake spec_clean
