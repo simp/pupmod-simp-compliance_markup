@@ -45,7 +45,7 @@ def enforcement(key, options = {"mode" => "value"}, &block)
       throw :no_such_key
     when "compliance_markup::percent_sign"
       throw :no_such_key
-    else
+  else
       retval = :notfound
       if cache_has_key("lock")
         lock = cached_value("lock")
@@ -80,10 +80,11 @@ def enforcement(key, options = {"mode" => "value"}, &block)
               end
 
               cache("debug_output_#{profile}", debug_output)
-              cache("compliance_map_#{profile}", profile_map)
 
               compile_end_time = Time.now
 
+              profile_map["compliance_markup::debug::hiera_backend_compile_time"] = (compile_end_time - compile_start_time)
+              cache("compliance_map_#{profile}", profile_map)
               debug("debug: compiled compliance_map containing #{profile_map.size} keys in #{compile_end_time - compile_start_time} seconds")
             end
             if key == "compliance_markup::debug::dump"
