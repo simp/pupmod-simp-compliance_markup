@@ -3,6 +3,11 @@ Puppet::Functions.create_function(:'compliance_markup::enforcement') do
     param "String", :key
     param "Hash", :options
     param "Puppet::LookupContext", :context
+    end
+  dispatch :hiera_enforcement do
+    param "String", :key
+    param "Hash", :options
+    param "Undef", :context
   end
   def initialize(closure_scope, loader)
     filename = File.expand_path('../../../../puppetx/simp/compliance_mapper.rb', __FILE__)
@@ -21,7 +26,7 @@ Puppet::Functions.create_function(:'compliance_markup::enforcement') do
       unless (e.class.to_s == 'ArgumentError')
         debug("Threw error #{e.to_s}")
       end
-      context.not_found
+      not_found
     end
     retval
   end
@@ -31,8 +36,17 @@ Puppet::Functions.create_function(:'compliance_markup::enforcement') do
   def environment()
     closure_scope.environment.name.to_s
   end
+  def not_found()
+    if (!@context.nil?)
+      @context.not_found
+    else
+      throw :no_such_key
+    end
+  end
   def debug(message)
-    @context.explain() { "#{message}" }
+    if (!@context.nil?)
+      @context.explain() { "#{message}" }
+    end
   end
   def cache?
     if (!@context.nil?)
@@ -42,7 +56,9 @@ Puppet::Functions.create_function(:'compliance_markup::enforcement') do
     end
   end
   def cache(key, value)
-    @context.cache(key, value)
+    if (!@context.nil?)
+      @context.cache(key, value)
+    end
   end
   def cache_has_key(key)
     if (!@context.nil?)
@@ -63,9 +79,15 @@ Puppet::Functions.create_function(:'compliance_markup::enforcement') do
     data
   end
   def cached_value(key)
-    @context.cached_value(key)
+    if (!@context.nil?)
+      @context.cached_value(key)
+    end
   end
   def cache_has_key(key)
-    @context.cache_has_key(key)
+    if (!@context.nil?)
+      @context.cache_has_key(key)
+    else
+      false
+    end
   end
 end
