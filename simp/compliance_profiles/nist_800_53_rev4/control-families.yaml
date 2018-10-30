@@ -1,6 +1,6 @@
 ---
 version: 2.0.0
-control-families:
+control_families:
   AC:
     standard: nist_800_53:rev4
     title: Access Control
