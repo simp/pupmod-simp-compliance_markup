@@ -2,17 +2,18 @@
 
 require 'spec_helper'
 require 'semantic_puppet'
+require 'puppet/pops/lookup/context'
 puppetver = SemanticPuppet::Version.parse(Puppet.version)
-requiredver = SemanticPuppet::Version.parse("20.9.0")
+requiredver = SemanticPuppet::Version.parse("4.10.0")
 if (puppetver > requiredver)
-  describe 'compliance_markup::hiera_backend' do
+  describe 'compliance_markup::enforcement' do
     context "when key doesn't exist in the compliance map" do
       let(:hieradata){ "test_spec" }
       it 'should throw an error' do
         errored = false
         ex = nil
         begin
-          result = subject.execute("compliance_markup::test::nonexistent", {}, Puppet::LookupContext.new('rp_env', 'compliance_markup'))
+          result = subject.execute("compliance_markup::test::nonexistent", {}, nil)
         rescue Exception => e
           ex = e
           errored = true
@@ -23,7 +24,7 @@ if (puppetver > requiredver)
         errored = false
         ex = nil
         begin
-          result = subject.execute("compliance_markup::test::nonexistent", {}, Puppet::LookupContext.new('rp_env', 'compliance_markup'))
+          result = subject.execute("compliance_markup::test::nonexistent", {}, nil)
         rescue Exception => e
           ex = e
           errored = true
@@ -37,7 +38,7 @@ if (puppetver > requiredver)
         errored = false
         ex = nil
         begin
-          result = subject.execute("compliance_markup::test::testvariable", {}, Puppet::LookupContext.new('rp_env', 'compliance_markup'))
+          result = subject.execute("compliance_markup::test::testvariable", {}, nil)
         rescue Exception => e
           ex = e
           errored = true
@@ -48,7 +49,7 @@ if (puppetver > requiredver)
         errored = false
         ex = nil
         begin
-          result = subject.execute("compliance_markup::test::testvariable", {}, Puppet::LookupContext.new('rp_env', 'compliance_markup'))
+          result = subject.execute("compliance_markup::test::testvariable", {}, nil)
         rescue Exception => e
           ex = e
           errored = true
@@ -59,12 +60,28 @@ if (puppetver > requiredver)
         errored = false
         ex = nil
         begin
-          result = subject.execute("compliance_markup::test::testvariable", {}, Puppet::LookupContext.new('m'))
+          result = subject.execute("compliance_markup::test::testvariable", {}, nil)
         rescue Exception => e
           ex = e
           errored = true
         end
         expect(ex.to_s).to_not match(/no_such_key/)
+      end
+    end
+
+    context "when key == compliance_markup::debug::hiera_backend_compile_time" do
+      let(:hieradata){ "test_spec" }
+      it 'should return an number' do
+        errored = false
+        ex = nil
+        begin
+          result = subject.execute("compliance_markup::debug::hiera_backend_compile_time", {}, nil)
+        rescue Exception => e
+          ex = e
+          errored = true
+        end
+        puts "    completed in #{result} seconds"
+        expect(result).to be_a(Float)
       end
     end
   end
