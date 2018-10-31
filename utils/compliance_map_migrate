@@ -11,10 +11,26 @@ require 'fileutils'
 
 @uid = Time.now.strftime('%s')
 
+def deep_merge(old, new)
+  old.merge(new) { |key, val1, val2|
+    if val1.kind_of?(Hash) and val2.kind_of?(Hash)
+      deep_merge(val1, val2)
+    elsif val1.kind_of?(Array) and val2.kind_of?(Array)
+      val1 & val2
+    else
+      val2
+    end
+  }
+end
+
 def parse_options
   options = OpenStruct.new
   options.dst_version = '2.0.0'
   options.output_format = 'yaml'
+  options.input = []
+  options.input_hash = {}
+  options.confine = {}
+  options.append = ''
 
   _opts = OptionParser.new do |opts|
     opts.banner = "Usage: #{$0} [options]"
@@ -26,7 +42,7 @@ def parse_options
       '--input PATH',
       'The source Compliance Mapper Hieradata file'
     ) do |arg|
-      options.input = File.absolute_path(arg.strip)
+      options.input << File.absolute_path(arg.strip)
     end
 
     opts.on(
@@ -75,7 +91,7 @@ def parse_options
       '-f FORMAT',
       '--output_format FORMAT',
       'The output format. May be one of "json" or "yaml"',
-      '  Default: yaml'
+      "  Default: #{options.output_format}"
     ) do |arg|
       options.output_format = arg.strip
 
@@ -91,6 +107,23 @@ def parse_options
       'For 2.0 migrations, isolate the target module to output. If left out, all will be output.'
     ) do |arg|
       options.target_module = arg.strip
+    end
+
+    opts.on(
+      '-c FACT=VALUE',
+      '--confine FACT=VALUE',
+      'For 2.0 migrations, specify confinement for the target data'
+    ) do |arg|
+      c = arg.split(%r{\s*=\s*})
+      options.confine[c[0]] = c[1]
+    end
+
+    opts.on(
+      '-a STRING',
+      '--append STRING',
+      'For 2.0 migrations, append STRING to check key'
+    ) do |arg|
+      options.append = arg.strip
     end
 
     opts.on(
@@ -111,7 +144,7 @@ def parse_options
     exit 1
   end
 
-  unless options.input
+  if options.input.empty?
     $stderr.puts("You must pass an input file to #{$0}")
     puts _opts
     exit 1
@@ -119,35 +152,38 @@ def parse_options
 
   unless options.output
     options.output = File.join(
-      File.dirname(options.input),
-      "#{File.basename(options.input,'.yaml')}.#{options.dst_version}.yaml"
+      File.dirname(options.input[0]),
+      "#{File.basename(options.input[0],'.yaml')}.#{options.dst_version}.yaml"
     )
   end
 
-  _infile = options.input
-  if File.exist?(options.input)
-    begin
-      if _infile =~ /\.yaml$/
-        options.input = YAML.load_file(_infile)
-      else
-        options.input = JSON.load(File.read(_infile))
-      end
-    rescue Psych::SyntaxError, JSON::JSONError
-      $stderr.puts("Error: Could not parse input file '#{_infile}'")
+  options.input.each do |_infile|
+    if File.exist?(_infile)
+        begin
+        _data = {}
+        if _infile =~ /\.yaml$/
+            _data = YAML.load_file(_infile)
+        else
+            _data = JSON.load(File.read(_infile))
+        end
+        options.input_hash = deep_merge(options.input_hash, _data)
+        rescue Psych::SyntaxError, JSON::JSONError
+        $stderr.puts("Error: Could not parse input file '#{_infile}'")
+        end
+    else
+        $stderr.puts("Error: Could not find input file '#{_infile}'")
+        exit 1
     end
-  else
-    $stderr.puts("Error: Could not find input file '#{_infile}'")
-    exit 1
   end
 
   unless options.src_version
     # 0.0.1
-    options.src_version = options.input['version']
+    options.src_version = options.input_hash['version']
 
     unless options.src_version
       # 1.0.0
-      unless options.input['compliance_markup::compliance_map'].nil?
-        options.src_version = options.input['compliance_markup::compliance_map']['version']
+      unless options.input_hash['compliance_markup::compliance_map'].nil?
+        options.src_version = options.input_hash['compliance_markup::compliance_map']['version']
       end
 
       unless options.src_version
@@ -168,7 +204,7 @@ class HieraXlat
     @dst_version = to
   end
 
-  def xlat_0_0_1_to_1_0_0(input)
+  def xlat_0_0_1_to_1_0_0(options)
     output_hash = {
       'compliance_map::percent_sign' => '%',
 
@@ -177,35 +213,35 @@ class HieraXlat
       }
     }
 
-    input.keys.sort.each do |entry|
+    options.input_hash.keys.sort.each do |entry|
       garbage, policy, *key = entry.split('::')
       key = key.join('::')
 
       if garbage == 'compliance'
         output_hash['compliance_map'][policy] ||= Hash.new
 
-        unless input[entry]['identifier'].nil?
-          input[entry]['identifiers'] = Array(input[entry]['identifier'])
-          input[entry].delete('identifier')
+        unless options.input_hash[entry]['identifier'].nil?
+          options.input_hash[entry]['identifiers'] = Array(options.input_hash[entry]['identifier'])
+          options.input_hash[entry].delete('identifier')
         end
 
-        value = input[entry]['value']
+        value = options.input_hash[entry]['value']
 
         if value.is_a?(String)
           value.gsub!('global::percent_sign', 'compliance_map::percent_sign')
         end
 
-        input[entry]['value'] = value
+        options.input_hash[entry]['value'] = value
 
         # Ordering for readability
         main_sections = ['identifiers', 'value', 'notes']
-        other_sections = (input[entry].keys - main_sections)
+        other_sections = (options.input_hash[entry].keys - main_sections)
 
         (main_sections + other_sections).each do |section|
           output_hash['compliance_map'][policy][key] ||= Hash.new
 
-          unless input[entry][section].nil?
-            output_hash['compliance_map'][policy][key][section] = input[entry][section]
+          unless options.input_hash[entry][section].nil?
+            output_hash['compliance_map'][policy][key][section] = options.input_hash[entry][section]
           end
         end
       elsif garbage == 'global'
@@ -219,15 +255,15 @@ class HieraXlat
     return output_hash
   end
 
-  def xlat_1_0_0_to_2_0_0(input, target_module=nil)
+  def xlat_1_0_0_to_2_0_0(options)
     output_hash = {
       'version' => '2.0.0',
       'checks' => {}
     }
 
-    check_header = 'puppet.forge.simp'
+    check_header = 'oval:com.puppet.forge.simp'
 
-    maps = input['compliance_markup::compliance_map']
+    maps = options.input_hash['compliance_markup::compliance_map']
 
     policies = maps.keys
     policies.delete('version')
@@ -236,24 +272,74 @@ class HieraXlat
       params = maps[policy].keys.sort
 
       params.each do |param|
-        if target_module
-          next unless param.split('::').first == target_module
+        if options.target_module
+          next unless param.split('::').first == options.target_module
         end
 
         unique_name = "#{check_header}.#{param.gsub('::','.')}"
 
-        output_hash['checks'][unique_name] ||= {
-          'controls' => {},
-          'type'     => 'puppet-class-parameter',
-          'settings' => {
+        unless options.append.empty?
+          unique_name.concat('.', options.append)
+        end
+
+        new_check = {
+          'settings'    => {
             'parameter' => param,
             'value'     => maps[policy][param]['value']
-          }
+          },
+          'type'        => 'puppet-class-parameter',
+          'controls'    => {},
+          'identifiers' => {},
         }
 
-        new_controls = Hash[maps[policy][param]['identifiers'].map{|x| x = ["#{policy}:#{x}", true]}]
+        output_hash['checks'][unique_name] ||= new_check
 
-        output_hash['checks'][unique_name]['controls'].merge!(new_controls)
+        until output_hash['checks'][unique_name]['settings']['value'] == maps[policy][param]['value']
+          unique_name.concat('.', policy)
+          output_hash['checks'][unique_name] ||= new_check
+        end
+
+        unless options.confine.empty?
+          if output_hash['checks'][unique_name]['confine'].nil?
+            output_hash['checks'][unique_name]['confine'] = options.confine
+          else
+            output_hash['checks'][unique_name]['confine'].merge!(options.confine)
+          end
+        end
+
+        identifiers = maps[policy][param]['identifiers'].map { |v|
+          v.gsub(%r{\(([^\)]*)\)}, ':\1')
+        }
+
+        if output_hash['checks'][unique_name]['identifiers'][policy].nil?
+          output_hash['checks'][unique_name]['identifiers'][policy] = identifiers
+        else
+          output_hash['checks'][unique_name]['identifiers'][policy].concat(identifiers)
+        end
+
+        if policy == 'disa_stig'
+          output_hash['checks'][unique_name]['controls'].merge!({ policy => true })
+
+          output_hash['checks'][unique_name]['controls'].merge!(identifiers.collect { |identifier|
+            if m = %r{^(CCI)-}.match(identifier)
+              ["#{m[1].downcase}:#{identifier}", true]
+            else
+              [identifier, true]
+            end
+          }.to_h)
+        else
+          output_hash['checks'][unique_name]['controls'].merge!(identifiers.collect { |identifier|
+            ["#{policy}:#{identifier}", true]
+          }.to_h)
+        end
+
+        unless maps[policy][param]['oval-ids'].nil?
+          if output_hash['checks'][unique_name]['oval-ids'].nil?
+            output_hash['checks'][unique_name]['oval-ids'] = maps[policy][param]['oval-ids']
+          else
+            output_hash['checks'][unique_name]['oval-ids'].concat(maps[policy][param]['oval-ids']).uniq!
+          end
+        end
       end
     end
 
@@ -270,14 +356,10 @@ class HieraXlat
     end
 
     to_ret = {}
-    if options.target_module
-      to_ret = self.send(xlat_name.to_sym, options.input, options.target_module)
-    else
-      to_ret = self.send(xlat_name.to_sym, options.input)
-    end
+    to_ret = self.send(xlat_name.to_sym, options)
 
     if options.output_format == 'yaml'
-      to_ret = to_ret.to_yaml
+      to_ret = YAML.dump(YAML.load(to_ret.to_json))
     else
       to_ret = JSON.pretty_generate(to_ret)
     end
