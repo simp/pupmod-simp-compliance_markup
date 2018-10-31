@@ -1,3 +1,6 @@
+* Wed Oct 31 2018 Steven Pritchard <steven.pritchard@onyxpoint.com> - 2.4.1-0
+- Fix the output of utils/compliance_map_migrate
+
 * Fri Oct 19 2018 Liz Nemsick <lnemsick.simp@gmail.com> - 2.4.1-0
 - Fixed the following incorrect parameter types
   - simp::yum::schedule::minute

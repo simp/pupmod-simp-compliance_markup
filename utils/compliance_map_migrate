@@ -273,7 +273,7 @@ class HieraXlat
     if options.target_module
       to_ret = self.send(xlat_name.to_sym, options.input, options.target_module)
     else
-      to_ret = self.send(xlat_name.to_sym, options.input).to_yaml
+      to_ret = self.send(xlat_name.to_sym, options.input)
     end
 
     if options.output_format == 'yaml'
