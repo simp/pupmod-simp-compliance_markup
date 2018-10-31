@@ -34,8 +34,33 @@ Puppet::Functions.create_function(:'compliance_markup::enforcement') do
   def debug(message)
     @context.explain() { "#{message}" }
   end
+  def cache?
+    if (!@context.nil?)
+      true
+    else
+      false
+    end
+  end
   def cache(key, value)
     @context.cache(key, value)
+  end
+  def cache_has_key(key)
+    if (!@context.nil?)
+      @context.cache_has_key(key)
+    else
+      false
+    end
+  end
+  def cached_file_data(path)
+    data = nil
+    if (!@context.nil?)
+      @context.cached_file_data(path) do |contents|
+        data = contents
+      end
+    else
+      data = File.read(path)
+    end
+    data
   end
   def cached_value(key)
     @context.cached_value(key)

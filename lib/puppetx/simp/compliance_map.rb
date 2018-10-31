@@ -450,23 +450,31 @@ def cache(key, value)
   end
   @hash[key] = value
 end
+
 def cached_value(key)
   if @hash == nil
     @hash = {}
   end
   @hash[key]
 end
+
 def cache_has_key(key)
   if @hash == nil
     @hash = {}
   end
   @hash.key?(key)
 end
+
 def debug(message)
   return
 end
+
 def codebase
   "compliance_map"
+end
+
+def cached_file_data(path)
+  File.read(path)
 end
 
 def environment
