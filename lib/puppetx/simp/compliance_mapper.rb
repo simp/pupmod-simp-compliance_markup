@@ -224,12 +224,13 @@ def compiler_class()
             ]
             interp_pathspecs.each do |interp_pathspec|
               Dir.glob(interp_pathspec) do |filename|
+                filedata = @callback.cached_file_data(filename)
                 begin
                   case type
-                    when 'yaml'
-                      @compliance_data[filename] = YAML.load(File.read(filename))
+                  when 'yaml'
+                      @compliance_data[filename] = YAML.load(filedata)
                     when 'json'
-                      @compliance_data[filename] = JSON.parse(File.read(filename))
+                      @compliance_data[filename] = JSON.parse(filedata)
                   end
                 rescue
                 end
