@@ -1,3 +1,6 @@
+* Fri Aug 09 2019 Dylan Cochran <dylan.cochran@onyxpoint.com> - 3.0.1-0
+- Add confinement on modules and facts to SIMP Compliance Engine.
+
 * Wed Aug 07 2019 Trevor Vaughan <tvaughan@onyxpoint.com> - 3.0.0-0
 - Converted the `compliance_map` function to a Puppet 4 function called
   `compliance_markup::compliance_map()`

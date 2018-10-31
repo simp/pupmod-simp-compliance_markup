@@ -482,3 +482,11 @@ end
 def environment
   @context.environment.name.to_s
 end
+
+def lookup_fact(fact)
+  @context.lookupvar("facts")[fact]
+end
+
+def module_list
+  @context.environment.modules.map { |obj| { "name" => obj.metadata["name"], "version" => obj.metadata["version"] } }
+end
