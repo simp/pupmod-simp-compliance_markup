@@ -2,11 +2,15 @@
 version: 2.0.0
 profiles:
   disa:
+    controls:
+      compliance_markup:test: true
     checks:
       disacheck: true
+      confined: true
   nist:
     checks:
       nistcheck: true
+      confined: false
 checks:
   nistcheck:
     type: 'puppet-class-parameter'
@@ -18,3 +22,48 @@ checks:
     settings:
       parameter: 'compliance_markup::test::v2variable'
       value: 'disa'
+  confined_by_module:
+    controls:
+      - compliance_markup:test
+    type: 'puppet'
+    confine:
+      module_name: simp-compliance_markup
+      module_version: ">= 2.4.0"
+    settings:
+      parameter: 'compliance_markup::test::confined_by_module'
+      value: 'confined'
+  unconfined:
+    controls:
+      - compliance_markup:test
+    type: 'puppet'
+    settings:
+      parameter: 'compliance_markup::test::unconfined'
+      value: 'confined'
+  confined_with_wrong_module_version:
+    controls:
+      - compliance_markup:test
+    type: 'puppet'
+    confine:
+      module_name: simp-compliance_markup
+      module_version: ">= 200.4.0"
+    settings:
+      parameter: 'compliance_markup::test::confined_with_wrong_module_version'
+      value: 'confined'
+  confined_with_matching_fact:
+    controls:
+      - compliance_markup:test
+    type: 'puppet'
+    confine:
+      fqdn: localhost
+    settings:
+      parameter: 'compliance_markup::test::confined_with_matching_fact'
+      value: 'confined'
+  confined_with_not_matching_fact:
+    controls:
+      - compliance_markup:test
+    type: 'puppet'
+    confine:
+      fqdn: localhost2
+    settings:
+      parameter: 'compliance_markup::test::confined_with_not_matching_fact'
+      value: 'confined'

@@ -84,5 +84,76 @@ if (puppetver > requiredver)
         expect(result).to be_a(Float)
       end
     end
+    context "when key == compliance_markup::test::confined_by_module" do
+      let(:hieradata){ "test_spec" }
+      it 'should return "confined"' do
+        errored = false
+        ex = nil
+        begin
+          result = subject.execute("compliance_markup::test::confined_by_module", {}, nil)
+        rescue Exception => e
+          ex = e
+          errored = true
+        end
+        expect(result).to eql("confined")
+      end
+    end
+    context "when key == compliance_markup::test::unconfined" do
+      let(:hieradata){ "test_spec" }
+      it 'should return "confined"' do
+        errored = false
+        ex = nil
+        begin
+          result = subject.execute("compliance_markup::test::unconfined", {}, nil)
+        rescue Exception => e
+          ex = e
+          errored = true
+        end
+        expect(result).to eql("confined")
+      end
+    end
+    context "when key == compliance_markup::test::confined_with_matching_fact" do
+      let(:hieradata){ "test_spec" }
+      it 'should return "confined"' do
+        errored = false
+        ex = nil
+        begin
+          result = subject.execute("compliance_markup::test::confined_with_matching_fact", {}, nil)
+        rescue Exception => e
+          ex = e
+          errored = true
+        end
+        expect(result).to eql("confined")
+      end
+    end
+    context "when key == compliance_markup::test::confined_with_not_matching_fact" do
+      let(:hieradata){ "test_spec" }
+      it 'should return "confined"' do
+        errored = false
+        ex = nil
+        begin
+          result = subject.execute("compliance_markup::test::confined_with_not_matching_fact", {}, nil)
+        rescue Exception => e
+          ex = e
+          errored = true
+        end
+        expect(result).to_not eql("confined")
+      end
+    end
+    context "when key == compliance_markup::test::confined_with_wrong_module_version" do
+      let(:hieradata){ "test_spec" }
+      it 'should not return "confined"' do
+        errored = false
+        ex = nil
+        begin
+          $pry_debug = true
+          result = subject.execute("compliance_markup::test::confined_with_wrong_module_version", {}, nil)
+        rescue Exception => e
+          ex = e
+          errored = true
+        end
+        expect(result).to_not eql("confined")
+      end
+    end
   end
 end

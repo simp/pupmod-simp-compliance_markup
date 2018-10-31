@@ -90,4 +90,10 @@ Puppet::Functions.create_function(:'compliance_markup::enforcement') do
       false
     end
   end
+  def lookup_fact(fact)
+    closure_scope.lookupvar("facts")[fact]
+  end
+  def module_list
+    closure_scope.environment.modules.map { |obj| { "name" => obj.metadata["name"], "version" => obj.metadata["version"] } }
+  end
 end
