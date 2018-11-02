@@ -1287,7 +1287,7 @@
           "nosuid"
         ]
       },
-      "simp::mountpoints:tmp::secure": {
+      "simp::mountpoints::tmp::secure": {
         "identifiers": [
           "AC-3",
           "CM-7"
@@ -1314,21 +1314,21 @@
         "notes": "Setting this number higher than 10 should be justified",
         "value": 10
       },
-      "simp:root_user::manage_group": {
+      "simp::root_user::manage_group": {
         "identifiers": [
           "AC-3",
           "CM-7"
         ],
         "value": true
       },
-      "simp:root_user::manage_perms": {
+      "simp::root_user::manage_perms": {
         "identifiers": [
           "AC-3",
           "CM-7"
         ],
         "value": true
       },
-      "simp:root_user::manage_user": {
+      "simp::root_user::manage_user": {
         "identifiers": [
           "AC-3",
           "CM-7"
@@ -2313,7 +2313,7 @@
         ],
         "value": false
       },
-      "ssh::server:conf::pki": {
+      "ssh::server::conf::pki": {
         "identifiers": [
           "SC-8(1)",
           "SC-8(2)",
