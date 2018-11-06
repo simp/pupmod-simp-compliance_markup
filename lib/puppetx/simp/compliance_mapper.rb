@@ -277,6 +277,10 @@ def compiler_class()
       v2.standard
     end
 
+    def oval_id(id, options = {})
+      v2.oval_id(id, options)
+    end
+
     def template_info(standard_name)
       if (standard.key?(standard_name))
         standard[standard_name]["options"]
@@ -357,6 +361,22 @@ def compiler_class()
 
         def standard
           @data[:standards]
+        end
+
+        def oval_id(id, options = {})
+          result = {
+              "checks" => {},
+              "ces" => {},
+          }
+          # only return the first result atm
+          check.each do |name, checkdata|
+            if (checkdata.key?("oval-ids"))
+              if (checkdata["oval-ids"].include?(id))
+                result["checks"][name] = checkdata
+              end
+            end
+          end
+          result
         end
 
         def import(filename, data)
@@ -608,6 +628,10 @@ def compiler_class()
         end
       end
       table
+    end
+    def version
+      require 'semantic_puppet'
+      SemanticPuppet::Version.parse("2.5.0")
     end
   end
 end
