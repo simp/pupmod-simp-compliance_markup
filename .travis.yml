@@ -1,16 +1,32 @@
 # The testing matrix considers ruby/puppet versions supported by SIMP and PE:
+#
+# https://puppet.com/docs/pe/2018.1/component_versions_in_recent_pe_releases.html
+# https://puppet.com/misc/puppet-enterprise-lifecycle
+# https://puppet.com/docs/pe/2018.1/overview/getting_support_for_pe.html
 # ------------------------------------------------------------------------------
-#  release    pup   ruby      eol
-# PE 2017.2   4.10  2.1.9  TBD
-# PE 2017.3   5.3   2.4.1  2018-07
-# PE 2018.1   ???   ?????  ????-??  (LTS)
+# Release       Puppet   Ruby   EOL
+# SIMP 6.2      4.10     2.1.9  TBD
+# PE 2016.4     4.10     2.1.9  2018-12-31 (LTS)
+# PE 2017.3     5.3      2.4.4  2018-12-31
+# SIMP 6.3      5.5      2.4.4  TBD***
+# PE 2018.1     5.5      2.4.4  2020-05 (LTS)***
+# PE 2019.0     6.0      2.5.1  2019-08-31^^^
+#
+# *** = Modules created for SIMP 6.3+ are not required to support Puppet < 5.5
+# ^^^ = SIMP doesn't support 6 yet; tests are info-only and allowed to fail
+
 ---
 language: ruby
 cache: bundler
 sudo: false
 
-bundler_args: --without development system_tests --path .vendor
+stages:
+  - check
+  - spec
+  - name: deploy
+    if: 'fork = false AND tag = true'
 
+bundler_args: --without development system_tests --path .vendor
 
 notifications:
   email: false
@@ -23,62 +39,91 @@ addons:
 before_install:
   - rm -f Gemfile.lock
 
+global:
+  - STRICT_VARIABLES=yes
+
 jobs:
+  allow_failures:
+    - name: 'Latest Puppet 6.x (allowed to fail)'
+
   include:
     - stage: check
-      rvm: 2.4.1
-      env: STRICT_VARIABLES=yes TRUSTED_NODE_DATA=yes PUPPET_VERSION="~> 5"
+      name: 'Syntax, style, and validation checks'
+      rvm: 2.4.4
+      env: PUPPET_VERSION="~> 5.5"
       script:
         - bundle exec rake check:dot_underscore
         - bundle exec rake check:test_file
-        - bundle exec rake lint
-        - bundle exec rake metadata_lint
         - bundle exec rake pkg:check_version
+        - bundle exec rake metadata_lint
         - bundle exec rake pkg:compare_latest_tag
         - bundle exec rake pkg:create_tag_changelog
+        - bundle exec rake lint
+        - bundle exec puppet module build
         - ruby -r json -e 'Dir.glob("data/**/*.json").map{|j| puts "Attempting to load "+j;JSON.load(File.new(j))}'
         - ruby -r yaml -e 'Dir.glob("data/**/*.y{,a}ml").map{|y| puts "Attempting to load "+y;YAML.load(File.new(y))}'
-        - bundle exec puppet module build
 
     - stage: spec
-      rvm: 2.4.1
-      env: STRICT_VARIABLES=yes TRUSTED_NODE_DATA=yes PUPPET_VERSION="~> 5.0"
+      name: 'Puppet 4.10 (SIMP 6.2, PE 2016.4)'
+      rvm: 2.1.9
+      env: PUPPET_VERSION="~> 4.10.0"
       script:
         - bundle exec rake spec
 
     - stage: spec
-      rvm: 2.1.9
-      env: STRICT_VARIABLES=yes TRUSTED_NODE_DATA=yes PUPPET_VERSION="~> 4.10.0"
+      name: 'Puppet 5.3 (PE 2017.3)'
+      rvm: 2.4.4
+      env: PUPPET_VERSION="~> 5.3.0"
+      script:
+        - bundle exec rake spec
+
+    - stage: spec
+      rvm: 2.4.4
+      name: 'Puppet 5.5 (SIMP 6.3, PE 2018.1)'
+      env: PUPPET_VERSION="~> 5.5.0"
+      script:
+        - bundle exec rake spec
+
+    - stage: spec
+      name: 'Latest Puppet 5.x'
+      rvm: 2.4.4
+      env: PUPPET_VERSION="~> 5.0"
+      script:
+        - bundle exec rake spec
+
+    - stage: spec
+      name: 'Latest Puppet 6.x (allowed to fail)'
+      rvm: 2.5.1
+      env: PUPPET_VERSION="~> 6.0"
       script:
         - bundle exec rake spec
 
     - stage: acceptance
       sudo: required
       rvm: 2.1.9
+      name: 'Puppet 4.10 (SIMP 6.2, PE 2016.4)'
       bundler_args: --without development --path .vendor
       services:
         - docker
       script:
         - bundle exec rake spec_clean
         - bundle exec rake beaker:suites[default,docker_centos]
-      # PUPPET_VERSION can't handle a '~' here due to code in the test
-      env: PUPPET_VERSION="4.10.4"
+      env: PUPPET_VERSION="~> 4.10.4"
 
     - stage: acceptance
       sudo: required
-      rvm: 2.4.1
+      rvm: 2.4.4
+      name: 'Puppet 5.5 (SIMP 6.3, PE 2018.1)'
       bundler_args: --without development --path .vendor
       services:
         - docker
       script:
         - bundle exec rake spec_clean
         - bundle exec rake beaker:suites[default,docker_centos]
-      # PUPPET_VERSION can't handle a '~' here due to code in the test
-      env: PUPPET_VERSION="5.5.3" BEAKER_PUPPET_COLLECTION="puppet5"
+      env: PUPPET_VERSION="~> 5.5.7" BEAKER_PUPPET_COLLECTION="puppet5"
 
-    # This needs to be last since we have an acceptance test
     - stage: deploy
-      rvm: 2.4.1
+      rvm: 2.4.4
       script:
         - true
       before_deploy:
@@ -98,5 +143,4 @@ jobs:
               secure: "vL1MNFrE7aazh/rEsSaHugCYYWXrJmsBuhMIP27CQ/EpBQ6wfWZhukZdkikZrmkIiJHHLi1HaQycKdW2AzcqN932iXOdjYtEA9eE/hO1VtGMYVobZFS4sh2Wtt8saVOg0tMPq45hjFHUe8FmgyrsjHBB+kl/fdfLVr+TiFCmWGXtZkjMlJxqPp+fyZZDrMoKoB7eSm3edOtqX7gONP3MEJ/wcHgCUTyspxI8sSXGl8IPwWNxU4LSgCwbvr/JzmDmKiK2AbSc7Q2+g7NrvZV39CbcV0IH4Uy4A+3fBBli/nPaidm/dvIvcYDacWF0UiXZTMvqd8tL4Z3Sf4vvB6NZ328ml97w233fLSHdLGn8qaIjmkK5x1UN9BRmA/WZbmkSSLWqwr6Cz+c4unik1NeQF2shpNZw8cGyh6IFnpIUbBsXPgxiIbb1HfoQCRFocTgkqpsbH7n8WpJkEdPpVgtJh51xILlbZibsI9U1YsfDjpZWXxUUObsANbAK0Z0Ep0wkzv31+9fSD7FlGOJ//GjqFRjW4inekCeUNyRbXTGIlDMeZyRKs/JZVndKr9AFestwkiM7AWWNFUKfSX5RE0oRNwQDAKAa8HDPtErNhfoAtBCYEcBTB6GoXhnyX/1gwrDb8zeEtbc50PLBnJT6gJIp2M2IiAeXHgGuMLiDbNzgThQ="
           on:
             tags: true
-            rvm: 2.4.1
             condition: '($SKIP_FORGE_PUBLISH != true)'
