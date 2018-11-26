@@ -24,7 +24,7 @@ stages:
   - check
   - spec
   - name: deploy
-    if: 'fork = false AND tag = true'
+    if: 'tag IS present'
 
 bundler_args: --without development system_tests --path .vendor
 
@@ -50,7 +50,7 @@ jobs:
     - stage: check
       name: 'Syntax, style, and validation checks'
       rvm: 2.4.4
-      env: PUPPET_VERSION="~> 5.5"
+      env: PUPPET_VERSION="~> 5"
       script:
         - bundle exec rake check:dot_underscore
         - bundle exec rake check:test_file
@@ -60,8 +60,6 @@ jobs:
         - bundle exec rake pkg:create_tag_changelog
         - bundle exec rake lint
         - bundle exec puppet module build
-        - ruby -r json -e 'Dir.glob("data/**/*.json").map{|j| puts "Attempting to load "+j;JSON.load(File.new(j))}'
-        - ruby -r yaml -e 'Dir.glob("data/**/*.y{,a}ml").map{|y| puts "Attempting to load "+y;YAML.load(File.new(y))}'
 
     - stage: spec
       name: 'Puppet 4.10 (SIMP 6.2, PE 2016.4)'
@@ -97,30 +95,6 @@ jobs:
       env: PUPPET_VERSION="~> 6.0"
       script:
         - bundle exec rake spec
-
-    - stage: acceptance
-      sudo: required
-      rvm: 2.1.9
-      name: 'Puppet 4.10 (SIMP 6.2, PE 2016.4)'
-      bundler_args: --without development --path .vendor
-      services:
-        - docker
-      script:
-        - bundle exec rake spec_clean
-        - bundle exec rake beaker:suites[default,docker_centos]
-      env: PUPPET_VERSION="~> 4.10.4"
-
-    - stage: acceptance
-      sudo: required
-      rvm: 2.4.4
-      name: 'Puppet 5.5 (SIMP 6.3, PE 2018.1)'
-      bundler_args: --without development --path .vendor
-      services:
-        - docker
-      script:
-        - bundle exec rake spec_clean
-        - bundle exec rake beaker:suites[default,docker_centos]
-      env: PUPPET_VERSION="~> 5.5.7" BEAKER_PUPPET_COLLECTION="puppet5"
 
     - stage: deploy
       rvm: 2.4.4
