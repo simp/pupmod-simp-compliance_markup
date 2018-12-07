@@ -228,6 +228,7 @@ def compiler_class()
 
             interp_pathspecs.each do |interp_pathspec|
               Dir.glob(interp_pathspec) do |filename|
+		puts "loading #{filename}"
                 filedata = @callback.cached_file_data(filename)
                 begin
                   case type
@@ -247,6 +248,7 @@ def compiler_class()
       @v2 = v2_compiler.new(callback)
 
       @compliance_data.each do |filename, map|
+	puts "Reading data from #{filename}"
         if map.key?("version")
           version = SemanticPuppet::Version.parse(map["version"])
 
@@ -375,6 +377,18 @@ def compiler_class()
                 result["checks"][name] = checkdata
               end
             end
+            if checkdata.key?("ces")
+              checkdata["ces"].each do |cename|
+                if (ce.key?(cename))
+                  if ce[cename].key?("oval-ids")
+                    if ce[cename]["oval-ids"].include?(id)
+	              result['ces'][cename] = ce[cename]
+                      result["checks"][name] = checkdata
+                    end
+                  end
+                end
+              end
+            end
           end
           result
         end
@@ -388,7 +402,6 @@ def compiler_class()
               'control_families',
               'standards',
           ]
-
           data.each do |key, value|
             if settings.include?(key)
               keysym = key.to_sym
