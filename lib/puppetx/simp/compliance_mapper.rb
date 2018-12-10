@@ -121,7 +121,10 @@ def enforcement(key, options = {"mode" => "value"}, &block)
           # option that toggles it on. This would allow un-overridable enforcement at the hiera
           # layer (though it can still be overridden by resource-style class definitions)
         end
-      rescue
+      rescue Exception => e
+        if $debugmode
+          binding.pry
+        end
       ensure
         cache("lock", false)
       end
@@ -228,7 +231,6 @@ def compiler_class()
 
             interp_pathspecs.each do |interp_pathspec|
               Dir.glob(interp_pathspec) do |filename|
-		puts "loading #{filename}"
                 filedata = @callback.cached_file_data(filename)
                 begin
                   case type
@@ -248,7 +250,6 @@ def compiler_class()
       @v2 = v2_compiler.new(callback)
 
       @compliance_data.each do |filename, map|
-	puts "Reading data from #{filename}"
         if map.key?("version")
           version = SemanticPuppet::Version.parse(map["version"])
 
@@ -456,7 +457,8 @@ def compiler_class()
                           requiredver.include?(currentver)
                         else
                           rvalue = @callback.lookup_fact(confinement_setting)
-                          rvalue == confinement_value
+                          rretval = rvalue == confinement_value
+                          rretval
                         end
                       end
                     end
@@ -523,7 +525,7 @@ def compiler_class()
                               unless key == "parameter"
                                 case current[key].class.to_s
                                 when "Array"
-                                  current[key].merge!(value)
+                                  current[key] += value
                                 when "Hash"
                                   current[key].merge!(value)
                                 else
