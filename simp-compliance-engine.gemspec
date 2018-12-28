@@ -34,6 +34,6 @@ Gem::Specification.new do |s|
   s.email = 'simp@simp-project.org'
   s.license = 'Apache-2.0'
   s.homepage = 'https://github.com/simp/pupmod-simp-compliance_markup'
-  s.files = Dir['Rakefile', '{bin,lib}/**/*', 'README*','*.gemspec','*.md','CONTRIBUTORS','Gemfile','LICENSE','NOTICE.TXT', '.gem_version', '.gem_date']
+  s.files = Dir['Rakefile', '{bin,lib,data}/**/*', 'README*','*.gemspec','*.md','CONTRIBUTORS','Gemfile','LICENSE','NOTICE.TXT', '.gem_version', '.gem_date']
   s.add_runtime_dependency 'semantic_puppet'
 end
