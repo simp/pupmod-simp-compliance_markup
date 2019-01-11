@@ -1047,7 +1047,7 @@
         "notes": "This only helps with \"Secure Name/Address Resolution\" but does not alone meet that control",
         "value": "warn"
       },
-      "rsync::server::global::address": {
+      "rsync::server::listen_address": {
         "identifiers": [
           "CM-7"
         ],

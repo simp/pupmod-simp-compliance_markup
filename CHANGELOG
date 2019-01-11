@@ -1,3 +1,7 @@
+* Fri Jan 11 2019 Adam Yohrling <adam.yohrling@onyxpoint.com> - 2.4.2-0
+- Converted all `rsync::server::global` settings to updated `rsync::server`
+  settings
+
 * Fri Nov 02 2018 Steven Pritchard <steven.pritchard@onyxpoint.com> - 2.4.1-0
 - Fix the following keys:
   - simp::mountpoints::tmp::secure
