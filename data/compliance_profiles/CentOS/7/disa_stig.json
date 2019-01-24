@@ -2311,7 +2311,7 @@
           "CCI-002361"
         ],
 	"oval-ids": [
-		"sshd_set_keepalive",
+		"sshd_set_keepalive"
 	],
         "value": 0
       },
