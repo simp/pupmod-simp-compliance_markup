@@ -281,7 +281,45 @@ def compiler_class()
     end
 
     def oval_id(id, options = {})
-      v2.oval_id(id, options)
+      result = v2.oval_id(id, options)
+      if result["checks"] == {} and result["ces"] == {}
+        result = {
+            "checks" => {},
+            "ces" => {},
+        }
+        @compliance_data.each do |filename, map|
+
+          # Assume version 1 if no version is specified.
+          # Due to old archaic code
+          version = SemanticPuppet::Version.parse('1.0.0')
+
+          if map.key?("version")
+            version = SemanticPuppet::Version.parse(map["version"])
+          end
+
+          if version.major == 1
+            map.each do |nkey, nvalue|
+              unless nkey == "version"
+                nvalue.each do |key, value|
+                  if value.key?("oval-ids")
+                    if value["oval-ids"].include?(id)
+                      data = {
+                          "type" => "puppet-class-parameter",
+                          "settings" => {
+                              "parameter" => key,
+                              "value" => value["value"]
+                          }
+                      }
+                      result["checks"]["oval:compliance_markup_v1:#{nkey}:#{key}"] = data
+                    end
+                  end
+                end
+              end
+            end
+          end
+        end
+      end
+      result
     end
 
     def template_info(standard_name)
