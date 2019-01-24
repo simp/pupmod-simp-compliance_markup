@@ -2310,6 +2310,9 @@
           "CCI-001133",
           "CCI-002361"
         ],
+	"oval-ids": [
+		"sshd_set_keepalive",
+	],
         "value": 0
       },
       "ssh::server::conf::clientaliveinterval": {
