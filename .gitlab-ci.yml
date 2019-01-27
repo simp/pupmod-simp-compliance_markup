@@ -50,8 +50,8 @@ variables:
     paths:
       - '.vendor'
   before_script:
-    - 'ruby -e "puts %(Environment Variables:\n  * #{ENV.keys.grep(/PUPPET|SIMP|BEAKER|MATRIX/).map{|v| %(#{v} = #{ENV[v]})}.join(%(\n  * ))})"'
-    - 'declare GEM_BUNDLER_VER=(-v "~> ${BUNDLER_VERSION:-1.17.0}")'
+    - 'ruby -e "puts %(\n\n), %q(=)*80, %(\nSIMP-relevant Environment Variables:\n\n#{e=ENV.keys.grep(/^PUPPET|^SIMP|^BEAKER|MATRIX/); pad=e.map{|x| x.size}.max+1; e.map{|v| %(    * #{%(#{v}:).ljust(pad)} #{39.chr + ENV[v] + 39.chr}\n)}.join}\n),  %q(=)*80, %(\n\n)"'
+    - 'declare GEM_BUNDLER_VER=(-v "~> ${BUNDLER_VERSION:-1.17.1}")'
     - 'declare GEM_INSTALL_CMD=(gem install --no-document)'
     - 'declare BUNDLER_INSTALL_CMD=(bundle install --no-binstubs --jobs $(nproc) "${FLAGS[@]}")'
     - 'mkdir -p ${GEM_HOME} ${BUNDLER_BIN}'
@@ -70,7 +70,7 @@ variables:
 #-----------------------------------------------------------------------
 
 .pup_4: &pup_4
-  image: 'ruby:2.4'
+  image: 'ruby:2.1'
   variables:
     PUPPET_VERSION: '~> 4.0'
     MATRIX_RUBY_VERSION: '2.1'
@@ -85,13 +85,6 @@ variables:
   image: 'ruby:2.4'
   variables:
     PUPPET_VERSION: '~> 5.0'
-    BEAKER_PUPPET_COLLECTION: 'puppet5'
-    MATRIX_RUBY_VERSION: '2.4'
-
-.pup_5_3: &pup_5_3
-  image: 'ruby:2.4'
-  variables:
-    PUPPET_VERSION: '~> 5.3.0'
     BEAKER_PUPPET_COLLECTION: 'puppet5'
     MATRIX_RUBY_VERSION: '2.4'
 
@@ -130,12 +123,12 @@ variables:
   script:
     - 'bundle exec rake spec'
 
-.acceptance_tests: &acceptance_tests
+.acceptance_base: &acceptance_base
   stage: 'acceptance'
   tags: ['beaker']
   <<: *setup_bundler_env
 
-.compliance_tests: &compliance_tests
+.compliance_base: &compliance_base
   stage: 'compliance'
   tags: ['beaker']
   <<: *setup_bundler_env
@@ -158,8 +151,6 @@ sanity_checks:
     - 'bundle exec rake pkg:compare_latest_tag'
     - 'bundle exec rake pkg:create_tag_changelog'
     - 'bundle exec puppet module build'
-    - ruby -r json -e 'Dir.glob("data/**/*.json").map{|j| puts "Attempting to load "+j;JSON.load(File.new(j))}'
-    - ruby -r yaml -e 'Dir.glob("data/**/*.y{,a}ml").map{|y| puts "Attempting to load "+y;YAML.load(File.new(y))}'
 
 # Linting
 #-----------------------------------------------------------------------
@@ -179,20 +170,16 @@ pup6-lint:
 # Unit Tests
 #-----------------------------------------------------------------------
 
-pup4.10-unit:
-  <<: *pup_4_10
-  <<: *unit_tests
-
 pup5-unit:
   <<: *pup_5
   <<: *unit_tests
 
-pup5.3-unit:
-  <<: *pup_5_3
-  <<: *unit_tests
-
 pup5.5.7-unit:
   <<: *pup_5_5_7
+  <<: *unit_tests
+
+pup4.10-unit:
+  <<: *pup_4_10
   <<: *unit_tests
 
 pup6-unit:
@@ -203,38 +190,38 @@ pup6-unit:
 # ==============================================================================
 pup4.10:
   <<: *pup_4_10
-  <<: *acceptance_tests
+  <<: *acceptance_base
   script:
     - 'bundle exec rake beaker:suites'
 
 pup4.10-fips:
   <<: *pup_4_10
-  <<: *acceptance_tests
+  <<: *acceptance_base
   <<: *only_with_SIMP_FULL_MATRIX
   script:
     - 'BEAKER_fips=yes bundle exec rake beaker:suites'
 
 pup5.5.7:
   <<: *pup_5_5_7
-  <<: *acceptance_tests
+  <<: *acceptance_base
   script:
     - 'bundle exec rake beaker:suites'
 
 pup5.5.7-fips:
   <<: *pup_5_5_7
-  <<: *acceptance_tests
+  <<: *acceptance_base
   script:
     - 'BEAKER_fips=yes bundle exec rake beaker:suites'
 
 pup5.5.7-oel:
   <<: *pup_5_5_7
-  <<: *acceptance_tests
+  <<: *acceptance_base
   script:
     - 'bundle exec rake beaker:suites[default,oel]'
 
 pup5.5.7-oel-fips:
   <<: *pup_5_5_7
-  <<: *acceptance_tests
+  <<: *acceptance_base
   <<: *only_with_SIMP_FULL_MATRIX
   script:
     - 'BEAKER_fips=yes bundle exec rake beaker:suites[default,oel]'
