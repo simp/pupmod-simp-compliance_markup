@@ -308,7 +308,8 @@ def compiler_class()
                           "settings" => {
                               "parameter" => key,
                               "value" => value["value"]
-                          }
+                          },
+                          "identifiers" => value["identifiers"]
                       }
                       result["checks"]["oval:compliance_markup_v1:#{nkey}:#{key}"] = data
                     end
