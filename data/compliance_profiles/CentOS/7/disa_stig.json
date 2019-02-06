@@ -45,7 +45,8 @@
           "CCI-000368"
         ],
         "oval-ids": [
-          "xccdf_org:ssgproject:content_rule_aide_periodic_cron_checking"
+          "xccdf_org:ssgproject:content_rule_aide_periodic_cron_checking",
+          "aide_periodic_cron_checking"
         ],
         "value": true
       },
@@ -78,7 +79,8 @@
           "SRG-OS-000363-GPOS-00150"
         ],
         "oval-ids": [
-          "xccdf_org:ssgproject:content_rule_aide_periodic_cron_checking"
+          "xccdf_org:ssgproject:content_rule_aide_periodic_cron_checking",
+          "aide_periodic_cron_checking"
         ],
         "value": 5
       },
@@ -88,7 +90,8 @@
           "SRG-OS-000363-GPOS-00150"
         ],
         "oval-ids": [
-          "xccdf_org:ssgproject:content_rule_aide_periodic_cron_checking"
+          "xccdf_org:ssgproject:content_rule_aide_periodic_cron_checking",
+          "aide_periodic_cron_checking"
         ],
         "value": 4
       },
@@ -98,7 +101,8 @@
           "SRG-OS-000363-GPOS-00150"
         ],
         "oval-ids": [
-          "xccdf_org:ssgproject:content_rule_aide_periodic_cron_checking"
+          "xccdf_org:ssgproject:content_rule_aide_periodic_cron_checking",
+          "aide_periodic_cron_checking"
         ],
         "value": 0
       },
@@ -107,6 +111,9 @@
           "RHEL-07-030350",
           "SRG-OS-000343-GPOS-00134",
           "CCI-001855"
+        ],
+        "oval-ids": [
+          "auditd_data_retention_action_mail_acct"
         ],
         "value": "root"
       },
@@ -118,6 +125,9 @@
           "SRG-OS-000042-GPOS-00020",
           "CCI-002234",
           "CCI-000135"
+        ],
+        "oval-ids": [
+          "bootloader_audit_argument"
         ],
         "value": true
       },
@@ -139,7 +149,13 @@
           "xccdf_org:ssgproject:content_rule_audit_rules_dac_modification_lremovexattr",
           "xccdf_org:ssgproject:content_rule_audit_rules_dac_modification_lsetxattr",
           "xccdf_org:ssgproject:content_rule_audit_rules_dac_modification_removexattr",
-          "xccdf_org:ssgproject:content_rule_audit_rules_dac_modification_setxattr"
+          "xccdf_org:ssgproject:content_rule_audit_rules_dac_modification_setxattr",
+          "audit_rules_dac_modification_fremovexattr",
+          "audit_rules_dac_modification_fsetxattr",
+          "audit_rules_dac_modification_lremovexattr",
+          "audit_rules_dac_modification_lsetxattr",
+          "audit_rules_dac_modification_removexattr",
+          "audit_rules_dac_modification_setxattr"
         ],
         "value": true
       },
@@ -161,7 +177,13 @@
           "xccdf_org:ssgproject:content_rule_audit_rules_dac_modification_lremovexattr",
           "xccdf_org:ssgproject:content_rule_audit_rules_dac_modification_lsetxattr",
           "xccdf_org:ssgproject:content_rule_audit_rules_dac_modification_removexattr",
-          "xccdf_org:ssgproject:content_rule_audit_rules_dac_modification_setxattr"
+          "xccdf_org:ssgproject:content_rule_audit_rules_dac_modification_setxattr",
+          "audit_rules_dac_modification_fremovexattr",
+          "audit_rules_dac_modification_fsetxattr",
+          "audit_rules_dac_modification_lremovexattr",
+          "audit_rules_dac_modification_lsetxattr",
+          "audit_rules_dac_modification_removexattr",
+          "audit_rules_dac_modification_setxattr"
         ],
         "value": "perm_mod"
       },
@@ -173,6 +195,9 @@
           "SRG-OS-000462-GPOS-00206",
           "SRG-OS-000471-GPOS-00215",
           "RHEL-07-030700"
+        ],
+        "oval-ids": [
+          "audit_rules_sysadmin_actions"
         ],
         "value": true
       },
@@ -200,7 +225,10 @@
         "oval-ids": [
           "xccdf_org:ssgproject:content_rule_audit_rules_dac_modification_chmod",
           "xccdf_org:ssgproject:content_rule_audit_rules_dac_modification_fchmod",
-          "xccdf_org:ssgproject:content_rule_audit_rules_dac_modification_fchmodat"
+          "xccdf_org:ssgproject:content_rule_audit_rules_dac_modification_fchmodat",
+          "audit_rules_dac_modification_chmod",
+          "audit_rules_dac_modification_fchmod",
+          "audit_rules_dac_modification_fchmodat"
         ],
         "value": true
       },
@@ -217,7 +245,10 @@
         "oval-ids": [
           "xccdf_org:ssgproject:content_rule_audit_rules_dac_modification_chmod",
           "xccdf_org:ssgproject:content_rule_audit_rules_dac_modification_fchmod",
-          "xccdf_org:ssgproject:content_rule_audit_rules_dac_modification_fchmodat"
+          "xccdf_org:ssgproject:content_rule_audit_rules_dac_modification_fchmodat",
+          "audit_rules_dac_modification_chmod",
+          "audit_rules_dac_modification_fchmod",
+          "audit_rules_dac_modification_fchmodat"
         ],
         "value": "perm_mod"
       },
@@ -236,7 +267,11 @@
           "xccdf_org:ssgproject:content_rule_audit_rules_dac_modification_chown",
           "xccdf_org:ssgproject:content_rule_audit_rules_dac_modification_fchown",
           "xccdf_org:ssgproject:content_rule_audit_rules_dac_modification_fchownat",
-          "xccdf_org:ssgproject:content_rule_audit_rules_dac_modification_lchown"
+          "xccdf_org:ssgproject:content_rule_audit_rules_dac_modification_lchown",
+          "audit_rules_dac_modification_chown",
+          "audit_rules_dac_modification_fchown",
+          "audit_rules_dac_modification_fchownat",
+          "audit_rules_dac_modification_lchown"
         ],
         "value": true
       },
@@ -255,7 +290,11 @@
           "xccdf_org:ssgproject:content_rule_audit_rules_dac_modification_chown",
           "xccdf_org:ssgproject:content_rule_audit_rules_dac_modification_fchown",
           "xccdf_org:ssgproject:content_rule_audit_rules_dac_modification_fchownat",
-          "xccdf_org:ssgproject:content_rule_audit_rules_dac_modification_lchown"
+          "xccdf_org:ssgproject:content_rule_audit_rules_dac_modification_lchown",
+          "audit_rules_dac_modification_chown",
+          "audit_rules_dac_modification_fchown",
+          "audit_rules_dac_modification_fchownat",
+          "audit_rules_dac_modification_lchown"
         ],
         "value": "perm_mod"
       },
@@ -292,6 +331,9 @@
           "RHEL-07-030840",
           "RHEL-07-030850",
           "RHEL-07-030860"
+        ],
+        "oval-ids": [
+          "audit_rules_kernel_module_loading"
         ],
         "value": true
       },
@@ -352,7 +394,10 @@
         ],
         "oval-ids": [
           "xccdf_org:ssgproject:content_rule_audit_rules_login_events_faillock",
-          "xccdf_org:ssgproject:content_rule_audit_rules_login_events_tallylog"
+          "xccdf_org:ssgproject:content_rule_audit_rules_login_events_tallylog",
+          "audit_rules_login_events_faillock",
+          "audit_rules_login_events_tallylog",
+          "audit_rules_login_events"
         ],
         "value": true
       },
@@ -367,7 +412,9 @@
         ],
         "oval-ids": [
           "xccdf_org:ssgproject:content_rule_audit_rules_login_events_faillock",
-          "xccdf_org:ssgproject:content_rule_audit_rules_login_events_tallylog"
+          "xccdf_org:ssgproject:content_rule_audit_rules_login_events_tallylog",
+          "audit_rules_login_events_faillock",
+          "audit_rules_login_events_tallylog"
         ],
         "value": "logins"
       },
@@ -377,6 +424,9 @@
           "SRG-OS-000392-GPOS-00172",
           "RHEL-07-030740",
           "RHEL-07-030750"
+        ],
+        "oval-ids": [
+          "audit_rules_media_export"
         ],
         "value": true
       },
@@ -510,7 +560,13 @@
           "xccdf_org:ssgproject:content_rule_audit_rules_file_deletion_events_unlink",
           "xccdf_org:ssgproject:content_rule_audit_rules_file_deletion_events_unlinkat",
           "xccdf_org:ssgproject:content_rule_audit_rules_file_deletion_events_rename",
-          "xccdf_org:ssgproject:content_rule_audit_rules_file_deletion_events_renameat"
+          "xccdf_org:ssgproject:content_rule_audit_rules_file_deletion_events_renameat",
+          "audit_rules_file_deletion_events_rmdir",
+          "audit_rules_file_deletion_events_unlink",
+          "audit_rules_file_deletion_events_unlinkat",
+          "audit_rules_file_deletion_events_rename",
+          "audit_rules_file_deletion_events_renameat",
+          "audit_rules_file_deletion_events"
         ],
         "value": true
       },
@@ -531,7 +587,13 @@
           "xccdf_org:ssgproject:content_rule_audit_rules_file_deletion_events_unlink",
           "xccdf_org:ssgproject:content_rule_audit_rules_file_deletion_events_unlinkat",
           "xccdf_org:ssgproject:content_rule_audit_rules_file_deletion_events_rename",
-          "xccdf_org:ssgproject:content_rule_audit_rules_file_deletion_events_renameat"
+          "xccdf_org:ssgproject:content_rule_audit_rules_file_deletion_events_renameat",
+          "audit_rules_file_deletion_events_rmdir",
+          "audit_rules_file_deletion_events_unlink",
+          "audit_rules_file_deletion_events_unlinkat",
+          "audit_rules_file_deletion_events_rename",
+          "audit_rules_file_deletion_events_renameat",
+          "audit_rules_file_deletion_events"
         ],
         "value": "delete"
       },
@@ -593,6 +655,9 @@
           "SRG-OS-000327-GPOS-00127",
           "RHEL-07-030360"
         ],
+        "oval-ids": [
+          "audit_rules_privileged_commands"
+        ],
         "value": "setuid/setgid"
       },
       "auditd::config::audit_profiles::stig::audit_unsuccessful_file_operations": {
@@ -614,7 +679,14 @@
           "xccdf_org:ssgproject:content_rule_audit_rules_unsuccessful_file_modification_openat",
           "xccdf_org:ssgproject:content_rule_audit_rules_unsuccessful_file_modification_open_by_handle_at",
           "xccdf_org:ssgproject:content_rule_audit_rules_unsuccessful_file_modification_truncate",
-          "xccdf_org:ssgproject:content_rule_audit_rules_unsuccessful_file_modification_ftruncate"
+          "xccdf_org:ssgproject:content_rule_audit_rules_unsuccessful_file_modification_ftruncate",
+          "audit_rules_unsuccessful_file_modification_creat",
+          "audit_rules_unsuccessful_file_modification_open",
+          "audit_rules_unsuccessful_file_modification_openat",
+          "audit_rules_unsuccessful_file_modification_open_by_handle_at",
+          "audit_rules_unsuccessful_file_modification_truncate",
+          "audit_rules_unsuccessful_file_modification_ftruncate",
+          "audit_rules_unsuccessful_file_modification"
         ],
         "value": true
       },
@@ -637,7 +709,14 @@
           "xccdf_org:ssgproject:content_rule_audit_rules_unsuccessful_file_modification_openat",
           "xccdf_org:ssgproject:content_rule_audit_rules_unsuccessful_file_modification_open_by_handle_at",
           "xccdf_org:ssgproject:content_rule_audit_rules_unsuccessful_file_modification_truncate",
-          "xccdf_org:ssgproject:content_rule_audit_rules_unsuccessful_file_modification_ftruncate"
+          "xccdf_org:ssgproject:content_rule_audit_rules_unsuccessful_file_modification_ftruncate",
+          "audit_rules_unsuccessful_file_modification_creat",
+          "audit_rules_unsuccessful_file_modification_open",
+          "audit_rules_unsuccessful_file_modification_openat",
+          "audit_rules_unsuccessful_file_modification_open_by_handle_at",
+          "audit_rules_unsuccessful_file_modification_truncate",
+          "audit_rules_unsuccessful_file_modification_ftruncate",
+          "audit_rules_unsuccessful_file_modification"
         ],
         "value": "access"
       },
@@ -676,6 +755,9 @@
           "SRG-OS-000254-GPOS-00095",
           "SRG-OS-000255-GPOS-00096",
           "CCI-000126"
+        ],
+        "oval-ids": [
+          "service_auditd_enabled"
         ],
         "value": true
       },
@@ -724,6 +806,9 @@
           "SRG-OS-000343-GPOS-00134",
           "CCI-001855"
         ],
+        "oval-ids": [
+          "auditd_data_retention_space_left_action"
+        ],
         "notes": "This value can be changed if there is a more ideal notification method for your systems",
         "value": "EMAIL"
       },
@@ -732,6 +817,9 @@
           "RHEL-07-030770",
           "SRG-OS-000480-GPOS-00227",
           "CCI-000366"
+        ],
+        "oval-ids": [
+          "auditd_audispd_syslog_plugin_activated"
         ],
         "notes": "Sending audit logs to syslog *might* by a bandwidth problem in some instances. Otherwise, it should NOT be turned off",
         "value": true
@@ -786,7 +874,8 @@
           "CCI-000366"
         ],
         "oval-ids": [
-          "xccdf_org:ssgproject:content_rule_install_mcafee_antivirus"
+          "xccdf_org:ssgproject:content_rule_install_mcafee_antivirus",
+          "install_mcafee_antivirus"
         ],
         "notes": "If ClamAV is not used, alternate malicious code detection software should be implemented",
         "value": true
@@ -798,7 +887,8 @@
           "CCI-000366"
         ],
         "oval-ids": [
-          "xccdf_org:ssgproject:content_rule_install_mcafee_antivirus"
+          "xccdf_org:ssgproject:content_rule_install_mcafee_antivirus",
+          "install_mcafee_antivirus"
         ],
         "notes": "If ClamAV is not used, alternate malicious code detection software should be implemented",
         "value": false
@@ -810,7 +900,8 @@
           "CCI-000366"
         ],
         "oval-ids": [
-          "xccdf_org:ssgproject:content_rule_install_mcafee_antivirus"
+          "xccdf_org:ssgproject:content_rule_install_mcafee_antivirus",
+          "install_mcafee_antivirus"
         ],
         "notes": "If ClamAV is not used, alternate malicious code detection software should be implemented",
         "value": true
@@ -838,7 +929,9 @@
         ],
         "oval_ids": [
           "xccdf_org.ssgproject.content_rule_dconf_gnome_disable_user_list",
-          "xccdf_org.ssgproject.content_rule_dconf_gnome_screensaver_user_info"
+          "xccdf_org.ssgproject.content_rule_dconf_gnome_screensaver_user_info",
+          "dconf_gnome_disable_user_list",
+          "dconf_gnome_screensaver_user_info"
         ],
         "value": {
           "chooser": {
@@ -868,7 +961,8 @@
           "SRG-OS-000023-GPOS-00008"
         ],
         "oval_ids": [
-          "xccdf_org.ssgproject.content_rule_dconf_gnome_banner_enabled"
+          "xccdf_org.ssgproject.content_rule_dconf_gnome_banner_enabled",
+          "dconf_gnome_banner_enabled"
         ],
         "value": true
       },
@@ -882,7 +976,9 @@
         ],
         "oval_ids": [
           "xccdf_org.ssgproject.content_rule_dconf_gnome_banner_enabled",
-          "xccdf_org.ssgproject.content_rule_dconf_gnome_login_banner_text"
+          "xccdf_org.ssgproject.content_rule_dconf_gnome_login_banner_text",
+          "dconf_gnome_banner_enabled",
+          "dconf_gnome_login_banner_text"
         ],
         "value": "us/department_of_defense"
       },
@@ -928,7 +1024,13 @@
           "xccdf_org.ssgproject.content_rule_dconf_gnome_screensaver_idle_delay",
           "xccdf_org.ssgproject.content_rule_dconf_gnome_screensaver_lock_delay",
           "xccdf_org.ssgproject.content_rule_dconf_gnome_screensaver_lock_enabled",
-          "xccdf_org.ssgproject.content_rule_dconf_gnome_session_user_locks"
+          "xccdf_org.ssgproject.content_rule_dconf_gnome_session_user_locks",
+          "dconf_gnome_disable_automount",
+          "dconf_gnome_screensaver_idle_activation_enabled",
+          "dconf_gnome_screensaver_idle_delay",
+          "dconf_gnome_screensaver_lock_delay",
+          "dconf_gnome_screensaver_lock_enabled",
+          "dconf_gnome_session_user_locks"
         ],
         "value": {
           "simp_gnome": {
@@ -981,7 +1083,8 @@
         ],
         "notes": "If the SIMP default rules are modified, the running rules should be viewed to ensure they allow a minimal set inbound flows",
         "oval-ids": [
-          "xccdf_org:ssgproject:content_rule_set_firewalld_default_zone"
+          "xccdf_org:ssgproject:content_rule_set_firewalld_default_zone",
+          "set_firewalld_default_zone"
         ],
         "value": true
       },
@@ -1028,7 +1131,8 @@
           "CCI-000048"
         ],
         "oval-ids": [
-          "xccdf_org:ssgproject:content_rule_banner_etc_issue"
+          "xccdf_org:ssgproject:content_rule_banner_etc_issue",
+          "banner_etc_issue"
         ],
         "value": "us_dod"
       },
@@ -1152,7 +1256,8 @@
           "CCI-000195"
         ],
         "oval-ids": [
-          "xccdf_org:ssgproject:content_rule_accounts_password_pam_difok"
+          "xccdf_org:ssgproject:content_rule_accounts_password_pam_difok",
+          "accounts_password_pam_difok"
         ],
         "value": 8
       },
@@ -1193,7 +1298,8 @@
           "CCI-000195"
         ],
         "oval-ids": [
-          "xccdf_org:ssgproject:content_rule_accounts_password_pam_minclass"
+          "xccdf_org:ssgproject:content_rule_accounts_password_pam_minclass",
+          "accounts_password_pam_minclass"
         ],
         "value": 4
       },
@@ -1220,7 +1326,8 @@
           "CCI-000366"
         ],
         "oval-ids": [
-          "xccdf_org:ssgproject:content_rule_accounts_password_pam_retry"
+          "xccdf_org:ssgproject:content_rule_accounts_password_pam_retry",
+          "accounts_password_pam_retry"
         ],
         "value": 3
       },
@@ -1239,7 +1346,8 @@
           "CCI-002238"
         ],
         "oval-ids": [
-          "xccdf_org:ssgproject:content_rule_accounts_passwords_pam_faillock_deny"
+          "xccdf_org:ssgproject:content_rule_accounts_passwords_pam_faillock_deny",
+          "accounts_passwords_pam_faillock_deny"
         ],
         "value": 3
       },
@@ -1300,7 +1408,8 @@
           "CCI-002238"
         ],
         "oval-ids": [
-          "xccdf_org:ssgproject:content_rule_accounts_passwords_pam_faillock_unlock_time"
+          "xccdf_org:ssgproject:content_rule_accounts_passwords_pam_faillock_unlock_time",
+          "accounts_passwords_pam_faillock_unlock_time"
         ],
         "value": 604800
       },
@@ -1416,7 +1525,8 @@
           "CCI-001849"
         ],
         "oval-ids": [
-          "xccdf_org:ssgproject:content_rule_rsyslog_cron_logging"
+          "xccdf_org:ssgproject:content_rule_rsyslog_cron_logging",
+          "rsyslog_cron_logging"
         ],
         "value": true
       },
@@ -1503,7 +1613,8 @@
           "CCI-000366"
         ],
         "oval-ids": [
-          "xccdf_org:ssgproject:content_rule_disable_ctrlaltdel_reboot"
+          "xccdf_org:ssgproject:content_rule_disable_ctrlaltdel_reboot",
+          "disable_ctrlaltdel_reboot"
         ],
         "value": false
       },
@@ -1514,7 +1625,8 @@
           "CCI-000366"
         ],
         "oval-ids": [
-          "xccdf_org:ssgproject:content_rule_disable_ctrlaltdel_reboot"
+          "xccdf_org:ssgproject:content_rule_disable_ctrlaltdel_reboot",
+          "disable_ctrlaltdel_reboot"
         ],
         "value": false
       },
@@ -1667,7 +1779,8 @@
           "CCI-002038"
         ],
         "oval-ids": [
-          "xccdf_org:ssgproject:content_rule_sudo_remove_nopasswd"
+          "xccdf_org:ssgproject:content_rule_sudo_remove_nopasswd",
+          "sudo_remove_nopasswd"
         ],
         "value": true
       },
@@ -2172,7 +2285,8 @@
         ],
         "notes": "If the default security relevant logs are changed, they should be justified, especially if fewer than the SIMP default are configured",
         "oval-ids": [
-          "xccdf_org:ssgproject:content_rule_rsyslog_cron_logging"
+          "xccdf_org:ssgproject:content_rule_rsyslog_cron_logging",
+          "rsyslog_cron_logging"
         ],
         "value": {
           "programs": [
@@ -2299,7 +2413,8 @@
           "CCI-000048"
         ],
         "oval-ids": [
-          "xccdf_org:ssgproject:content_rule_sshd_enable_warning_banner"
+          "xccdf_org:ssgproject:content_rule_sshd_enable_warning_banner",
+          "sshd_enable_warning_banner"
         ],
         "value": "/etc/issue"
       },
@@ -2322,6 +2437,9 @@
           "SRG-OS-000279-GPOS-00109",
           "CCI-000366"
         ],
+        "oval-ids": [
+          "sshd_set_idle_timeout"
+        ],
         "value": 600
       },
       "ssh::server::conf::compression": {
@@ -2339,7 +2457,8 @@
           "CCI-000068"
         ],
         "oval-ids": [
-          "xccdf_org:ssgproject:content_rule_sshd_use_approved_ciphers"
+          "xccdf_org:ssgproject:content_rule_sshd_use_approved_ciphers",
+          "sshd_use_approved_ciphers"
         ],
         "value": true
       },
@@ -2416,6 +2535,9 @@
           "SRG-OS-000106-GPOS-00053",
           "CCI-000766"
         ],
+        "oval-ids": [
+          "sshd_disable_empty_passwords"
+        ],
         "value": false
       },
       "ssh::server::conf::permitrootlogin": {
@@ -2423,6 +2545,9 @@
           "RHEL-07-040310",
           "SRG-OS-000480-GPOS-00227",
           "CCI-000366"
+        ],
+        "oval-ids": [
+          "sshd_disable_root_login"
         ],
         "value": false
       },
@@ -2488,7 +2613,8 @@
         ],
         "notes": "For EL7, this should be 'sandbox'. This will be fixed in a later revision of the map.",
         "oval-ids": [
-          "xccdf_org:ssgproject:content_rule_sshd_use_priv_separation"
+          "xccdf_org:ssgproject:content_rule_sshd_use_priv_separation",
+          "sshd_use_priv_separation"
         ],
         "value": "sandbox"
       },
@@ -2506,7 +2632,8 @@
           "SRG-OS-000480-GPOS-00227"
         ],
         "oval-ids": [
-          "xccdf_org:ssgproject:content_rule_sshd_print_last_log"
+          "xccdf_org:ssgproject:content_rule_sshd_print_last_log",
+          "sshd_print_last_log"
         ],
         "value": true
       },
@@ -2517,7 +2644,8 @@
           "CCI-000366"
         ],
         "oval-ids": [
-          "xccdf_org:ssgproject:content_rule_sshd_enable_x11_forwarding"
+          "xccdf_org:ssgproject:content_rule_sshd_enable_x11_forwarding",
+          "sshd_enable_x11_forwarding"
         ],
         "value": true
       },
@@ -2563,7 +2691,8 @@
           "CCI-001453"
         ],
         "oval-id": [
-          "xccdf_org:ssgproject:content_rule_ldap_client_start_tls"
+          "xccdf_org:ssgproject:content_rule_ldap_client_start_tls",
+          "ldap_client_start_tls"
         ],
         "value": true
       },
@@ -2574,7 +2703,8 @@
           "CCI-001453"
         ],
         "oval-id": [
-          "xccdf_org:ssgproject:content_rule_ldap_client_start_tls"
+          "xccdf_org:ssgproject:content_rule_ldap_client_start_tls",
+          "ldap_client_start_tls"
         ],
         "value": [
           "HIGH",
@@ -2697,7 +2827,8 @@
           "CCI-000795"
         ],
         "oval-ids": [
-          "xccdf_org:ssgproject:content_rule_account_disable_post_pw_expiration"
+          "xccdf_org:ssgproject:content_rule_account_disable_post_pw_expiration",
+          "account_disable_post_pw_expiration"
         ],
         "value": 0
       },
@@ -2712,7 +2843,8 @@
           "CCI-001133"
         ],
         "oval-ids": [
-          "xccdf_org:ssgproject:content_rule_accounts_tmout"
+          "xccdf_org:ssgproject:content_rule_accounts_tmout",
+          "accounts_tmout"
         ],
         "value": 10
       },
@@ -2784,7 +2916,8 @@
           "CCI-000366"
         ],
         "oval-ids": [
-          "xccdf_org:ssgproject:content_rule_accounts_have_homedir_login_defs"
+          "xccdf_org:ssgproject:content_rule_accounts_have_homedir_login_defs",
+          "accounts_have_homedir_login_defs"
         ],
         "value": true
       },
@@ -2855,6 +2988,10 @@
           "CCI-002884",
           "CCI-000126"
         ],
+        "oval-ids": [
+          "xccdf_org:ssgproject:content_rule_display_login_attempts",
+          "display_login_attempts"
+        ],
         "value": true
       },
       "useradd::login_defs::log_ok_logins": {
@@ -2920,7 +3057,8 @@
           "CCI-000199"
         ],
         "oval-ids": [
-          "xccdf_org:ssgproject:content_rule_accounts_maximum_age_login_defs"
+          "xccdf_org:ssgproject:content_rule_accounts_maximum_age_login_defs",
+          "accounts_maximum_age_login_defs"
         ],
         "value": 60
       },
@@ -2930,6 +3068,10 @@
           "SRG-OS-000075-GPOS-00043",
           "CCI-000198"
         ],
+        "oval-ids": [
+          "xccdf_org:ssgproject:content_rule_accounts_minimum_age_login_defs",
+          "accounts_minimum_age_login_defs"
+        ],
         "value": 1
       },
       "useradd::login_defs::pass_min_len": {
@@ -2937,6 +3079,10 @@
           "RHEL-07-010250",
           "SRG-OS-000078-GPOS-00046",
           "CCI-000205"
+        ],
+        "oval-ids": [
+          "xccdf_org:ssgproject:content_rule_accounts_password_minlen_login_defs",
+          "accounts_password_minlen_login_defs"
         ],
         "value": 15
       },
@@ -2954,7 +3100,8 @@
           "CCI-001814"
         ],
         "oval-ids": [
-          "xccdf_org:ssgproject:content_rule_accounts_umask_etc_login_defs"
+          "xccdf_org:ssgproject:content_rule_accounts_umask_etc_login_defs",
+          "accounts_umask_etc_login_defs"
         ],
         "value": "077"
       },
@@ -3139,7 +3286,8 @@
           "SI-3(a)"
         ],
         "oval-ids": [
-          "xccdf_org:ssgproject:content_rule_install_mcafee_antivirus"
+          "xccdf_org:ssgproject:content_rule_install_mcafee_antivirus",
+          "install_mcafee_antivirus"
         ],
         "value": true
       },
@@ -3157,7 +3305,8 @@
           "AC-4"
         ],
         "oval-ids": [
-          "xccdf_org:ssgproject:content_rule_service_firewalld_enabled"
+          "xccdf_org:ssgproject:content_rule_service_firewalld_enabled",
+          "service_firewalld_enabled"
         ],
         "value": true
       },
@@ -3268,7 +3417,11 @@
         "oval-ids": [
           "xccdf_org:ssgproject:content_rule_clean_components_post_updating",
           "xccdf_org:ssgproject:content_rule_ensure_gpgcheck_repo_metadata",
-          "xccdf_org:ssgproject:content_rule_ensure_gpgcheck_never_disabled"
+          "xccdf_org:ssgproject:content_rule_ensure_gpgcheck_never_disabled",
+          "clean_components_post_updating",
+          "ensure_gpgcheck_repo_metadata",
+          "ensure_gpgcheck_never_disabled",
+          "ensure_gpgcheck_globally_activated"
         ],
         "value": {
           "localpkg_gpgcheck": true,
