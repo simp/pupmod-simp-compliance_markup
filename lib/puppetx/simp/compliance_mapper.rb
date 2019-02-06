@@ -382,27 +382,27 @@ def compiler_class()
         end
 
         def ce
-          @data[:ce]
+          @data[:ce] ? @data[:ce] : {}
         end
 
         def control
-          @data[:controls]
+          @data[:controls] ? @data[:control]  : {}
         end
 
         def check
-          @data[:checks]
+          @data[:checks] ? @data[:checks] : {}
         end
 
         def profile
-          @data[:profiles]
+          @data[:profiles] ? @data[:profiles] : {}
         end
 
         def control_family
-          @data[:control_families]
+          @data[:control_families] ? @data[:control_families] : {}
         end
 
         def standard
-          @data[:standards]
+          @data[:standard] ? @data[:standard] : {}
         end
 
         def oval_id(id, options = {})
