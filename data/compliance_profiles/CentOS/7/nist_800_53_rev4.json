@@ -100,6 +100,20 @@
         "identifiers": [
           "AU-2"
         ],
+        "oval-ids": [
+          "xccdf_org:ssgproject:content_rule_audit_rules_dac_modification_fremovexattr",
+          "xccdf_org:ssgproject:content_rule_audit_rules_dac_modification_fsetxattr",
+          "xccdf_org:ssgproject:content_rule_audit_rules_dac_modification_lremovexattr",
+          "xccdf_org:ssgproject:content_rule_audit_rules_dac_modification_lsetxattr",
+          "xccdf_org:ssgproject:content_rule_audit_rules_dac_modification_removexattr",
+          "xccdf_org:ssgproject:content_rule_audit_rules_dac_modification_setxattr",
+          "audit_rules_dac_modification_fremovexattr",
+          "audit_rules_dac_modification_fsetxattr",
+          "audit_rules_dac_modification_lremovexattr",
+          "audit_rules_dac_modification_lsetxattr",
+          "audit_rules_dac_modification_removexattr",
+          "audit_rules_dac_modification_setxattr"
+        ],
         "value": true
       },
       "auditd::config::audit_profiles::simp::audit_cfg_cron": {
@@ -147,6 +161,14 @@
       "auditd::config::audit_profiles::simp::audit_chmod": {
         "identifiers": [
           "AU-2"
+        ],        
+        "oval-ids": [
+          "xccdf_org:ssgproject:content_rule_audit_rules_dac_modification_chmod",
+          "xccdf_org:ssgproject:content_rule_audit_rules_dac_modification_fchmod",
+          "xccdf_org:ssgproject:content_rule_audit_rules_dac_modification_fchmodat",
+          "audit_rules_dac_modification_chmod",
+          "audit_rules_dac_modification_fchmod",
+          "audit_rules_dac_modification_fchmodat"
         ],
         "notes": "SIMP disables this by default due to the excessive number of audit records generated. Enable with caution.",
         "value": true
@@ -154,6 +176,16 @@
       "auditd::config::audit_profiles::simp::audit_chown": {
         "identifiers": [
           "AU-2"
+        ],
+        "oval-ids": [
+          "xccdf_org:ssgproject:content_rule_audit_rules_dac_modification_chown",
+          "xccdf_org:ssgproject:content_rule_audit_rules_dac_modification_fchown",
+          "xccdf_org:ssgproject:content_rule_audit_rules_dac_modification_fchownat",
+          "xccdf_org:ssgproject:content_rule_audit_rules_dac_modification_lchown",
+          "audit_rules_dac_modification_chown",
+          "audit_rules_dac_modification_fchown",
+          "audit_rules_dac_modification_fchownat",
+          "audit_rules_dac_modification_lchown"
         ],
         "value": true
       },
