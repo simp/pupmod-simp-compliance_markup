@@ -1,3 +1,15 @@
+* Tue Mar 05 2019 Steven Pritchard <steven.pritchard@onyxpoint.com> - 2.4.2-0
+- Compliance_map_migrate improvements
+  - Merge values from multiple input files.
+  - Make 'check_header' consistent with other v2 data.
+  - Reorder output to match other v2 data.
+  - Fix controls, oval-ids, and identifiers output.
+  - Normalize identifier strings.
+  - Add option to supply confinement.
+  - Use a strange YAML incantation to avoid anchors in the output.
+  - Add option to append a string to the checks key.
+  - Add additional helper scripts for v1 to v2 migration.
+
 * Fri Nov 02 2018 Steven Pritchard <steven.pritchard@onyxpoint.com> - 2.4.1-0
 - Fix the following keys:
   - simp::mountpoints::tmp::secure
