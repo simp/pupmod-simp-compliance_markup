@@ -1,3 +1,6 @@
+* Thu Mar 07 2019 Liz Nemsick <lnemsick.simp@gmail.com> - 2.4.2-0
+- Update the upper bound of stdlib to < 6.0.0
+
 * Tue Mar 05 2019 Steven Pritchard <steven.pritchard@onyxpoint.com> - 2.4.2-0
 - Compliance_map_migrate improvements
   - Merge values from multiple input files.
