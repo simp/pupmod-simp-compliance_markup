@@ -1,3 +1,5 @@
+compliance_markup::debug::enabled_sce_versions:
+  - 1
 compliance_markup::enforcement: [ 'disa', 'nist' ]
 compliance_markup::compliance_map:
         disa:

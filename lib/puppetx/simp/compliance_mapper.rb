@@ -73,12 +73,16 @@ def enforcement(key, options = {"mode" => "value"}, &block)
               profile_compiler   = compiler_class.new(self)
 
               profile_compiler.load(&block)
+	      
+	      if options.key?("enabled_sce_versions")
+		      profile_compiler.enabled_sce_versions = options["enabled_sce_versions"]
+	      end
 
               profile_map = profile_compiler.list_puppet_params(profile_list).cook do |item|
                 debug_output[item["parameter"]] = item["telemetry"]
                 item[options["mode"]]
               end
-
+              profile_map["compliance_markup::debug::enabled_sce_versions"] = profile_compiler.enabled_sce_versions
               cache("debug_output_#{profile}", debug_output)
               cache("compliance_map_#{profile}", profile_map)
 
@@ -516,6 +520,15 @@ def compiler_class()
       end
     end
 
+    def enabled_sce_versions=(value)
+	    @enabled_sce_versions = value
+    end
+
+    def enabled_sce_versions
+	    @enabled_sce_versions = [2] if @enabled_sce_versions.nil?
+	    @enabled_sce_versions
+    end
+
     # NOTE To ensure backwards compatability, we need to take steps to ensure that
     # the v1 and v2 compilers both work without stepping on each-others' toes.
     def list_puppet_params(profile_list)
@@ -538,7 +551,7 @@ def compiler_class()
               version = SemanticPuppet::Version.parse(map["version"])
             end
 
-            if version.major == 1
+	    if version.major == 1 and enabled_sce_versions.include?(1)
               result = v1_parser(profile_map, map)
               v1_table.merge!(result)
             end
@@ -546,13 +559,12 @@ def compiler_class()
 
           # v2 application
           begin
-            v2_table = v2.list_puppet_params(profile_list)
+		  v2_table = v2.list_puppet_params(profile_list) if enabled_sce_versions.include?(2)
           rescue Exception => ex
             raise ex
           end
         end
       end
-
       table = v1_table.merge!(v2_table)
 
       control_list.new(table)

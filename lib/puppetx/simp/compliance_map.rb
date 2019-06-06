@@ -240,9 +240,11 @@ def compliance_map(args, context)
 
   @catalog = @context.resource.scope.catalog
   profile_compiler = compiler_class.new(self)
+  profile_compiler.enabled_sce_versions = @context.call_function('lookup', ["compliance_markup::debug::enabled_sce_versions", {"default_value" => [2]}])
   profile_compiler.load do |key, default|
     @context.call_function('lookup', [key, {"default_value" => default}])
   end
+
   main_config = process_options(args)
   report_types = main_config[:report_types]
 
