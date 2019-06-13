@@ -58,7 +58,7 @@
         "notes": "This value can be different than weekly but should be justified.",
         "value": "weekly"
       },
-      "aide::schedule": {
+      "aide::enable": {
         "identifiers": [
           "CCI-001744",
           "SRG-OS-000363-GPOS-00150"
@@ -770,7 +770,7 @@
         ],
         "value": true
       },
-      "autofs::ldap_auth_conf_file": {
+      "autofs::ldap_auth::ldap_auth_conf_file": {
         "identifiers": [
           "RHEL-07-010500",
           "SRG-OS-000104-GPOS-00051",
@@ -3015,7 +3015,7 @@
         ],
         "value": true
       },
-      "vsftpd::config::ssl_ciphers": {
+      "vsftpd::cipher_suite": {
         "identifiers": [
           "RHEL-07-040030",
           "SRG-OS-000066-GPOS-00034",
@@ -3033,7 +3033,7 @@
         ],
         "value": true
       },
-      "vsftpd::config::syslog": {
+      "vsftpd::config::syslog_enable": {
         "identifiers": [
           "RHEL-07-030310",
           "RHEL-07-030620",
@@ -3186,8 +3186,9 @@
       },
       "simp_options::logrotate": {
         "identifiers": [
-          "AU-4",
-          "AU-11"
+          "RHEL-07-030320",
+          "SRG-OS-000341-GPOS-00132",
+          "CCI-001849"
         ],
         "value": true
       },
@@ -3203,12 +3204,6 @@
           "IA-3"
         ],
         "value": "simp"
-      },
-      "simp_options::selinux": {
-        "identifiers": [
-          "AC-3(3)"
-        ],
-        "value": true
       },
       "simp_options::sssd": {
         "identifiers": [

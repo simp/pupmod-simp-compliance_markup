@@ -415,7 +415,7 @@
         ],
         "value": true
       },
-      "autofs::ldap_auth_conf_file": {
+      "autofs::ldap_auth::ldap_auth_conf_file": {
         "identifiers": [
           "IA-1"
         ],
@@ -2060,12 +2060,6 @@
           "IA-3"
         ],
         "value": "simp"
-      },
-      "simp_options::selinux": {
-        "identifiers": [
-          "AC-3(3)"
-        ],
-        "value": true
       },
       "simp_options::sssd": {
         "identifiers": [
