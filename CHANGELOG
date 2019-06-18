@@ -1,6 +1,8 @@
 * Tue Jun 11 2019 Trevor Vaughan <tvaughan@onyxpoint.com> - 2.4.3-0
 - Fix Puppet 6 support in the compliance_map function
 - Dropped Puppet 4 support
+- Fixed bug in the compliance report functionality that did not correctly
+  record the percent compliant in each report summary
 
 * Tue Mar 12 2019 Trevor Vaughan <tvaughan@onyxpoint.com> - 2.4.2-0
 - Fix bug in Array merging
