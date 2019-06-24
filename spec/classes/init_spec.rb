@@ -268,7 +268,7 @@ describe 'compliance_markup' do
               report_file = "#{params['options']['server_report_dir']}/#{facts[:fqdn]}/compliance_report.#{report_format}"
 
               if report_format == 'yaml'
-                @report = YAML.load_file(report_file)
+                @report ||= YAML.load_file(report_file)
               elsif report_format == 'json'
                 @report ||= JSON.load(File.read(report_file))
               end
@@ -458,6 +458,26 @@ describe 'compliance_markup' do
                   expect(entry['identifiers']).to_not be_empty
                   expect(entry['notes']).to_not be_empty
                 end
+
+                it 'should have a summary section of the "other" profile' do
+                  expect( report['compliance_profiles']['other_profile']['summary'] ).to_not be_empty
+                end
+
+                it 'should have the number of compliant entries in the summary of the "other" profile' do
+                  expect( report['compliance_profiles']['other_profile']['summary']['compliant'] ).to be_an(Integer)
+                end
+
+                it 'should have the number of non_compliant entries in the summary of the "other" profile' do
+                  expect( report['compliance_profiles']['other_profile']['summary']['non_compliant'] ).to be_an(Integer)
+                end
+
+                it 'be appropriately compliant in the summary of the "other" profile' do
+                  if report['compliance_profiles']['other_profile']['summary']['compliant'] + report['compliance_profiles']['other_profile']['summary']['non_compliant'] == 0
+                    expect( report['compliance_profiles']['other_profile']['summary']['percent_compliant'] ).to eq(0)
+                  else
+                    expect( report['compliance_profiles']['other_profile']['summary']['percent_compliant'] ).to eq(100)
+                  end
+                end
               end
             end
 
@@ -484,6 +504,26 @@ describe 'compliance_markup' do
 
               it 'should have a documented_missing_parameters section' do
                 expect( report['compliance_profiles'][profile_name]['documented_missing_parameters'] ).to_not be_empty
+              end
+
+              it 'should have a summary section' do
+                expect( report['compliance_profiles'][profile_name]['summary'] ).to_not be_empty
+              end
+
+              it 'should have the number of compliant entries in the summary' do
+                expect( report['compliance_profiles'][profile_name]['summary']['compliant'] ).to be_an(Integer)
+              end
+
+              it 'should have the number of non_compliant entries in the summary' do
+                expect( report['compliance_profiles'][profile_name]['summary']['non_compliant'] ).to be_an(Integer)
+              end
+
+              it 'be appropriately compliant in the summary' do
+                if report['compliance_profiles'][profile_name]['summary']['compliant'] + report['compliance_profiles'][profile_name]['summary']['non_compliant'] == 0
+                  expect( report['compliance_profiles'][profile_name]['summary']['percent_compliant'] ).to eq(0)
+                else
+                  expect( report['compliance_profiles'][profile_name]['summary']['percent_compliant'] ).to eq(100)
+                end
               end
             end
 
