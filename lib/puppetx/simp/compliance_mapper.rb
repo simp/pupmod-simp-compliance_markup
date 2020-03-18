@@ -164,7 +164,7 @@ def cached_lookup(key, default, &block)
   if cache_has_key(key)
     retval = cached_value(key)
   else
-    retval = yield key, default
+    retval = yield(key, default) || {}
     cache(key, retval)
   end
   retval
