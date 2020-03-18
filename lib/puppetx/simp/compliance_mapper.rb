@@ -294,6 +294,50 @@ def compiler_class()
       v2.profile
     end
 
+    def oval_id(id, options = {})
+      result = v2.oval_id(id, options)
+      if result["checks"] == {} and result["ces"] == {}
+        result = {
+            "checks" => {},
+            "ces" => {},
+        }
+        @compliance_data.each do |filename, map|
+
+          # Assume version 1 if no version is specified.
+          # Due to old archaic code
+          version = SemanticPuppet::Version.parse('2.0.0')
+
+          if map.key?("version")
+            version = SemanticPuppet::Version.parse(map["version"])
+          end
+
+          if version.major == 2
+            map.each do |nkey, nvalue|
+              unless nkey == "version"
+                nvalue.each do |key, value|
+                  if value.key?("oval-ids")
+                    if value["oval-ids"].include?(id)
+                      data = {
+                          "type" => "puppet-class-parameter",
+                          "settings" => {
+                              "parameter" => key,
+                              "value" => value["value"]
+                          },
+                          "identifiers" => value["identifiers"]
+                      }
+                      result["checks"]["oval:compliance_markup_v2:#{nkey}:#{key}"] = data
+                    end
+                  end
+                end
+              end
+            end
+          end
+        end
+      end
+      result
+    end
+
+
     def v2_compiler()
       Class.new do
         def initialize(callback)
@@ -326,6 +370,33 @@ def compiler_class()
 
         def profile
           @profile_list
+        end
+
+        def oval_id(id, options = {})
+          result = {
+              "checks" => {},
+              "ces" => {},
+          }
+          check.each do |name, checkdata|
+            if (checkdata.key?("oval-ids"))
+              if (checkdata["oval-ids"].include?(id))
+                result["checks"][name] = checkdata
+              end
+            end
+            if checkdata.key?("ces")
+              checkdata["ces"].each do |cename|
+                if (ce.key?(cename))
+                  if ce[cename].key?("oval-ids")
+                    if ce[cename]["oval-ids"].include?(id)
+	              result['ces'][cename] = ce[cename]
+                      result["checks"][name] = checkdata
+                    end
+                  end
+                end
+              end
+            end
+          end
+          result
         end
 
         def import(filename, data)
@@ -678,5 +749,11 @@ def compiler_class()
       end
       table
     end
+
+    def version
+      require 'semantic_puppet'
+      SemanticPuppet::Version.parse("2.5.0")
+    end
+
   end
 end
