@@ -95,7 +95,7 @@ Puppet::Functions.create_function(:'compliance_markup::enforcement', Puppet::Fun
     end
   end
   def lookup_fact(fact)
-    closure_scope.lookupvar("facts")[fact]
+    closure_scope.lookupvar("facts").dig(*fact.split('.'))
   end
   def module_list
     closure_scope.environment.modules.map { |obj| { "name" => obj.metadata["name"], "version" => obj.metadata["version"] } }

@@ -521,7 +521,7 @@ def compiler_class()
                     end
 
                     fact_value = @callback.lookup_fact(confinement_setting)
-                    unless fact_value == confinement_value
+                    unless confinement_value.is_a?(Array) ? confinement_value.include?(fact_value) : (fact_value == confinement_value)
                       delete_item = true
                       throw :confine_end
                     end

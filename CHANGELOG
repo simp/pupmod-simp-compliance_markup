@@ -1,3 +1,7 @@
+* Fri Apr 10 2020 Steven Pritchard <steven.pritchard@onyxpoint.com> - 3.1.0-0
+- Support arrays of potential matches in confinement blocks
+- Support structured facts in confinement
+
 * Wed Feb 26 2020 Trevor Vaughan <tvaughan@onyxpoint.com> - 3.1.0-0
 - Ensure that the Hiera backend recurses as little as possible to improve
   performance.

@@ -6,6 +6,7 @@ fixtures:
       puppet_version: ">= 6.0.0"
     simplib: https://github.com/simp/pupmod-simp-simplib
     stdlib: https://github.com/simp/puppetlabs-stdlib
+    systemd: https://github.com/simp/puppet-systemd
     useradd: https://github.com/simp/pupmod-simp-useradd
     yum: https://github.com/simp/voxpupuli-yum
     yumrepo_core:
