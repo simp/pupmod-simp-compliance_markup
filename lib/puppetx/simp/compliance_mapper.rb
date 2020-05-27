@@ -310,6 +310,94 @@ def compiler_class()
           @profile_list
         end
 
+        def apply_confinement(value)
+          value.delete_if do |_key, specification|
+            delete_item = false
+
+            catch(:confine_end) do
+              if specification.key?('confine')
+                confine = specification['confine']
+
+                if confine
+                  unless confine.is_a?(Hash)
+
+                    unless specification['settings'].key?('value')
+                      location = 'unknown'
+
+                      if specification['telemetry'] && specification['telemetry'].first
+                        location = specification['telemetry'].first['filename']
+                      end
+
+                      raise "'confine' must be a Hash in '#{location}'"
+                    end
+                  end
+
+                  confine.each do |confinement_setting, confinement_value|
+                    if confinement_setting == 'module_name'
+                      known_module = @callback.module_list.select { |obj| obj['name'] == confinement_value }
+
+                      if known_module.empty?
+                        delete_item = true
+                        throw :confine_end
+                      end
+
+                      if confine['module_version']
+                        require 'semantic_puppet'
+
+                        currentver = nil
+                        requiredver = {}
+                        begin
+                          currentver = SemanticPuppet::Version.parse(known_module.first['version'])
+                          requiredver = SemanticPuppet::VersionRange.parse(confine['module_version'])
+                        rescue
+                          warn "Unable to match #{known_module} against version requirement #{confine['module_version']}"
+                          delete_item = true
+                          throw :confine_end
+                        end
+
+                        unless requiredver.include?(currentver)
+                          delete_item = true
+                          throw :confine_end
+                        end
+                      end
+                    end
+
+                    fact_value = @callback.lookup_fact(confinement_setting)
+                    unless confinement_value.is_a?(Array) ? confinement_value.include?(fact_value) : (fact_value == confinement_value)
+                      delete_item = true
+                      throw :confine_end
+                    end
+                  end
+                end
+              end
+            end
+
+            delete_item
+          end
+
+          value
+        end
+
+        def normalize_data(filename, key, value)
+          ret = {}
+          value.each do |profile_name, map|
+            ret[profile_name] ||= {}
+
+            map.each do |k, v|
+              ret[profile_name][k] = v
+            end
+
+            ret[profile_name]["telemetry"] = [{
+              "filename" => filename,
+              "path"     => "#{key}/#{profile_name}",
+              "id"       => "#{profile_name}",
+              "value"    => Marshal.load(Marshal.dump(map))
+            }]
+          end
+
+          apply_confinement(ret)
+        end
+
         def import(filename, data)
           data.each do |key, value|
             case key
@@ -352,31 +440,31 @@ def compiler_class()
           # Potential matches prior to confinement
           specifications = []
 
-          profile_list.reverse.each do |profile|
-            unless @profile_list.key?(profile)
-              @callback.debug(%{SKIP: Profile '#{profile}' not in '#{@profile_list.keys.join("', '")}'})
+          profile_list.reverse.each do |profile_name|
+            unless @profile_list.key?(profile_name)
+              @callback.debug(%{SKIP: Profile '#{profile_name}' not in '#{@profile_list.keys.join("', '")}'})
               next
             end
 
-            info = @profile_list[profile]
+            info = @profile_list[profile_name]
 
-            @check_list.each do |check, spec|
+            @check_list.each do |check_name, spec|
               specification = Marshal.load(Marshal.dump(spec))
 
               # Skip unless this item applies to puppet
               unless (specification['type'] == 'puppet') || (specification['type'] == 'puppet-class-parameter')
-                @callback.debug("SKIP: '#{check}' is not a puppet parameter")
+                @callback.debug("SKIP: '#{check_name}' is not a puppet parameter")
                 next
               end
 
               # Skip unless we actually have a parameter setting
               unless specification.key?('settings')
-                @callback.debug("SKIP: '#{check}' does not have any settings")
+                @callback.debug("SKIP: '#{check_name}' does not have any settings")
                 next
               end
 
               unless specification['settings'].key?('parameter')
-                @callback.debug("SKIP: '#{check}' does not have a parameter specified")
+                @callback.debug("SKIP: '#{check_name}' does not have a parameter specified")
                 next
               end
 
@@ -388,7 +476,7 @@ def compiler_class()
                   location = specification['telemetry'].first['filename']
                 end
 
-                raise "'#{check}' has parameter '#{specification['settings']['parameter']}' in '#{location}' but has no assigned value"
+                raise "'#{check_name}' has parameter '#{specification['settings']['parameter']}' in '#{location}' but has no assigned value"
               end
 
               if info.key?('checks') && info['checks'].include?(check) && (info['checks'][check] == true)
@@ -397,8 +485,8 @@ def compiler_class()
               end
 
               if specification.key?('controls')
-                specification['controls'].each do |control, subsection|
-                  if info.key?('controls') && info['controls'].include?(control) && (info['controls'][control] == true)
+                specification['controls'].each do |control_name, subsection|
+                  if info.key?('controls') && info['controls'].include?(control_name) && (info['controls'][control_name] == true)
                     specifications << specification
                     next
                   end
@@ -406,8 +494,8 @@ def compiler_class()
               end
 
               if specification.key?('ces')
-                specification['ces'].each do |ce|
-                  if (info.key?('ces')) && (info['ces'].key?(ce)) && (info['ces'][ce] == true)
+                specification['ces'].each do |ce_name|
+                  if (info.key?('ces')) && (info['ces'].key?(ce_name)) && (info['ces'][ce_name] == true)
                     specifications << specification
                     next
                   elsif @configuration_element_list.key?(ce)
@@ -426,63 +514,6 @@ def compiler_class()
               # Skip if we didn't find any controls to match against
               @callback.debug("SKIP: '#{check}' had no matching controls")
             end
-          end
-
-          # Now that all potential matches have been collected, we need to
-          # apply the confinement
-          specifications.delete_if do |specification|
-            delete_item = false
-
-            catch(:confine_end) do
-              if specification.key?('confine')
-                confine = specification['confine']
-
-                if confine
-                  unless confine.is_a?(Hash)
-
-                    unless specification['settings'].key?('value')
-                      location = 'unknown'
-
-                      if specification['telemetry'] && specification['telemetry'].first
-                        location = specification['telemetry'].first['filename']
-                      end
-
-                      raise "'confine' must be a Hash in check '#{check}' in '#{location}'"
-                    end
-                  end
-
-                  confine.each do |confinement_setting, confinement_value|
-                    if confinement_setting == 'module_name'
-                      unless @callback.module_list.map { |obj| obj['name'] }.include?(confinement_value)
-                        delete_item = true
-                        throw :confine_end
-                      end
-
-                      if confine['module_version']
-                        require 'semantic_puppet'
-                        known_module = @callback.module_list.select { |obj| obj['name'] == confinement_setting }
-
-                        currentver = SemanticPuppet::Version.parse(known_module.first['version'])
-                        requiredver = SemanticPuppet::VersionRange.parse(confine['module_version'])
-
-                        unless requiredver.include?(currentver)
-                          delete_item = true
-                          throw :confine_end
-                        end
-                      end
-                    end
-
-                    fact_value = @callback.lookup_fact(confinement_setting)
-                    unless confinement_value.is_a?(Array) ? confinement_value.include?(fact_value) : (fact_value == confinement_value)
-                      delete_item = true
-                      throw :confine_end
-                    end
-                  end
-                end
-              end
-            end
-
-            delete_item
           end
 
           # If we didn't find anything, we can just bail

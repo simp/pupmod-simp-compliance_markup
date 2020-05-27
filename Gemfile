@@ -20,6 +20,7 @@ end
 group :development do
   gem 'pry'
   gem 'pry-doc'
+  gem 'pry-byebug'
 end
 
 group :system_tests do

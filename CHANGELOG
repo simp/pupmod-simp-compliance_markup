@@ -1,3 +1,8 @@
+* Fri May 29 2020 Steven Pritchard <steven.pritchard@onyxpoint.com> - 3.1.0-0
+- Support confinement in profiles, controls, and ces (as well as checks)
+- Add rspec tests for compliance_markup::enforcement
+- Support structured facts in confinement
+
 * Mon Apr 13 2020 Trevor Vaughan <tvaughan@onyxpoint.com> - 3.1.0-0
 - Add EL8 support
 - Ensure that the Hiera backend recurses as little as possible to improve
@@ -5,6 +10,9 @@
 - Remove all support for v1 data since it was experimental and removed in 3.0.0
 - Removed the deprecated (experimental) Hiera v3 backend
 - Removed the deprecated Puppet 3 function
+
+* Fri Apr 10 2020 Steven Pritchard <steven.pritchard@onyxpoint.com> - 3.1.0-0
+- Support arrays of potential matches in confinement blocks
 
 * Fri Apr 10 2020 Steven Pritchard <steven.pritchard@onyxpoint.com> - 3.1.0-0
 - Support arrays of potential matches in confinement blocks
