@@ -378,26 +378,6 @@ def compiler_class()
           value
         end
 
-        def normalize_data(filename, key, value)
-          ret = {}
-          value.each do |profile_name, map|
-            ret[profile_name] ||= {}
-
-            map.each do |k, v|
-              ret[profile_name][k] = v
-            end
-
-            ret[profile_name]["telemetry"] = [{
-              "filename" => filename,
-              "path"     => "#{key}/#{profile_name}",
-              "id"       => "#{profile_name}",
-              "value"    => Marshal.load(Marshal.dump(map))
-            }]
-          end
-
-          apply_confinement(ret)
-        end
-
         def import(filename, data)
           data.each do |key, value|
             case key
@@ -406,11 +386,15 @@ def compiler_class()
                 @profile_list[profile] ||= {}
                 @profile_list[profile] = DeepMerge.deep_merge!(@profile_list[profile], map, {:knockout_prefix => '--'})
               end
+
+              apply_confinement(@profile_list)
             when "controls"
               value.each do |profile, map|
                 @control_list[profile] ||= {}
                 @control_list[profile] = DeepMerge.deep_merge!(@control_list[profile], map, {:knockout_prefix => '--'})
               end
+
+              apply_confinement(@control_list)
             when "checks"
               value.each do |profile, map|
                 @check_list[profile] ||= {}
@@ -424,12 +408,17 @@ def compiler_class()
                 }
 
                 @check_list[profile]['telemetry'] = [check_telemetry]
+
               end
+
+              apply_confinement(@check_list)
             when "ce"
               value.each do |profile, map|
                 @configuration_element_list[profile] ||= {}
                 @configuration_element_list[profile] = DeepMerge.deep_merge!(@configuration_element_list[profile], map, {:knockout_prefix => '--'})
               end
+
+              apply_confinement(@configuration_element_list)
             end
           end
         end
@@ -479,7 +468,7 @@ def compiler_class()
                 raise "'#{check_name}' has parameter '#{specification['settings']['parameter']}' in '#{location}' but has no assigned value"
               end
 
-              if info.key?('checks') && info['checks'].include?(check) && (info['checks'][check] == true)
+              if info.key?('checks') && info['checks'].include?(check_name) && (info['checks'][check_name] == true)
                 specifications << specification
                 next
               end
@@ -498,10 +487,10 @@ def compiler_class()
                   if (info.key?('ces')) && (info['ces'].key?(ce_name)) && (info['ces'][ce_name] == true)
                     specifications << specification
                     next
-                  elsif @configuration_element_list.key?(ce)
-                    if @configuration_element_list[ce].key?('controls')
-                      @configuration_element_list[ce]['controls'].each do |control, subsection|
-                        if info.key?('controls') && info["controls"].include?(control)
+                  elsif @configuration_element_list.key?(ce_name)
+                    if @configuration_element_list[ce_name].key?('controls')
+                      @configuration_element_list[ce_name]['controls'].each do |control_name, subsection|
+                        if info.key?('controls') && info["controls"].include?(control_name)
                           specifications << specification
                           next
                         end
@@ -512,7 +501,7 @@ def compiler_class()
               end
 
               # Skip if we didn't find any controls to match against
-              @callback.debug("SKIP: '#{check}' had no matching controls")
+              @callback.debug("SKIP: '#{check_name}' had no matching controls")
             end
           end
 

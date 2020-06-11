@@ -5,6 +5,7 @@ require 'semantic_puppet'
 require 'puppet/pops/lookup/context'
 require 'yaml'
 require 'fileutils'
+require 'pry'
 
 puppetver = SemanticPuppet::Version.parse(Puppet.version)
 requiredver = SemanticPuppet::Version.parse("4.10.0")
