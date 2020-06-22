@@ -1,3 +1,7 @@
+* Mon Jun 22 2020 Steven Pritchard <steven.pritchard@onyxpoint.com> - 3.1.0-0
+- Deep merge hash values in the Hiera backend
+- Reduce the amount of data passed around in the Hiera backend
+
 * Fri May 29 2020 Steven Pritchard <steven.pritchard@onyxpoint.com> - 3.1.0-0
 - Support confinement in profiles, controls, and ces (as well as checks)
 - Add rspec tests for compliance_markup::enforcement

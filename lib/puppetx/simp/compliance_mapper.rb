@@ -424,8 +424,6 @@ def compiler_class()
         end
 
         def list_puppet_params(profile_list)
-          retval = {}
-
           # Potential matches prior to confinement
           specifications = []
 
@@ -506,39 +504,42 @@ def compiler_class()
           end
 
           # If we didn't find anything, we can just bail
-          return retval if specifications.empty?
+          return {} if specifications.empty?
 
           if specifications.count > 1
             @callback.debug("WARN: Multiple valid specifications found for #{specifications.first['settings']['parameter']}, they will be merged in the order that they were defined")
           end
 
+          retval = {}
           specifications.each do |specification|
             parameter = specification['settings']['parameter']
 
-            # Process all entries that have passed the confinement checks and
-            # return the appropriate match
-            if retval.key?(parameter)
-              # Merge
-              # XXX ToDo: Need merge settings support
-              current = retval[parameter]
+            unless retval.key?(parameter)
+              retval[parameter] = {
+                'parameter' => parameter.dup,
+                'value'     => Marshal.load(Marshal.dump(specification['settings']['value'])),
+                'telemetry' => Marshal.load(Marshal.dump(specification['telemetry'])),
+              }
 
-              specification['settings'].each do |key, value|
-                unless key == 'parameter'
-                  case current[key].class.to_s
-                  when 'Array'
-                    current[key] = (current[key] + Array(value)).uniq
-                  when 'Hash'
-                    current[key].merge!(value)
-                  else
-                    current[key] = Marshal.load(Marshal.dump(value))
-                  end
-                end
-              end
-
-              current['telemetry'] = current['telemetry'] + specification['telemetry']
-            else
-              retval[parameter] = specification['settings'].merge(specification)
+              next
             end
+
+            if retval[parameter]['value'].class.to_s != specification['settings']['value'].class.to_s
+              raise "Value type mismatch for #{parameter}"
+            end
+
+            # Merge
+            # XXX ToDo: Need merge settings support
+            case retval[parameter]['value'].class.to_s
+            when 'Array'
+              retval[parameter]['value'] = (retval[parameter]['value'] + Marshal.load(Marshal.dump(specification['settings']['value']))).uniq
+            when 'Hash'
+              retval[parameter]['value'] = DeepMerge.deep_merge!(retval[parameter]['value'], specification['settings']['value'])
+            else
+              retval[parameter]['value'] = Marshal.load(Marshal.dump(specification['settings']['value']))
+            end
+
+            retval[parameter]['telemetry'] << Marshal.load(Marshal.dump(specification['telemetry']))
           end
 
           return retval
