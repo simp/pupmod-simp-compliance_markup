@@ -383,6 +383,9 @@ Depending on the version of Puppet being used, the
 `compliance_markup::compliance_map()` function may not be able to precisely
 determine where the function has been called and a best guess may be provided.
 
+Hash values for Puppet parameters in compliance data will always be deep
+merged. Configurable merge behavior may be implemented in a future release.
+
 ## Development
 
 Patches are welcome to the code on the [SIMP Project Github](https://github.com/simp/pupmod-simp-compliance_markup) account. If you provide code, you are
