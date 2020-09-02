@@ -1,4 +1,26 @@
 require 'spec_helper'
+require 'fileutils'
+
+def activate_data(profile_dir)
+  fixtures = File.expand_path('../fixtures', __dir__)
+
+  dummy_module = File.join(fixtures, 'modules', 'init_spec', 'SIMP', 'compliance_profiles')
+  FileUtils.mkdir_p(dummy_module)
+
+  Dir.glob(File.join(fixtures, 'hieradata', profile_dir, 'SIMP', 'compliance_profiles', '*.yaml')).each do |file|
+    FileUtils.cp file, dummy_module
+  end
+end
+
+def remove_data
+  fixtures = File.expand_path('../fixtures', __dir__)
+
+  dummy_module = File.join(fixtures, 'modules', 'init_spec', 'SIMP', 'compliance_profiles')
+
+  Dir.glob(File.join(dummy_module, '*.yaml')).each do |file|
+    FileUtils.rm file
+  end
+end
 
 describe 'compliance_markup' do
   on_supported_os.each do |os, facts|
@@ -283,17 +305,11 @@ describe 'compliance_markup' do
 
             context 'in a default run' do
               before(:all) do
-                ENV['HIERA_compliance_data_dir'] = File.expand_path(
-                  File.join(
-                    fixtures,
-                    'hieradata',
-                    'passing_checks'
-                  )
-                )
+                activate_data('passing_checks')
               end
 
               after(:all) do
-                ENV['HIERA_compliance_data_dir'] = nil
+                remove_data
               end
 
               let(:params) { @default_params }
@@ -363,17 +379,11 @@ describe 'compliance_markup' do
 
             context 'when placing the report on the client' do
               before(:all) do
-                ENV['HIERA_compliance_data_dir'] = File.expand_path(
-                  File.join(
-                    fixtures,
-                    'hieradata',
-                    'passing_checks'
-                  )
-                )
+                activate_data('passing_checks')
               end
 
               after(:all) do
-                ENV['HIERA_compliance_data_dir'] = nil
+                remove_data
               end
 
               let(:params) {
@@ -442,17 +452,11 @@ describe 'compliance_markup' do
 
             context 'when checking system compliance' do
               before(:all) do
-                ENV['HIERA_compliance_data_dir'] = File.expand_path(
-                  File.join(
-                    fixtures,
-                    'hieradata',
-                    'passing_checks'
-                  )
-                )
+                activate_data('passing_checks')
               end
 
               after(:all) do
-                ENV['HIERA_compliance_data_dir'] = nil
+                remove_data
               end
 
               let(:params) {
@@ -600,17 +604,11 @@ describe 'compliance_markup' do
 
             context 'when running with the default options' do
               before(:all) do
-                ENV['HIERA_compliance_data_dir'] = File.expand_path(
-                  File.join(
-                    fixtures,
-                    'hieradata',
-                    'passing_checks'
-                  )
-                )
+                activate_data('passing_checks')
               end
 
               after(:all) do
-                ENV['HIERA_compliance_data_dir'] = nil
+                remove_data
               end
 
               let(:params) { @default_params }
@@ -659,17 +657,11 @@ describe 'compliance_markup' do
 
             context 'when an option in test1 has deviated' do
               before(:all) do
-                ENV['HIERA_compliance_data_dir'] = File.expand_path(
-                  File.join(
-                    fixtures,
-                    'hieradata',
-                    'test1_deviation'
-                  )
-                )
+                activate_data('test1_deviation')
               end
 
               after(:all) do
-                ENV['HIERA_compliance_data_dir'] = nil
+                remove_data
               end
 
               let(:params) { @default_params }
@@ -722,17 +714,11 @@ describe 'compliance_markup' do
 
             context 'when an option in test2::test3 has deviated' do
               before(:all) do
-                ENV['HIERA_compliance_data_dir'] = File.expand_path(
-                  File.join(
-                    fixtures,
-                    'hieradata',
-                    'test2_3_deviation'
-                  )
-                )
+                activate_data('test2_3_deviation')
               end
 
               after(:all) do
-                ENV['HIERA_compliance_data_dir'] = nil
+                remove_data
               end
 
               let(:params) { @default_params }
@@ -764,17 +750,11 @@ describe 'compliance_markup' do
               }
 
               before(:all) do
-                ENV['HIERA_compliance_data_dir'] = File.expand_path(
-                  File.join(
-                    fixtures,
-                    'hieradata',
-                    'passing_checks'
-                  )
-                )
+                activate_data('passing_checks')
               end
 
               after(:all) do
-                ENV['HIERA_compliance_data_dir'] = nil
+                remove_data
               end
 
               it { is_expected.to(compile.with_all_deps) }
@@ -788,17 +768,11 @@ describe 'compliance_markup' do
               }
 
               before(:all) do
-                ENV['HIERA_compliance_data_dir'] = File.expand_path(
-                  File.join(
-                    fixtures,
-                    'hieradata',
-                    'passing_checks'
-                  )
-                )
+                activate_data('passing_checks')
               end
 
               after(:all) do
-                ENV['HIERA_compliance_data_dir'] = nil
+                remove_data
               end
 
               it { is_expected.to(compile.with_all_deps) }
@@ -812,19 +786,12 @@ describe 'compliance_markup' do
               }
 
               before(:all) do
-                ENV['HIERA_compliance_data_dir'] = File.expand_path(
-                  File.join(
-                    fixtures,
-                    'hieradata',
-                    'undefined_values'
-                  )
-                )
+                activate_data('undefined_values')
               end
 
               after(:all) do
-                ENV['HIERA_compliance_data_dir'] = nil
+                remove_data
               end
-
 
               it { is_expected.to(compile.with_all_deps) }
             end

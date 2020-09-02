@@ -516,9 +516,12 @@ def compiler_class()
 
             unless retval.key?(parameter)
               retval[parameter] = {
-                'parameter' => parameter.dup,
-                'value'     => Marshal.load(Marshal.dump(specification['settings']['value'])),
-                'telemetry' => Marshal.load(Marshal.dump(specification['telemetry'])),
+                'parameter'   => parameter.dup,
+                'value'       => Marshal.load(Marshal.dump(specification['settings']['value'])),
+                'controls'    => specification['controls'].nil? ? {} : Marshal.load(Marshal.dump(specification['controls'])),
+                'identifiers' => specification['identifiers'].nil? ? {} : Marshal.load(Marshal.dump(specification['identifiers'])),
+                'oval-ids'    => specification['oval-ids'].nil? ? {} : Marshal.load(Marshal.dump(specification['oval-ids'])),
+                'telemetry'   => Marshal.load(Marshal.dump(specification['telemetry'])),
               }
 
               next
@@ -537,6 +540,10 @@ def compiler_class()
               retval[parameter]['value'] = DeepMerge.deep_merge!(retval[parameter]['value'], specification['settings']['value'])
             else
               retval[parameter]['value'] = Marshal.load(Marshal.dump(specification['settings']['value']))
+            end
+
+            ['controls', 'identifiers', 'oval-ids'].each do |key|
+              retval[parameter][key] = DeepMerge.deep_merge!(retval[parameter][key], specification[key]) unless specification[key].nil?
             end
 
             retval[parameter]['telemetry'] << Marshal.load(Marshal.dump(specification['telemetry']))
