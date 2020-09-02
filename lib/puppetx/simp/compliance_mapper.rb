@@ -380,21 +380,19 @@ def compiler_class()
 
         def import(filename, data)
           data.each do |key, value|
+            apply_confinement(value) if value.is_a?(Hash)
+
             case key
             when "profiles"
               value.each do |profile, map|
                 @profile_list[profile] ||= {}
                 @profile_list[profile] = DeepMerge.deep_merge!(@profile_list[profile], map, {:knockout_prefix => '--'})
               end
-
-              apply_confinement(@profile_list)
             when "controls"
               value.each do |profile, map|
                 @control_list[profile] ||= {}
                 @control_list[profile] = DeepMerge.deep_merge!(@control_list[profile], map, {:knockout_prefix => '--'})
               end
-
-              apply_confinement(@control_list)
             when "checks"
               value.each do |profile, map|
                 @check_list[profile] ||= {}
@@ -408,23 +406,17 @@ def compiler_class()
                 }
 
                 @check_list[profile]['telemetry'] = [check_telemetry]
-
               end
-
-              apply_confinement(@check_list)
             when "ce"
               value.each do |profile, map|
                 @configuration_element_list[profile] ||= {}
                 @configuration_element_list[profile] = DeepMerge.deep_merge!(@configuration_element_list[profile], map, {:knockout_prefix => '--'})
               end
-
-              apply_confinement(@configuration_element_list)
             end
           end
         end
 
         def list_puppet_params(profile_list)
-          # Potential matches prior to confinement
           specifications = []
 
           profile_list.reverse.each do |profile_name|
@@ -483,7 +475,7 @@ def compiler_class()
               if specification.key?('ces')
                 specification['ces'].each do |ce_name|
                   if (info.key?('ces')) && (info['ces'].key?(ce_name)) && (info['ces'][ce_name] == true)
-                    specifications << specification
+                    specifications << specification if @configuration_element_list.key?(ce_name)
                     next
                   elsif @configuration_element_list.key?(ce_name)
                     if @configuration_element_list[ce_name].key?('controls')
