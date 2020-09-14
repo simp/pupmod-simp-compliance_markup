@@ -1,3 +1,12 @@
+* Wed Sep 16 2020 Steven Pritchard <steven.pritchard@onyxpoint.com> - 3.1.1-0
+- Add tests for profile merging
+- Deduplicate profile, control, ce, and check names in enforcement tests to
+  avoid cross-contamination of test data
+- Remove useless loops in list_puppet_params function
+- Fix calls to deep_merge!
+- Fix logic for merging oval-ids, controls, and identifiers
+- Add begin/rescue blocks around merges to avoid problems with incorrect data
+
 * Fri Sep 11 2020 Steven Pritchard <steven.pritchard@onyxpoint.com> - 3.1.1-0
 - Add controls, identifiers, and oval-ids
 - Work around rspec failure

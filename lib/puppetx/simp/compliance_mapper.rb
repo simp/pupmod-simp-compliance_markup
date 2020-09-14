@@ -22,6 +22,7 @@
 # cache_has_key(key)
 #
 # which allow for debug logging, and caching, respectively.
+require 'deep_merge'
 
 def enforcement(key, context=self, options={"mode" => "value"}, &block)
 
@@ -386,17 +387,17 @@ def compiler_class()
             when "profiles"
               value.each do |profile, map|
                 @profile_list[profile] ||= {}
-                @profile_list[profile] = DeepMerge.deep_merge!(@profile_list[profile], map, {:knockout_prefix => '--'})
+                @profile_list[profile] = @profile_list[profile].deep_merge!(map, {:knockout_prefix => '--'})
               end
             when "controls"
               value.each do |profile, map|
                 @control_list[profile] ||= {}
-                @control_list[profile] = DeepMerge.deep_merge!(@control_list[profile], map, {:knockout_prefix => '--'})
+                @control_list[profile] = @control_list[profile].deep_merge!(map, {:knockout_prefix => '--'})
               end
             when "checks"
               value.each do |profile, map|
                 @check_list[profile] ||= {}
-                @check_list[profile] = DeepMerge.deep_merge!(@check_list[profile], map, {:knockout_prefix => '--'})
+                @check_list[profile] = @check_list[profile].deep_merge!(map, {:knockout_prefix => '--'})
 
                 check_telemetry = {
                   'filename' => filename,
@@ -410,7 +411,7 @@ def compiler_class()
             when "ce"
               value.each do |profile, map|
                 @configuration_element_list[profile] ||= {}
-                @configuration_element_list[profile] = DeepMerge.deep_merge!(@configuration_element_list[profile], map, {:knockout_prefix => '--'})
+                @configuration_element_list[profile] = @configuration_element_list[profile].deep_merge!(map, {:knockout_prefix => '--'})
               end
             end
           end
@@ -499,7 +500,12 @@ def compiler_class()
           return {} if specifications.empty?
 
           if specifications.count > 1
-            @callback.debug("WARN: Multiple valid specifications found for #{specifications.first['settings']['parameter']}, they will be merged in the order that they were defined")
+            parameters = specifications.map { |specification| specification['settings']['parameter'] }
+            parameters.uniq.each do |param|
+              if parameters.count { |p| p == param } > 1
+                @callback.debug("WARN: Multiple valid specifications found for #{param}, they will be merged in the order that they were defined")
+              end
+            end
           end
 
           retval = {}
@@ -519,23 +525,42 @@ def compiler_class()
               next
             end
 
-            if retval[parameter]['value'].class.to_s != specification['settings']['value'].class.to_s
-              raise "Value type mismatch for #{parameter}"
-            end
-
             # Merge
             # XXX ToDo: Need merge settings support
-            case retval[parameter]['value'].class.to_s
-            when 'Array'
-              retval[parameter]['value'] = (retval[parameter]['value'] + Marshal.load(Marshal.dump(specification['settings']['value']))).uniq
-            when 'Hash'
-              retval[parameter]['value'] = DeepMerge.deep_merge!(retval[parameter]['value'], specification['settings']['value'])
-            else
-              retval[parameter]['value'] = Marshal.load(Marshal.dump(specification['settings']['value']))
+            begin
+              case retval[parameter]['value'].class.to_s
+              when 'Array'
+                retval[parameter]['value'] = (retval[parameter]['value'] + Marshal.load(Marshal.dump(specification['settings']['value']))).uniq
+              when 'Hash'
+                retval[parameter]['value'] = retval[parameter]['value'].deep_merge!(specification['settings']['value'])
+              else
+                retval[parameter]['value'] = Marshal.load(Marshal.dump(specification['settings']['value']))
+              end
+            rescue
+              if retval[parameter]['value'].class.to_s != specification['settings']['value'].class.to_s
+                raise "Value type mismatch for #{parameter}"
+              else
+                raise "Merge failed for values in #{parameter}"
+              end
             end
 
             ['controls', 'identifiers', 'oval-ids'].each do |key|
-              retval[parameter][key] = DeepMerge.deep_merge!(retval[parameter][key], specification[key]) unless specification[key].nil?
+              begin
+                case retval[parameter][key].class.to_s
+                when 'Array'
+                  retval[parameter][key] = (retval[parameter][key] + Marshal.load(Marshal.dump(specification[key]))).uniq
+                when 'Hash'
+                  retval[parameter][key] = retval[parameter][key].deep_merge!(specification[key])
+                else
+                  retval[parameter][key] = Marshal.load(Marshal.dump(specification[key]))
+                end
+              rescue
+                if retval[parameter][key].class.to_s != specification[key].class.to_s
+                  raise "Type mismatch for #{key} in #{parameter}"
+                else
+                  raise "Merge failed for #{key} in #{parameter}"
+                end
+              end
             end
 
             retval[parameter]['telemetry'] << Marshal.load(Marshal.dump(specification['telemetry']))
@@ -586,17 +611,7 @@ def compiler_class()
     end
 
     def list_puppet_params(profile_list)
-      table = {}
-
-      # Set the keys in reverse order. This means that [ 'disa', 'nist'] would prioritize
-      # disa values over nist. Only bother to store the highest priority value
-      profile_list.reverse.each do |profile_map|
-        unless profile_map =~ /^v[0-9]+/
-          table = v2.list_puppet_params(profile_list)
-        end
-      end
-
-      control_list.new(table)
+      control_list.new(v2.list_puppet_params(profile_list))
     end
   end
 end

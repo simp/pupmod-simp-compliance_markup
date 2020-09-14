@@ -14,9 +14,9 @@ describe 'lookup' do
   profile_yaml = {
     'version' => '2.0.0',
     'profiles' => {
-      'profile_test' => {
+      '00_profile_test' => {
         'controls' => {
-          'control1' => true,
+          '00_control1' => true,
         },
       },
     },
@@ -25,9 +25,9 @@ describe 'lookup' do
   ces_yaml = {
     'version' => '2.0.0',
     'ce' => {
-      'ce1' => {
+      '00_ce1' => {
         'controls' => {
-          'control1' => true,
+          '00_control1' => true,
         },
       },
     },
@@ -36,24 +36,24 @@ describe 'lookup' do
   checks_yaml = {
     'version' => '2.0.0',
     'checks' => {
-      'check1' => {
-        'type' => 'puppet-class-parameter',
+      '00_check1' => {
+        'type'     => 'puppet-class-parameter',
         'settings' => {
-          'parameter' => 'test_module::test_param',
-          'value' => 'a string',
+          'parameter' => 'test_module_00::test_param',
+          'value'     => 'a string',
         },
-        'ces' => [
-          'ce1',
+        'ces'      => [
+          '00_ce1',
         ],
       },
-      'check2' => {
-        'type' => 'puppet-class-parameter',
+      '00_check2' => {
+        'type'     => 'puppet-class-parameter',
         'settings' => {
-          'parameter' => 'test_module::test_param2',
-          'value' => 'another string',
+          'parameter' => 'test_module_00::test_param2',
+          'value'     => 'another string',
         },
-        'ces' => [
-          'ce1',
+        'ces'      => [
+          '00_ce1',
         ],
       },
     },
@@ -84,19 +84,19 @@ describe 'lookup' do
 
       let(:hieradata) { 'compliance-engine' }
 
-      it { is_expected.to run.with_params('test_module::test_param').and_raise_error(Puppet::DataBinding::LookupError, "Function lookup() did not find a value for the name 'test_module::test_param'") }
+      it { is_expected.to run.with_params('test_module_00::test_param').and_raise_error(Puppet::DataBinding::LookupError, "Function lookup() did not find a value for the name 'test_module_00::test_param'") }
     end
 
     context "on #{os} with compliance_markup::enforcement and an existing profile" do
       let(:facts) do
-        os_facts.merge('target_compliance_profile' => 'profile_test')
+        os_facts.merge('target_compliance_profile' => '00_profile_test')
       end
 
       let(:hieradata) { 'compliance-engine' }
 
       # Test unconfined data.
-      it { is_expected.to run.with_params('test_module::test_param').and_return('a string') }
-      it { is_expected.to run.with_params('test_module::test_param2').and_return('another string') }
+      it { is_expected.to run.with_params('test_module_00::test_param').and_return('a string') }
+      it { is_expected.to run.with_params('test_module_00::test_param2').and_return('another string') }
     end
   end
 end

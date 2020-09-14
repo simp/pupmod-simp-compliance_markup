@@ -14,9 +14,9 @@ describe 'lookup' do
   profile_yaml = {
     'version' => '2.0.0',
     'profiles' => {
-      'profile_test' => {
+      '02_profile_test' => {
         'controls' => {
-          'control1' => true,
+          '02_control1' => true,
         },
       },
     },
@@ -25,9 +25,9 @@ describe 'lookup' do
   ces_yaml = {
     'version' => '2.0.0',
     'ce' => {
-      'ce1' => {
+      '02_ce1' => {
         'controls' => {
-          'control1' => true,
+          '02_control1' => true,
         },
       },
     },
@@ -35,81 +35,81 @@ describe 'lookup' do
 
   checks_yaml = {
     'version' => '2.0.0',
-    'checks' => {
-      'array check1' => {
-        'type' => 'puppet-class-parameter',
+    'checks'  => {
+      '02_array check1' => {
+        'type'     => 'puppet-class-parameter',
         'settings' => {
-          'parameter' => 'test_module::array_param',
-          'value' => [
+          'parameter' => 'test_module_02::array_param',
+          'value'     => [
             'array value 1',
           ],
         },
-        'ces' => [
-          'ce1',
+        'ces'      => [
+          '02_ce1',
         ],
       },
-      'array check2' => {
-        'type' => 'puppet-class-parameter',
+      '02_array check2' => {
+        'type'     => 'puppet-class-parameter',
         'settings' => {
-          'parameter' => 'test_module::array_param',
-          'value' => [
+          'parameter' => 'test_module_02::array_param',
+          'value'     => [
             'array value 2',
           ],
         },
-        'ces' => [
-          'ce1',
+        'ces'      => [
+          '02_ce1',
         ],
       },
-      'hash check1' => {
-        'type' => 'puppet-class-parameter',
+      '02_hash check1'  => {
+        'type'     => 'puppet-class-parameter',
         'settings' => {
-          'parameter' => 'test_module::hash_param',
-          'value' => {
+          'parameter' => 'test_module_02::hash_param',
+          'value'     => {
             'hash key 1' => 'hash value 1',
           },
         },
-        'ces' => [
-          'ce1',
+        'ces'      => [
+          '02_ce1',
         ],
       },
-      'hash check2' => {
-        'type' => 'puppet-class-parameter',
+      '02_hash check2'  => {
+        'type'     => 'puppet-class-parameter',
         'settings' => {
-          'parameter' => 'test_module::hash_param',
-          'value' => {
+          'parameter' => 'test_module_02::hash_param',
+          'value'     => {
             'hash key 2' => 'hash value 2',
           },
         },
-        'ces' => [
-          'ce1',
+        'ces'      => [
+          '02_ce1',
         ],
       },
-      'nested hash1' => {
-        'type' => 'puppet-class-parameter',
+      '02_nested hash1' => {
+        'type'     => 'puppet-class-parameter',
         'settings' => {
-          'parameter' => 'test_module::nested_hash',
-          'value' => {
+          'parameter' => 'test_module_02::nested_hash',
+          'value'     => {
             'key' => {
               'key1' => 'value1',
             },
           },
         },
-        'ces' => [
-          'ce1',
+        'ces'      => [
+          '02_ce1',
         ],
       },
-      'nested hash2' => {
-        'type' => 'puppet-class-parameter',
+      '02_nested hash2' => {
+        'type'     => 'puppet-class-parameter',
         'settings' => {
-          'parameter' => 'test_module::nested_hash',
-          'value' => {
+          'parameter' => 'test_module_02::nested_hash',
+          'value'     => {
             'key' => {
               'key2' => 'value2',
             },
           },
         },
-        'ces' => [
-          'ce1',
+        'ces'      => [
+          '02_ce1',
         ],
       },
     },
@@ -135,19 +135,19 @@ describe 'lookup' do
   on_supported_os.each do |os, os_facts|
     context "on #{os} with compliance_markup::enforcement and an existing profile" do
       let(:facts) do
-        os_facts.merge('target_compliance_profile' => 'profile_test')
+        os_facts.merge('target_compliance_profile' => '02_profile_test')
       end
 
       let(:hieradata) { 'compliance-engine' }
 
       # Test a simple array.
-      it { is_expected.to run.with_params('test_module::array_param').and_return(['array value 1', 'array value 2']) }
+      it { is_expected.to run.with_params('test_module_02::array_param').and_return(['array value 1', 'array value 2']) }
 
       # Test a simple hash.
-      it { is_expected.to run.with_params('test_module::hash_param').and_return({'hash key 1' => 'hash value 1', 'hash key 2' => 'hash value 2'}) }
+      it { is_expected.to run.with_params('test_module_02::hash_param').and_return({'hash key 1' => 'hash value 1', 'hash key 2' => 'hash value 2'}) }
 
       # Test a nested hash.
-      it { is_expected.to run.with_params('test_module::nested_hash').and_return({'key' => { 'key1' => 'value1', 'key2' => 'value2'}}) }
+      it { is_expected.to run.with_params('test_module_02::nested_hash').and_return({'key' => { 'key1' => 'value1', 'key2' => 'value2'}}) }
     end
   end
 end

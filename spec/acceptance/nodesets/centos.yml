@@ -12,19 +12,19 @@ HOSTS:
       - default
     platform:   el-7-x86_64
     box:        centos/7
-    hypervisor: vagrant
+    hypervisor: <%= hypervisor %>
   el6:
     roles:
       - client
     platform:   el-6-x86_64
     box:        centos/6
-    hypervisor: vagrant
+    hypervisor: <%= hypervisor %>
   el8:
     roles:
       - client
     platform:   el-8-x86_64
     box:        centos/8
-    hypervisor: vagrant
+    hypervisor: <%= hypervisor %>
 CONFIG:
   log_level: verbose
   type:      aio
