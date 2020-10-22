@@ -381,7 +381,9 @@ def compiler_class()
 
         def import(filename, data)
           data.each do |key, value|
-            apply_confinement(value) if value.is_a?(Hash)
+            unless @callback.class.method_defined?(:ignore_confine)
+              apply_confinement(value) if value.is_a?(Hash)
+            end
 
             case key
             when "profiles"
