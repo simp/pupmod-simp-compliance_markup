@@ -129,8 +129,11 @@ def enforcement(key, context=self, options={"mode" => "value"}, &block)
         # option that toggles it on. This would allow un-overridable enforcement at the hiera
         # layer (though it can still be overridden by resource-style class definitions)
       end
-    rescue
+    rescue => e
       # noop
+      warn e.message
+      debug(e.message)
+      debug(e.backtrace.inspect)
     ensure
       context.cache("lock", false)
     end
@@ -545,6 +548,7 @@ def compiler_class()
             end
 
             ['controls', 'identifiers', 'oval-ids'].each do |key|
+              next if specification[key].nil?
               begin
                 case retval[parameter][key].class.to_s
                 when 'Array'
