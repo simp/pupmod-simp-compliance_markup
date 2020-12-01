@@ -1,3 +1,7 @@
+* Mon Nov 02 2020 Steven Pritchard <steven.pritchard@onyxpoint.com> - 3.1.3-0
+- Add missing `nil` check when merging controls, identifiers, and oval-ids
+- Add `warn` and `debug` in outer `begin` block to avoid silent failures
+
 * Mon Oct 05 2020 Andy Adrian <andy.adrian@onyxpoint.com> - 3.1.2-0
 - Change order of import on ``compliance_markup::compliance_map`` so Hiera has
   precedence.
