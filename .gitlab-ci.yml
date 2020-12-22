@@ -259,7 +259,7 @@ variables:
 #=======================================================================
 
 releng_checks:
-  <<: *pup_6
+  <<: *pup_5
   <<: *setup_bundler_env
   stage: 'validation'
   tags: ['docker']
