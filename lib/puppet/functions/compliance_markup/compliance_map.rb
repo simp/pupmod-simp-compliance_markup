@@ -172,12 +172,28 @@
 #Puppet::Functions.create_function(:'compliance_markup::compliance_map') do
 Puppet::Functions.create_function(:'compliance_markup::compliance_map', Puppet::Functions::InternalFunction) do
 
+  # @param map_data
+  #   The full Hash of mapping data
+  #
+  # @return [Nil]
+  #
   dispatch :compliance_map do
     required_param 'Hash', :map_data
     # See: https://github.com/puppetlabs/puppet-specifications/blob/master/language/func-api.md#experimental--internal-features
     scope_param()
   end
 
+  # @param compliance_profile
+  #   Denotes the compliance profile(s) to which you are mapping
+  #
+  # @param identifiers
+  #   A unique identifier for the policy to which you are mapping
+  #
+  # @param notes
+  #   Allows for arbitrary notes to include in the compliance report
+  #
+  # @return [Nil]
+  #
   dispatch :compliance_map_inline do
     required_param 'Variant[String[1], Array[String[1]]]', :compliance_profile
     required_param 'Variant[String[1], Array[String[1]]]', :identifiers

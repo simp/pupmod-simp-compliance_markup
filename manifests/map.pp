@@ -3,10 +3,12 @@
 #
 # Defines appear to be run after all classes
 #
-# The options hash is passed directly to the
-# `compliance_markup::compliance_map()` function
+#
+# @param options
+#   The options hash is passed directly to the `compliance_markup::compliance_map()` function
+#
 define compliance_markup::map (
-  $options = {}
+  Hash $options = {}
 ) {
   compliance_markup::compliance_map($options)
 }

@@ -1,5 +1,8 @@
 * Mon Nov 02 2020 Andy Adrian <andy.adrian@onyxpoint.com> - 3.1.4-0
 - Remove unused and broken telemetry functionality
+- Updated the REFERENCE.md
+- Removed EL 6 from support due to EOL
+- Added puppet 7 testing
 
 * Mon Nov 02 2020 Steven Pritchard <steven.pritchard@onyxpoint.com> - 3.1.3-0
 - Add missing `nil` check when merging controls, identifiers, and oval-ids

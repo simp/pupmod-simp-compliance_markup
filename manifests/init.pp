@@ -44,7 +44,7 @@
 #     sees it:
 #     ``/opt/puppetlabs/server/data/puppetserver/simp/compliance_reports``
 #
-# @param custom_report_entries
+# @param custom_report_data
 #   A hash that will be included in the compliance report under the heading
 #   ``site_data``
 #

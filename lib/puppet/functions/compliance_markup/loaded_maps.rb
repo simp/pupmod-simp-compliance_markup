@@ -1,5 +1,7 @@
 # Returns the compliance data keys from the loaded compliance maps
 Puppet::Functions.create_function(:'compliance_markup::loaded_maps', Puppet::Functions::InternalFunction) do
+
+  # @return [Nil]
   dispatch :loaded_maps do
     scope_param()
   end
