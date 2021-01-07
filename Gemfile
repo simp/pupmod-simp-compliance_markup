@@ -1,3 +1,9 @@
+# ------------------------------------------------------------------------------
+#         NOTICE: **This file is maintained with puppetsync**
+#
+# This file is automatically updated as part of a puppet module baseline.
+# The next baseline sync will overwrite any local changes made to this file.
+# ------------------------------------------------------------------------------
 gem_sources = ENV.fetch('GEM_SERVERS','https://rubygems.org').split(/[, ]+/)
 
 ENV['PDK_DISABLE_ANALYTICS'] ||= 'true'
@@ -5,7 +11,7 @@ ENV['PDK_DISABLE_ANALYTICS'] ||= 'true'
 gem_sources.each { |gem_source| source gem_source }
 
 group :test do
-  puppet_version = ENV['PUPPET_VERSION'] || '~> 6.18'
+  puppet_version = ENV['PUPPET_VERSION'] || '~> 5.5'
   major_puppet_version = puppet_version.scan(/(\d+)(?:\.|\Z)/).flatten.first.to_i
   gem 'rake'
   gem 'puppet', puppet_version
@@ -18,7 +24,7 @@ group :test do
   gem 'puppet-lint-empty_string-check',   :require => false
   gem 'puppet-lint-trailing_comma-check', :require => false
   gem 'simp-rspec-puppet-facts', ENV['SIMP_RSPEC_PUPPET_FACTS_VERSION'] || '~> 3.1'
-  gem 'simp-rake-helpers', ENV['SIMP_RAKE_HELPERS_VERSION'] || ['>= 5.11.5', '< 6']
+  gem 'simp-rake-helpers', ENV['SIMP_RAKE_HELPERS_VERSION'] || ['> 5.11', '< 6']
   gem( 'pdk', ENV['PDK_VERSION'] || '~> 1.0', :require => false) if major_puppet_version > 5
 end
 

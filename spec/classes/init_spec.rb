@@ -65,8 +65,7 @@ describe 'compliance_markup' do
         }
 
         if ['RedHat', 'CentOS'].include?(facts[:os][:name])
-          if ['6','7'].include?(facts[:os][:release][:major])
-
+          if facts[:os][:release][:major] == '7'
             context 'when running with the inbuilt data' do
               pre_condition_common = <<-EOM
                 class yum (
@@ -77,23 +76,13 @@ describe 'compliance_markup' do
                 include yum
               EOM
 
-              if facts[:os][:release][:major] == '6'
-                let(:pre_condition) {
-                  <<-EOM
-                    $compliance_profile = ['nist_800_53:rev4']
+              let(:pre_condition) {
+                <<-EOM
+                  $compliance_profile = ['disa_stig', 'nist_800_53:rev4']
 
-                    #{pre_condition_common}
-                  EOM
-                }
-              else
-                let(:pre_condition) {
-                  <<-EOM
-                    $compliance_profile = ['disa_stig', 'nist_800_53:rev4']
-
-                    #{pre_condition_common}
-                  EOM
-                }
-              end
+                  #{pre_condition_common}
+                EOM
+              }
 
               let(:facts) { facts }
               let(:params) { @default_params }
