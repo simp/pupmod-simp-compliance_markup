@@ -23,7 +23,7 @@ def remove_data
 end
 
 describe 'compliance_markup' do
-  on_supported_os.each do |os, facts|
+  on_supported_os.each do |os, os_facts|
     let(:report_version) { '1.0.1' }
 
     context "on #{os}" do
@@ -64,73 +64,69 @@ describe 'compliance_markup' do
           @report
         }
 
-        if ['RedHat', 'CentOS'].include?(facts[:os][:name])
-          if facts[:os][:release][:major] == '7'
-            context 'when running with the inbuilt data' do
-              pre_condition_common = <<-EOM
-                class yum (
-                  # This should trigger a finding
-                  $config_options = {}
-                ) { }
+        context 'when running with the inbuilt data' do
+          pre_condition_common = <<-EOM
+            class yum (
+              # This should trigger a finding
+              $config_options = {}
+            ) { }
 
-                include yum
-              EOM
+            include yum
+          EOM
 
-              let(:pre_condition) {
-                <<-EOM
-                  $compliance_profile = ['disa_stig', 'nist_800_53:rev4']
+          let(:pre_condition) {
+            <<-EOM
+              $compliance_profile = ['disa_stig', 'nist_800_53:rev4']
 
-                  #{pre_condition_common}
-                EOM
-              }
+              #{pre_condition_common}
+            EOM
+          }
 
-              let(:facts) { facts }
-              let(:params) { @default_params }
+          let(:facts) { os_facts }
+          let(:params) { @default_params }
 
-              it 'should have a server side compliance report node directory' do
-                expect(File).to exist("#{params['options']['server_report_dir']}/#{facts[:fqdn]}")
-              end
+          it 'should have a server side compliance report node directory' do
+            expect(File).to exist("#{params['options']['server_report_dir']}/#{facts[:fqdn]}")
+          end
 
-              it 'should have a server side compliance node report' do
-                expect(File).to exist("#{params['options']['server_report_dir']}/#{facts[:fqdn]}/compliance_report.yaml")
-              end
+          it 'should have a server side compliance node report' do
+            expect(File).to exist("#{params['options']['server_report_dir']}/#{facts[:fqdn]}/compliance_report.yaml")
+          end
 
-              it 'should have a failing check' do
-                expect( report['compliance_profiles']['nist_800_53:rev4']['non_compliant'] ).to_not be_empty
-              end
+          it 'should have a failing check' do
+            expect( report['compliance_profiles']['nist_800_53:rev4']['non_compliant'] ).to_not be_empty
+          end
 
-              it 'should not have ruby serialized objects in the output' do
-                expect(raw_report).to_not match(/!ruby/)
-              end
+          it 'should not have ruby serialized objects in the output' do
+            expect(raw_report).to_not match(/!ruby/)
+          end
 
-              context 'when dumping the catalog compliance_map' do
-                let(:catalog_dump) {
-                  # There can be only one
-                  File.read("#{params['options']['server_report_dir']}/#{facts[:fqdn]}/catalog_compliance_map.yaml")
-                }
+          context 'when dumping the catalog compliance_map' do
+            let(:catalog_dump) {
+              # There can be only one
+              File.read("#{params['options']['server_report_dir']}/#{facts[:fqdn]}/catalog_compliance_map.yaml")
+            }
 
-                let(:params){
-                  _params = Marshal.load(Marshal.dump(@default_params))
-                  _params['options']['catalog_to_compliance_map'] = true
-                  _params
-                }
+            let(:params){
+              _params = Marshal.load(Marshal.dump(@default_params))
+              _params['options']['catalog_to_compliance_map'] = true
+              _params
+            }
 
-                it 'should have a generated catlaog' do
-                  expect(File).to exist("#{params['options']['server_report_dir']}/#{facts[:fqdn]}/catalog_compliance_map.yaml")
+            it 'should have a generated catlaog' do
+              expect(File).to exist("#{params['options']['server_report_dir']}/#{facts[:fqdn]}/catalog_compliance_map.yaml")
 
-                  expect(catalog_dump).to match(/GENERATED/)
-                end
+              expect(catalog_dump).to match(/GENERATED/)
+            end
 
-                it 'should not have Ruby serialized objects in the dump' do
-                  expect(catalog_dump).to_not match(/!ruby/)
-                end
+            it 'should not have Ruby serialized objects in the dump' do
+              expect(catalog_dump).to_not match(/!ruby/)
+            end
 
-                it 'should be valid YAML' do
-                  expect {
-                    YAML.load(catalog_dump)
-                  }.to_not raise_exception
-                end
-              end
+            it 'should be valid YAML' do
+              expect {
+                YAML.load(catalog_dump)
+              }.to_not raise_exception
             end
           end
         end
@@ -247,7 +243,7 @@ describe 'compliance_markup' do
             }
         end
 
-        let(:facts) { facts }
+        let(:facts) { os_facts }
 
         ['yaml','json'].each do |report_format|
           context "with report format #{report_format}" do
