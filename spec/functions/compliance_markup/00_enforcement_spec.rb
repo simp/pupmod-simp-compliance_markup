@@ -19,6 +19,11 @@ describe 'lookup' do
           '00_control1' => true,
         },
       },
+      '00_profile_with_check_reference' => {
+        'checks' => {
+          '00_check2' => true,
+        },
+      },
     },
   }.to_yaml
 
@@ -96,6 +101,18 @@ describe 'lookup' do
 
       # Test unconfined data.
       it { is_expected.to run.with_params('test_module_00::test_param').and_return('a string') }
+      it { is_expected.to run.with_params('test_module_00::test_param2').and_return('another string') }
+    end
+
+    context "on #{os} with compliance_markup::enforcement and a profile directly referencing a check" do
+      let(:facts) do
+        os_facts.merge('target_compliance_profile' => '00_profile_with_check_reference')
+      end
+
+      let(:hieradata) { 'compliance-engine' }
+
+      # Test unconfined data.
+      it { is_expected.to run.with_params('test_module_00::test_param').and_raise_error(Puppet::DataBinding::LookupError, "Function lookup() did not find a value for the name 'test_module_00::test_param'") }
       it { is_expected.to run.with_params('test_module_00::test_param2').and_return('another string') }
     end
   end
