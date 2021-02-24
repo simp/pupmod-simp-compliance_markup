@@ -384,6 +384,66 @@ def compiler_class()
           end
         end
 
+        def check_map
+          return @check_map unless @check_map.nil?
+
+          @check_map = {
+            'checks'   => {},
+            'controls' => {},
+            'ces'      => {},
+          }
+
+          @check_list.each do |check_name, specification|
+            # Skip unless this item applies to puppet
+            unless (specification['type'] == 'puppet') || (specification['type'] == 'puppet-class-parameter')
+              @callback.debug("SKIP: '#{check_name}' is not a puppet parameter")
+              next
+            end
+
+            # Skip unless we actually have a parameter setting
+            unless specification.key?('settings')
+              @callback.debug("SKIP: '#{check_name}' does not have any settings")
+              next
+            end
+
+            unless specification['settings'].key?('parameter')
+              @callback.debug("SKIP: '#{check_name}' does not have a parameter specified")
+              next
+            end
+
+            # A parameter with a setting but without a value is invalid
+            unless specification['settings'].key?('value')
+              location = 'unknown'
+
+              raise "'#{check_name}' has parameter '#{specification['settings']['parameter']}' in '#{location}' but has no assigned value"
+            end
+
+            @check_map['checks'][check_name] = [specification]
+
+            specification['controls']&.each do |control_name, value|
+              next unless value
+              @check_map['controls'][control_name] = [] if @check_map['controls'][control_name].nil?
+              @check_map['controls'][control_name] << specification
+            end
+
+            specification['ces']&.each do |ce_name|
+              next unless @configuration_element_list.key?(ce_name)
+
+              @check_map['ces'][ce_name] = [] if @check_map['ces'][ce_name].nil?
+              @check_map['ces'][ce_name] << specification
+
+              @configuration_element_list[ce_name]['controls']&.each do |control_name, value|
+                next unless value
+
+                @check_map['controls'][control_name] = [] if @check_map['controls'][control_name].nil?
+                @check_map['controls'][control_name] << specification
+              end
+            end
+          end
+
+          @check_map
+        end
+
         def list_puppet_params(profile_list)
           specifications = []
 
@@ -395,67 +455,12 @@ def compiler_class()
 
             info = @profile_list[profile_name]
 
-            @check_list.each do |check_name, spec|
-              specification = Marshal.load(Marshal.dump(spec))
-
-              # Skip unless this item applies to puppet
-              unless (specification['type'] == 'puppet') || (specification['type'] == 'puppet-class-parameter')
-                @callback.debug("SKIP: '#{check_name}' is not a puppet parameter")
-                next
+            ['checks', 'controls', 'ces'].each do |map_type|
+              info[map_type]&.each do |key, value|
+                next unless value
+                next if check_map[map_type][key].nil?
+                specifications += check_map[map_type][key]
               end
-
-              # Skip unless we actually have a parameter setting
-              unless specification.key?('settings')
-                @callback.debug("SKIP: '#{check_name}' does not have any settings")
-                next
-              end
-
-              unless specification['settings'].key?('parameter')
-                @callback.debug("SKIP: '#{check_name}' does not have a parameter specified")
-                next
-              end
-
-              # A parameter with a setting but without a value is invalid
-              unless specification['settings'].key?('value')
-                location = 'unknown'
-
-                raise "'#{check_name}' has parameter '#{specification['settings']['parameter']}' in '#{location}' but has no assigned value"
-              end
-
-              if info.key?('checks') && info['checks'].include?(check_name) && (info['checks'][check_name] == true)
-                specifications << specification
-                next
-              end
-
-              if specification.key?('controls')
-                specification['controls'].each do |control_name, subsection|
-                  if info.key?('controls') && info['controls'].include?(control_name) && (info['controls'][control_name] == true)
-                    specifications << specification
-                    next
-                  end
-                end
-              end
-
-              if specification.key?('ces')
-                specification['ces'].each do |ce_name|
-                  if (info.key?('ces')) && (info['ces'].key?(ce_name)) && (info['ces'][ce_name] == true)
-                    specifications << specification if @configuration_element_list.key?(ce_name)
-                    next
-                  elsif @configuration_element_list.key?(ce_name)
-                    if @configuration_element_list[ce_name].key?('controls')
-                      @configuration_element_list[ce_name]['controls'].each do |control_name, subsection|
-                        if info.key?('controls') && info["controls"].include?(control_name)
-                          specifications << specification
-                          next
-                        end
-                      end
-                    end
-                  end
-                end
-              end
-
-              # Skip if we didn't find any controls to match against
-              @callback.debug("SKIP: '#{check_name}' had no matching controls")
             end
           end
 
