@@ -48,7 +48,7 @@ def enforcement(key, context=self, options={"mode" => "value"}, &block)
     context.cache("lock", true)
 
     begin
-      profile_list = cached_lookup("compliance_markup::enforcement", [], &block)
+      profile_list = call_function('lookup', 'compliance_markup::enforcement', { 'default_value' => [] })
 
       unless profile_list == []
         debug("debug: compliance_markup::enforcement set to #{profile_list}, attempting to enforce")
@@ -123,15 +123,9 @@ end
 
 # These cache functions are assumed to be created by the wrapper
 # object backend.
+# Caching disabled temporarily (SIMP-9623).
 def cached_lookup(key, default, &block)
-  if cache_has_key(key)
-    retval = cached_value(key)
-  else
-    retval = yield key, default
-    cache(key, retval)
-  end
-
-  retval
+  yield key, default
 end
 
 def compiler_class()

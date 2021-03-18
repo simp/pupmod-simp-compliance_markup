@@ -454,24 +454,15 @@ def custom_call_file_info
 end
 
 # These methods are part of the callback api for compliance engine.
-
+# Caching disabled temporarily (SIMP-9623).
 def cache(key, value)
-  if @hash == nil
-    @hash = {}
-  end
-  @hash[key] = value
+  { key => value }
 end
 def cached_value(key)
-  if @hash == nil
-    @hash = {}
-  end
-  @hash[key]
+  nil
 end
 def cache_has_key(key)
-  if @hash == nil
-    @hash = {}
-  end
-  @hash.key?(key)
+  false
 end
 def debug(message)
   return

@@ -52,26 +52,7 @@ Puppet::Functions.create_function(:'compliance_markup::enforcement') do
 
     retval = nil
 
-    # This is needed to prevent infinite looping. Usually, the lookup function
-    # is called from different modules and, therefore, requires different
-    # scoping. However, in our case, we're actually looking across modules and
-    # need to maintain the same context at all times to ensure that caching
-    # works properly.
-    if @context
-      # This should never be called, but we're going to be extra safe and reload
-      # the underlying mapper code if it is.
-      if @context.environment_name != context.environment_name
-        filename = File.expand_path('../../../../puppetx/simp/compliance_mapper.rb', __FILE__)
-        self.instance_eval(File.read(filename), filename)
-
-        @context = context
-      end
-    else
-      @context ||= context
-    end
-
-    # Quick return if we already have a cached value for the key.
-    return cached_value(key) if cached_value(key)
+    @context = context
 
     begin
       # Parameters are frozen

@@ -1,3 +1,6 @@
+* Thu Mar 18 2021 Steven Pritchard <steven.pritchard@onyxpoint.com> - 3.1.4-0
+- Disable caching (SIMP-9623)
+
 * Wed Feb 24 2021 Steven Pritchard <steven.pritchard@onyxpoint.com> - 3.1.4-0
 - Refactor `list_puppet_params` to avoid excessive looping
 
