@@ -69,7 +69,9 @@ def enforcement(key, context=self, options={"mode" => "value"}, &block)
         compile_start_time = Time.now
         profile_compiler   = compiler_class.new(self)
 
-        profile_compiler.load(options, &block)
+        # Need to grab the global map if one has been defined
+        global_compliance_map = call_function('lookup', 'compliance_markup::compliance_map', { 'default_value' => {} })
+        profile_compiler.load(options, global_compliance_map, &block)
 
         profile_map = profile_compiler.list_puppet_params(profile_list).cook do |item|
           item[options["mode"]]
@@ -123,9 +125,9 @@ end
 # These cache functions are assumed to be created by the wrapper
 # object backend.
 # Caching disabled temporarily (SIMP-9623).
-#def cached_lookup(key, default, &block)
-#  yield key, default
-#end
+def cached_lookup(key, default, &block)
+  yield key, default
+end
 
 def compiler_class()
   Class.new do
@@ -142,10 +144,12 @@ def compiler_class()
       @version = SemanticPuppet::Version.parse('2.5.0')
     end
 
-    def load(options={}, &block)
+    def load(options={}, global_compliance_map = {}, &block)
       @callback.debug("callback = #{callback.codebase}")
 
-      @compliance_data = {}
+      @compliance_data = {
+        '_global' => global_compliance_map
+      }
 
       moduleroot = File.expand_path('../../../../../', __FILE__)
       rootpaths  = {}
