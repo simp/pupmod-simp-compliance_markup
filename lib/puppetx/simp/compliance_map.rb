@@ -453,17 +453,6 @@ def custom_call_file_info
   return file_info
 end
 
-# These methods are part of the callback api for compliance engine.
-# Caching disabled temporarily (SIMP-9623).
-def cache(key, value)
-  { key => value }
-end
-def cached_value(key)
-  nil
-end
-def cache_has_key(key)
-  false
-end
 def debug(message)
   return
 end

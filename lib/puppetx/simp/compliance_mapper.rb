@@ -41,11 +41,10 @@ def enforcement(key, context=self, options={"mode" => "value"}, &block)
 
   retval = :notfound
 
-  lock = false
-  lock = context.cached_value("lock") if context.cache_has_key("lock")
+  lock = context.cached_value('_simp_compliance_markup_lock') if context.cache_has_key('_simp_compliance_markup_lock')
 
   unless lock
-    context.cache("lock", true)
+    context.cache('_simp_compliance_markup_lock', true)
 
     begin
       profile_list = call_function('lookup', 'compliance_markup::enforcement', { 'default_value' => [] })
@@ -112,7 +111,7 @@ def enforcement(key, context=self, options={"mode" => "value"}, &block)
       debug(e.message)
       debug(e.backtrace.inspect)
     ensure
-      context.cache("lock", false)
+      context.cache('_simp_compliance_markup_lock', false)
     end
   end
 
@@ -124,9 +123,9 @@ end
 # These cache functions are assumed to be created by the wrapper
 # object backend.
 # Caching disabled temporarily (SIMP-9623).
-def cached_lookup(key, default, &block)
-  yield key, default
-end
+#def cached_lookup(key, default, &block)
+#  yield key, default
+#end
 
 def compiler_class()
   Class.new do
@@ -145,10 +144,6 @@ def compiler_class()
 
     def load(options={}, &block)
       @callback.debug("callback = #{callback.codebase}")
-
-      module_scope_compliance_map = callback.cached_lookup "compliance_markup::compliance_map", {}, &block
-      top_scope_compliance_map    = callback.cached_lookup "compliance_map", {}, &block
-
 
       @compliance_data = {}
 
@@ -218,9 +213,6 @@ def compiler_class()
           end
         end
       end
-
-      @compliance_data["puppet://compliance_markup::compliance_map"] = (module_scope_compliance_map)
-      @compliance_data["puppet://compliance_map"]                    = (top_scope_compliance_map)
 
       @v2 = v2_compiler.new(callback)
 
