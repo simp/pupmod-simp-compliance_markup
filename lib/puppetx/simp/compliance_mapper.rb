@@ -122,13 +122,6 @@ def enforcement(key, context=self, options={"mode" => "value"}, &block)
   retval
 end
 
-# These cache functions are assumed to be created by the wrapper
-# object backend.
-# Caching disabled temporarily (SIMP-9623).
-def cached_lookup(key, default, &block)
-  yield key, default
-end
-
 def compiler_class()
   Class.new do
     attr_reader :compliance_data
