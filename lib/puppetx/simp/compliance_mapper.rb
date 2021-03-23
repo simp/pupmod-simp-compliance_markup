@@ -69,9 +69,7 @@ def enforcement(key, context=self, options={"mode" => "value"}, &block)
         compile_start_time = Time.now
         profile_compiler   = compiler_class.new(self)
 
-        # Need to grab the global map if one has been defined
-        global_compliance_map = call_function('lookup', 'compliance_markup::compliance_map', { 'default_value' => {} })
-        profile_compiler.load(options, global_compliance_map, &block)
+        profile_compiler.load(options, &block)
 
         profile_map = profile_compiler.list_puppet_params(profile_list).cook do |item|
           item[options["mode"]]
@@ -137,12 +135,14 @@ def compiler_class()
       @version = SemanticPuppet::Version.parse('2.5.0')
     end
 
-    def load(options={}, global_compliance_map = {}, &block)
+    def load(options={}, &block)
       @callback.debug("callback = #{callback.codebase}")
 
-      @compliance_data = {
-        '_global' => global_compliance_map
-      }
+      module_scope_compliance_map = callback.call_function('lookup', 'compliance_markup::compliance_map', { 'default_value' => {} })
+      top_scope_compliance_map    = callback.call_function('lookup', 'compliance_map', { 'default_value' => {} })
+
+
+      @compliance_data = {}
 
       moduleroot = File.expand_path('../../../../../', __FILE__)
       rootpaths  = {}
@@ -210,6 +210,9 @@ def compiler_class()
           end
         end
       end
+
+      @compliance_data["puppet://compliance_markup::compliance_map"] = (module_scope_compliance_map)
+      @compliance_data["puppet://compliance_map"]                    = (top_scope_compliance_map)
 
       @v2 = v2_compiler.new(callback)
 
