@@ -138,9 +138,8 @@ def compiler_class()
     def load(options={}, &block)
       @callback.debug("callback = #{callback.codebase}")
 
-      module_scope_compliance_map = callback.call_function('lookup', 'compliance_markup::compliance_map', { 'default_value' => {} })
-      top_scope_compliance_map    = callback.call_function('lookup', 'compliance_map', { 'default_value' => {} })
-
+      module_scope_compliance_map = block.call 'compliance_markup::compliance_map', {}
+      top_scope_compliance_map    = block.call 'compliance_map', {}
 
       @compliance_data = {}
 
