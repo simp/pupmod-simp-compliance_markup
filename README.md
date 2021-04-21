@@ -29,6 +29,7 @@ Table of Contents
 * [Enforcement](#enforcement)
   * [v5 Backend Configuration](#v5-backend-configuration)
   * [Configuring profiles to enforce](#configuring-profiles-to-enforce)
+  * [Debugging the Hiera Backend](#debugging-the-hiera-backend)
 * [Limitations](#limitations)
 * [Development](#development)
   * [Acceptance tests](#acceptance-tests)
@@ -376,6 +377,15 @@ or specfic os version.
 ---
 compliance_markup::enforcement: [ 'disa_stig', 'nist_800_53_rev4' ]
 ```
+
+### Debugging the Hiera Backend
+
+The Hiera backend exposes a debug interface to users via `lookup`. These can be used to query the library for data or metrics.
+
+| Hiera key                                              | Purpose                                                    |
+| ---------                                              | -------                                                    |
+| `compliance_markup::debug::dump`                       | Returns a Hash of all data in the Hiera backend            |
+| `compliance_markup::debug::hiera_backend_compile_time` | Returns the Hiera backend data compilation time in seconds |
 
 ## Limitations
 

@@ -31,7 +31,7 @@ def enforcement(key, context=self, options={"mode" => "value"}, &block)
   # Throw away keys we know we can't handle.
   # This also prevents recursion.
   throw :no_such_key if
-    key.start_with?('compliance_markup::') || (
+    key.match?(%r{^compliance_markup::(?!debug::)}) || (
       [
       'lookup_options',
       'compliance_map'
