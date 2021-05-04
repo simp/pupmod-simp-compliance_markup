@@ -6,6 +6,7 @@
 * Wed Apr 21 2021 Steven Pritchard <steven.pritchard@onyxpoint.com> - 3.1.5-0
 - Fix and document `compliance_markup::debug::dump` and
   `compliance_markup::debug::hiera_backend_compile_time` keys
+- Bump puppetlabs-stdlib dependency to allow version 7
 
 * Wed Feb 24 2021 Steven Pritchard <steven.pritchard@onyxpoint.com> - 3.1.4-0
 - Refactor `list_puppet_params` to avoid excessive looping
