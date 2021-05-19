@@ -57,7 +57,7 @@ def enforcement(key, context=self, options={"mode" => "value"}, &block)
           # If we have a cache for this profile, we've already found
           # everything that we're going to find.
           if context.cache_has_key(key)
-            return cached_value(key)
+            return context.cached_value(key)
           else
             throw :no_such_key
           end
@@ -86,7 +86,7 @@ def enforcement(key, context=self, options={"mode" => "value"}, &block)
         compile_end_time = Time.now
 
         profile_map["compliance_markup::debug::hiera_backend_compile_time"] = (compile_end_time - compile_start_time)
-        cache("compliance_map_#{profile}", profile_map)
+        context.cache("compliance_map_#{profile}", profile_map)
         debug("debug: compiled compliance_map containing #{profile_map.size} keys in #{compile_end_time - compile_start_time} seconds")
 
         if key == "compliance_markup::debug::dump"
