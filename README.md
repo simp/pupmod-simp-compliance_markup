@@ -384,9 +384,10 @@ The Hiera backend exposes a debug interface to users via `lookup`. These can be 
 
 | Hiera key                                              | Purpose                                                    |
 | ---------                                              | -------                                                    |
-| `compliance_markup::debug::dump`                       | Returns a Hash of all data in the Hiera backend            |
+| `compliance_markup::debug::dump`                       | Returns a Hash of all output data from the Hiera backend   |
 | `compliance_markup::debug::hiera_backend_compile_time` | Returns the Hiera backend data compilation time in seconds |
 | `compliance_markup::debug::profiles`                   | Returns an Array of the available compliance profiles      |
+| `compliance_markup::debug::compliance_data`            | Returns a Hash of compiled input data to the Hiera backend |
 
 ## Limitations
 

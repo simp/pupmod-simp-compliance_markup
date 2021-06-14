@@ -70,8 +70,16 @@ def enforcement(key, context=self, options={"mode" => "value"}, &block)
 
         profile_compiler.load(options, &block)
 
-        if key == 'compliance_markup::debug::profiles'
+        case key
+        when 'compliance_markup::debug::profiles'
           return profile_compiler.profile.keys
+        when 'compliance_markup::debug::compliance_data'
+          return {
+            'version'  => '2.0.0',
+            'profiles' => profile_compiler.profile,
+            'ce'       => profile_compiler.ce,
+            'checks'   => profile_compiler.check,
+          }
         end
 
         profile_map = profile_compiler.list_puppet_params(profile_list).cook do |item|

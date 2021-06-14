@@ -8,7 +8,7 @@ require 'fileutils'
 
 describe 'lookup' do
   # Generate a fake module with dummy data for lookup().
-  profile_yaml = {
+  profile = {
     'version' => '2.0.0',
     'profiles' => {
       '06_profile_test' => {
@@ -17,9 +17,9 @@ describe 'lookup' do
         },
       },
     },
-  }.to_yaml
+  }
 
-  ces_yaml = {
+  ces = {
     'version' => '2.0.0',
     'ce' => {
       '06_ce1' => {
@@ -28,9 +28,9 @@ describe 'lookup' do
         },
       },
     },
-  }.to_yaml
+  }
 
-  checks_yaml = {
+  checks = {
     'version' => '2.0.0',
     'checks' => {
       '06_check1' => {
@@ -54,7 +54,7 @@ describe 'lookup' do
         ],
       },
     },
-  }.to_yaml
+  }
 
   fixtures = File.expand_path('../../fixtures', __dir__)
 
@@ -62,15 +62,15 @@ describe 'lookup' do
   FileUtils.mkdir_p(compliance_dir)
 
   File.open(File.join(compliance_dir, 'profile.yaml'), 'w') do |fh|
-    fh.puts profile_yaml
+    fh.puts profile.to_yaml
   end
 
   File.open(File.join(compliance_dir, 'ces.yaml'), 'w') do |fh|
-    fh.puts ces_yaml
+    fh.puts ces.to_yaml
   end
 
   File.open(File.join(compliance_dir, 'checks.yaml'), 'w') do |fh|
-    fh.puts checks_yaml
+    fh.puts checks.to_yaml
   end
 
   on_supported_os.each do |os, os_facts|
@@ -103,6 +103,15 @@ describe 'lookup' do
         result = subject.execute('compliance_markup::debug::profiles')
         expect(result).to be_a(Array)
         expect(result).to include('06_profile_test')
+      end
+
+      it do
+        result = subject.execute('compliance_markup::debug::compliance_data')
+        expect(result).to be_a(Hash)
+        expect(result.keys).to eq(['version', 'profiles', 'ce', 'checks'])
+        expect(result['profiles']).to include(profile['profiles'])
+        expect(result['ce']).to include(ces['ce'])
+        expect(result['checks']).to include(checks['checks'])
       end
     end
   end
