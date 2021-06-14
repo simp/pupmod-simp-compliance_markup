@@ -98,6 +98,12 @@ describe 'lookup' do
           'compliance_markup::debug::hiera_backend_compile_time',
         ])
       end
+
+      it do
+        result = subject.execute('compliance_markup::debug::profiles')
+        expect(result).to be_a(Array)
+        expect(result).to include('06_profile_test')
+      end
     end
   end
 end
