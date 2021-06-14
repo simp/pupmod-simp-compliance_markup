@@ -70,6 +70,10 @@ def enforcement(key, context=self, options={"mode" => "value"}, &block)
 
         profile_compiler.load(options, &block)
 
+        if key == 'compliance_markup::debug::profiles'
+          return profile_compiler.profile.keys
+        end
+
         profile_map = profile_compiler.list_puppet_params(profile_list).cook do |item|
           item[options["mode"]]
 
