@@ -1,6 +1,6 @@
 {
   "name": "simp-compliance_markup",
-  "version": "3.2.0",
+  "version": "3.3.0",
   "author": "SIMP Team",
   "summary": "Compliance-mapping annotation for Puppet code",
   "license": "Apache-2.0",
@@ -16,7 +16,7 @@
   "dependencies": [
     {
       "name": "puppetlabs/stdlib",
-      "version_requirement": ">= 4.13.1 < 8.0.0"
+      "version_requirement": ">= 6.18.0 < 8.0.0"
     },
     {
       "name": "simp/simplib",
@@ -49,7 +49,7 @@
   "requirements": [
     {
       "name": "puppet",
-      "version_requirement": ">= 5.0.0 < 8.0.0"
+      "version_requirement": ">= 6.22.1 < 8.0.0"
     }
   ]
 }

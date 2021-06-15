@@ -1,3 +1,7 @@
+* Tue Jun 15 2021 Chris Tessmer <chris.tessmer@onyxpoint.com> - 3.3.0
+- Removed support for Puppet 5
+- Ensured support for Puppet 7 in requirements and stdlib
+
 * Mon Jun 14 2021 Steven Pritchard <steven.pritchard@onyxpoint.com> - 3.2.0
 - Add `compliance_markup::debug::profiles` and
   `compliance_markup::debug::compliance_data` keys
