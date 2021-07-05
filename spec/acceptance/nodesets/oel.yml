@@ -11,7 +11,7 @@ HOSTS:
       - server
       - default
     platform:   el-7-x86_64
-    box:        onyxpoint/oel-7-x86_64
+    box:        generic/oracle7
     hypervisor: <%= hypervisor %>
 
   oel8:
