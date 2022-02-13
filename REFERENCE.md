@@ -20,16 +20,26 @@
 
 ## Classes
 
-### `compliance_markup`
+### <a name="compliance_markup"></a>`compliance_markup`
 
 This class should be included *after* all other classes in your site so that
 the mapper can properly analyze the standing catalog.
 
 #### Parameters
 
-The following parameters are available in the `compliance_markup` class.
+The following parameters are available in the `compliance_markup` class:
 
-##### `compliance_map`
+* [`compliance_map`](#compliance_map)
+* [`validate_profiles`](#validate_profiles)
+* [`report_types`](#report_types)
+* [`report_format`](#report_format)
+* [`report_on_client`](#report_on_client)
+* [`report_on_server`](#report_on_server)
+* [`server_report_dir`](#server_report_dir)
+* [`custom_report_data`](#custom_report_data)
+* [`options`](#options)
+
+##### <a name="compliance_map"></a>`compliance_map`
 
 Data type: `Hash`
 
@@ -37,7 +47,7 @@ The compliance Hash to which to map
 
 * This defaults to *Data In Modules*
 
-##### `validate_profiles`
+##### <a name="validate_profiles"></a>`validate_profiles`
 
 Data type: `Optional[Array[String[1]]]`
 
@@ -45,7 +55,7 @@ Compliance profiles that you wish to validate against
 
 Default value: ``undef``
 
-##### `report_types`
+##### <a name="report_types"></a>`report_types`
 
 Data type: `Array[
     Enum[
@@ -71,7 +81,7 @@ The types of entries that you want to report on
 
 Default value: `['non_compliant', 'unknown_parameters', 'custom_entries']`
 
-##### `report_format`
+##### <a name="report_format"></a>`report_format`
 
 Data type: `Enum['json','yaml']`
 
@@ -79,7 +89,7 @@ The output format for the report
 
 Default value: `'json'`
 
-##### `report_on_client`
+##### <a name="report_on_client"></a>`report_on_client`
 
 Data type: `Boolean`
 
@@ -90,7 +100,7 @@ Save a copy of the report on the client as a ``File`` resource
 
 Default value: ``false``
 
-##### `report_on_server`
+##### <a name="report_on_server"></a>`report_on_server`
 
 Data type: `Boolean`
 
@@ -98,7 +108,7 @@ Save a copy of the report on the puppet server
 
 Default value: ``true``
 
-##### `server_report_dir`
+##### <a name="server_report_dir"></a>`server_report_dir`
 
 Data type: `Optional[Stdlib::Absolutepath]`
 
@@ -112,7 +122,7 @@ The path where the server should store reports
 
 Default value: ``undef``
 
-##### `custom_report_data`
+##### <a name="custom_report_data"></a>`custom_report_data`
 
 Data type: `Optional[Hash]`
 
@@ -124,7 +134,7 @@ A hash that will be included in the compliance report under the heading
 
 Default value: ``undef``
 
-##### `options`
+##### <a name="options"></a>`options`
 
 Data type: `Optional[Hash]`
 
@@ -136,7 +146,7 @@ Default value: ``undef``
 
 ## Defined types
 
-### `compliance_markup::map`
+### <a name="compliance_markupmap"></a>`compliance_markup::map`
 
 phase of the catalog compile.
 
@@ -144,9 +154,11 @@ Defines appear to be run after all classes
 
 #### Parameters
 
-The following parameters are available in the `compliance_markup::map` defined type.
+The following parameters are available in the `compliance_markup::map` defined type:
 
-##### `options`
+* [`options`](#options)
+
+##### <a name="options"></a>`options`
 
 Data type: `Hash`
 
@@ -156,7 +168,7 @@ Default value: `{}`
 
 ## Functions
 
-### `compliance_markup::compliance_map`
+### <a name="compliance_markupcompliance_map"></a>`compliance_markup::compliance_map`
 
 Type: Ruby 4.x API
 
@@ -367,7 +379,7 @@ Data type: `Optional[String[1]]`
 
 Allows for arbitrary notes to include in the compliance report
 
-### `compliance_markup::enforcement`
+### <a name="compliance_markupenforcement"></a>`compliance_markup::enforcement`
 
 Type: Ruby 4.x API
 
@@ -459,7 +471,7 @@ Data type: `Puppet::LookupContext`
 
 The context in which the Hiera backend is being called
 
-### `compliance_markup::loaded_maps`
+### <a name="compliance_markuploaded_maps"></a>`compliance_markup::loaded_maps`
 
 Type: Ruby 4.x API
 
