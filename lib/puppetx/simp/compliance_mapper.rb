@@ -336,9 +336,25 @@ def compiler_class()
                     end
 
                     fact_value = @callback.lookup_fact(confinement_setting)
-                    unless confinement_value.is_a?(Array) ? confinement_value.include?(fact_value) : (fact_value == confinement_value)
-                      delete_item = true
-                      throw :confine_end
+                    #require 'pry-byebug'; binding.pry() if confinement_value == ['--RedHat'] && fact_value == 'CentOS'
+                    if confinement_value.is_a?(Array)
+                      confined = false
+                      confinement_value.delete_if{ |confinement| !confinement.match(%r{^--}) && !fact_value.include?(confinement) }
+                      confinement_value.each do |confinement|
+                        if confinement.match(%r{^--})
+                          confined = true if fact_value.include?(confinement[2..-1])
+                        end
+                      end
+
+                      if confined || confinement_value.empty?
+                        delete_item = true
+                        throw :confine_end
+                      end
+                    else
+                      unless confinement_value.match(%r{^--}) ? (fact_value != confinement_value[2..-1]) : (fact_value == confinement_value)
+                        delete_item = true
+                        throw :confine_end
+                      end  
                     end
                   end
                 end
