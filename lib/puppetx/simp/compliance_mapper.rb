@@ -287,6 +287,30 @@ def compiler_class()
           @profile_list
         end
 
+        def fact_match(fact_value, confinement_value)
+          #require 'pry-byebug'; binding.pry() if confinement_value == ['--RedHat', 'CentOS']
+          def string_match(fact_value, confinement_value)
+            return fact_value != confinement_value.delete_prefix('--') if confinement_value.start_with?('--')
+
+            fact_value == confinement_value
+          end
+
+          case confinement_value.class.to_s
+          when 'Array'
+            return confinement_value.any? do |value|
+              if value.is_a?(Array)
+                fact_value == value
+              else
+                fact_match(fact_value, value)
+              end
+            end
+          when 'String'
+            return string_match(fact_value, confinement_value)
+          else
+            return fact_value == confinement_value
+          end
+        end
+
         def apply_confinement(value)
           value.delete_if do |_key, specification|
             delete_item = false
@@ -306,6 +330,7 @@ def compiler_class()
                   end
 
                   confine.each do |confinement_setting, confinement_value|
+                    fact_value = @callback.lookup_fact(confinement_setting)
                     if confinement_setting == 'module_name'
                       known_module = @callback.module_list.select { |obj| obj['name'] == confinement_value }
 
@@ -335,23 +360,25 @@ def compiler_class()
                       end
                     end
 
-                    fact_value = @callback.lookup_fact(confinement_setting)
-                    unless fact_value.nil?
-                      if confinement_value.is_a?(Array)
-                        confined = false
-                        confinement_value.delete_if{ |confinement| !confinement.match(%r{^--}) && !fact_value.include?(confinement) }
-                        confinement_value.map{ |confinement| confined = true if (confinement.match(%r{^--}) && fact_value.include?(confinement[2..-1])) }
+                    # if confinement_value.is_a?(Array)
+                    #   confined = false
+                    #   confinement_value.delete_if{ |confinement| !confinement.match(%r{^--}) && !fact_value.include?(confinement) }
+                    #   confinement_value.map{ |confinement| confined = true if (confinement.match(%r{^--}) && fact_value.include?(confinement[2..-1])) }
 
-                        if confined || confinement_value.empty?
-                          delete_item = true
-                          throw :confine_end
-                        end
-                      else
-                        unless confinement_value.match(%r{^--}) ? (fact_value != confinement_value[2..-1]) : (fact_value == confinement_value)
-                          delete_item = true
-                          throw :confine_end
-                        end
-                      end
+                    #   if confined || confinement_value.empty?
+                    #     delete_item = true
+                    #     throw :confine_end
+                    #   end
+                    # else
+                    #   unless confinement_value.match(%r{^--}) ? (fact_value != confinement_value[2..-1]) : (fact_value == confinement_value)
+                    #     delete_item = true
+                    #     throw :confine_end
+                    #   end
+                    # end
+                    next if fact_value.nil?
+                    unless fact_match(fact_value, confinement_value)
+                      delete_item = true
+                      throw :confine_end
                     end
                   end
                 end
