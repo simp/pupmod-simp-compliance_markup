@@ -356,6 +356,12 @@ pup6.pe-oel:
   script:
     - 'bundle exec rake beaker:suites[default,oel]'
 
+pup6.pe-amzn2:
+  <<: *pup_6_pe
+  <<: *acceptance_base
+  script:
+    - 'bundle exec rake beaker:suites[default,amzn2]'
+
 pup6.pe-oel-fips:
   <<: *pup_6_pe
   <<: *acceptance_base
