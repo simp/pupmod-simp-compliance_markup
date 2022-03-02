@@ -330,7 +330,6 @@ def compiler_class()
                   end
 
                   confine.each do |confinement_setting, confinement_value|
-                    fact_value = @callback.lookup_fact(confinement_setting)
                     if confinement_setting == 'module_name'
                       known_module = @callback.module_list.select { |obj| obj['name'] == confinement_value }
 
@@ -360,21 +359,7 @@ def compiler_class()
                       end
                     end
 
-                    # if confinement_value.is_a?(Array)
-                    #   confined = false
-                    #   confinement_value.delete_if{ |confinement| !confinement.match(%r{^--}) && !fact_value.include?(confinement) }
-                    #   confinement_value.map{ |confinement| confined = true if (confinement.match(%r{^--}) && fact_value.include?(confinement[2..-1])) }
-
-                    #   if confined || confinement_value.empty?
-                    #     delete_item = true
-                    #     throw :confine_end
-                    #   end
-                    # else
-                    #   unless confinement_value.match(%r{^--}) ? (fact_value != confinement_value[2..-1]) : (fact_value == confinement_value)
-                    #     delete_item = true
-                    #     throw :confine_end
-                    #   end
-                    # end
+                    fact_value = @callback.lookup_fact(confinement_setting)
                     next if fact_value.nil?
                     unless fact_match(fact_value, confinement_value)
                       delete_item = true
