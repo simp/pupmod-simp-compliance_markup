@@ -288,7 +288,6 @@ def compiler_class()
         end
 
         def fact_match(fact_value, confinement_value)
-          #require 'pry-byebug'; binding.pry() if confinement_value == ['--RedHat', 'CentOS']
           def string_match(fact_value, confinement_value)
             return fact_value != confinement_value.delete_prefix('--') if confinement_value.start_with?('--')
 
