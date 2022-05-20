@@ -64,6 +64,19 @@ describe 'lookup' do
           'os.family' => 'RedHat',
         },
       },
+      '01_el_negative_check'       => {
+        'type'     => 'puppet-class-parameter',
+        'settings' => {
+          'parameter' => 'test_module_01::is_not_el',
+          'value'     => true,
+        },
+        'ces'      => [
+          '01_ce2',
+        ],
+        'confine'  => {
+          'os.family' => '!RedHat',
+        },
+      },
       '01_el7_check'      => {
         'type'     => 'puppet-class-parameter',
         'settings' => {
@@ -76,6 +89,39 @@ describe 'lookup' do
         'confine'  => {
           'os.name'          => [
             'RedHat',
+            'CentOS',
+          ],
+          'os.release.major' => '7',
+        },
+      },
+      '01_el7_negative_check'      => {
+        'type'     => 'puppet-class-parameter',
+        'settings' => {
+          'parameter' => 'test_module_01::not_el_version',
+          'value'     => '7',
+        },
+        'ces'      => [
+          '01_ce2',
+        ],
+        'confine'  => {
+          'os.name'          => [
+            '!RedHat',
+          ],
+          'os.release.major' => '7',
+        },
+      },
+      '01_el7_negative_mixed_check'      => {
+        'type'     => 'puppet-class-parameter',
+        'settings' => {
+          'parameter' => 'test_module_01::not_el_centos_version',
+          'value'     => '7',
+        },
+        'ces'      => [
+          '01_ce2',
+        ],
+        'confine'  => {
+          'os.name'          => [
+            '!RedHat',
             'CentOS',
           ],
           'os.release.major' => '7',
@@ -126,11 +172,37 @@ describe 'lookup' do
         it { is_expected.to run.with_params('test_module_01::is_el').and_raise_error(Puppet::DataBinding::LookupError, "Function lookup() did not find a value for the name 'test_module_01::is_el'") }
       end
 
+      # Test for confine on a single fact in checks.
+      if os_facts[:osfamily] != 'RedHat'
+        it { is_expected.to run.with_params('test_module_01::is_not_el').and_return(true) }
+      else
+        it { is_expected.to run.with_params('test_module_01::is_not_el').and_raise_error(Puppet::DataBinding::LookupError, "Function lookup() did not find a value for the name 'test_module_01::is_not_el'") }
+      end
+
       # Test for confine on multiple facts and an array of facts in checks.
       if (os_facts[:os][:name] == 'RedHat' || os_facts[:os][:name] == 'CentOS') && os_facts[:operatingsystemmajrelease] == '7'
         it { is_expected.to run.with_params('test_module_01::el_version').and_return('7') }
       else
         it { is_expected.to run.with_params('test_module_01::el_version').and_raise_error(Puppet::DataBinding::LookupError, "Function lookup() did not find a value for the name 'test_module_01::el_version'") }
+      end
+
+      # Test for confine on multiple facts and a negative fact match.
+      if (os_facts[:os][:name] != 'RedHat') && os_facts[:operatingsystemmajrelease] == '7'
+        it { is_expected.to run.with_params('test_module_01::not_el_version').and_return('7') }
+      else
+        it { is_expected.to run.with_params('test_module_01::not_el_version').and_raise_error(Puppet::DataBinding::LookupError, "Function lookup() did not find a value for the name 'test_module_01::not_el_version'") }
+      end
+
+      # Test for confine on multiple facts and a negative fact match mixed with a positive one.
+      # TODO: This does not currently work as one might expect. This will still positively match OracleLinux even though
+      # we ask for OS names that aren't RedHat but are CentOS. The array we're confining can only do an OR operation rather
+      # than an AND with a negative lookup.
+      if (os_facts[:os][:name] != 'RedHat') && (os_facts[:os][:name] == 'CentOS') && os_facts[:operatingsystemmajrelease] == '7'
+        it { is_expected.to run.with_params('test_module_01::not_el_centos_version').and_return('7') }
+      elsif (os_facts[:os][:name] != 'RedHat') && (os_facts[:os][:name] != 'CentOS') && os_facts[:operatingsystemmajrelease] == '7'
+        it { is_expected.to run.with_params('test_module_01::not_el_centos_version').and_return('7') }
+      else
+        it { is_expected.to run.with_params('test_module_01::not_el_centos_version').and_raise_error(Puppet::DataBinding::LookupError, "Function lookup() did not find a value for the name 'test_module_01::not_el_centos_version'") }
       end
 
       # Test for confine on module name & module version in ce.

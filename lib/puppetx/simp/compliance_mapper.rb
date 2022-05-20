@@ -287,6 +287,29 @@ def compiler_class()
           @profile_list
         end
 
+        def fact_match(fact_value, confinement_value)
+          def string_match(fact_value, confinement_value)
+            return fact_value != confinement_value.delete_prefix('!') if confinement_value.start_with?('!')
+
+            fact_value == confinement_value
+          end
+
+          case confinement_value.class.to_s
+          when 'Array'
+            return confinement_value.any? do |value|
+              if value.is_a?(Array)
+                fact_value == value
+              else
+                fact_match(fact_value, value)
+              end
+            end
+          when 'String'
+            return string_match(fact_value, confinement_value)
+          else
+            return fact_value == confinement_value
+          end
+        end
+
         def apply_confinement(value)
           value.delete_if do |_key, specification|
             delete_item = false
@@ -336,7 +359,8 @@ def compiler_class()
                     end
 
                     fact_value = @callback.lookup_fact(confinement_setting)
-                    unless confinement_value.is_a?(Array) ? confinement_value.include?(fact_value) : (fact_value == confinement_value)
+                    next if fact_value.nil?
+                    unless fact_match(fact_value, confinement_value)
                       delete_item = true
                       throw :confine_end
                     end
