@@ -99,7 +99,7 @@ describe 'lookup' do
         'settings' => {
           'parameter' => 'test_module_03::hash_param',
           'value'     => {
-            'hash key 2' => 'hash value 2',
+            'hash key 2' => '\-- hash value 2',
           },
         },
         'ces'      => [
@@ -173,7 +173,7 @@ describe 'lookup' do
       it { is_expected.to run.with_params('test_module_03::array_param').and_return(['array value 2', 'array value 1']) }
 
       # Test a simple hash.
-      it { is_expected.to run.with_params('test_module_03::hash_param').and_return({'hash key 1' => 'hash value 1', 'hash key 2' => 'hash value 2'}) }
+      it { is_expected.to run.with_params('test_module_03::hash_param').and_return({'hash key 1' => 'hash value 1', 'hash key 2' => '-- hash value 2'}) }
 
       # Test a nested hash.
       it { is_expected.to run.with_params('test_module_03::nested_hash').and_return({'key' => { 'key1' => 'value1', 'key2' => 'value2'}}) }
@@ -196,7 +196,7 @@ describe 'lookup' do
       it { is_expected.to run.with_params('test_module_03::array_param').and_return(['array value 1', 'array value 2']) }
 
       # Test a simple hash.
-      it { is_expected.to run.with_params('test_module_03::hash_param').and_return({'hash key 2' => 'hash value 2', 'hash key 1' => 'hash value 1'}) }
+      it { is_expected.to run.with_params('test_module_03::hash_param').and_return({'hash key 2' => '-- hash value 2', 'hash key 1' => 'hash value 1'}) }
 
       # Test a nested hash.
       it { is_expected.to run.with_params('test_module_03::nested_hash').and_return({'key' => { 'key1' => 'value2', 'key2' => 'value2'}}) }
