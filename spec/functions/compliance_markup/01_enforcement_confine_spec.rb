@@ -74,7 +74,7 @@ describe 'lookup' do
           '01_ce2',
         ],
         'confine'  => {
-          'os.family' => '--RedHat',
+          'os.family' => '!RedHat',
         },
       },
       '01_el7_check'      => {
@@ -105,7 +105,7 @@ describe 'lookup' do
         ],
         'confine'  => {
           'os.name'          => [
-            '--RedHat',
+            '!RedHat',
           ],
           'os.release.major' => '7',
         },
@@ -121,7 +121,7 @@ describe 'lookup' do
         ],
         'confine'  => {
           'os.name'          => [
-            '--RedHat',
+            '!RedHat',
             'CentOS',
           ],
           'os.release.major' => '7',
