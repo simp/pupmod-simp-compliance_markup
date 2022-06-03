@@ -1,3 +1,6 @@
+* Fri Jun 03 2022 Mike Riddle <mike@sicure.us> - 3.2.3
+- Updated reporting to account for escaped dashes
+
 * Fri May 20 2022 Trevor Vaughan <trevor@sicura.us> - 3.2.2
 - Allow for escaping knockout prefixes in strings to preserve leading `--`
   entries

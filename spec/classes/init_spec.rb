@@ -163,6 +163,10 @@ describe 'compliance_markup' do
                   ) { }
                 }
 
+                class test4 (
+                  $list1 = ['item1','item2'],
+                ){ }
+
                 define testdef1 (
                   $defarg1_1 = 'deffoo1_1'
                 ) {
@@ -184,6 +188,7 @@ describe 'compliance_markup' do
 
                 include 'test1'
                 include 'test2::test3'
+                include 'test4'
 
                 testdef1 { 'test_definition': }
                 testdef2 { 'test_definition': defarg1_2 => 'test_bad' }
@@ -212,6 +217,10 @@ describe 'compliance_markup' do
                   ) { }
                 }
 
+                class test4 (
+                  $list1 = ['item1','item2'],
+                ){ }
+
                 define testdef1 (
                   $defarg1_1 = 'deffoo1_1'
                 ) {
@@ -233,6 +242,7 @@ describe 'compliance_markup' do
 
                 include '::test1'
                 include '::test2::test3'
+                include '::test4'
 
                 testdef1 { 'test_definition': }
                 testdef2 { 'test_definition': defarg1_2 => 'test_bad' }
@@ -637,6 +647,49 @@ describe 'compliance_markup' do
                   # The bad defined type causes this
                   expect( report['compliance_profiles'][profile_name]['summary']['percent_compliant'] ).to eq(75)
                 end
+              end
+            end
+
+            context 'when an option in test4 has an escaped knockout prefix' do
+              before(:all) do
+                activate_data('escaped_knockout')
+              end
+
+              after(:all) do
+                remove_data
+              end
+
+              let(:params) { @default_params }
+
+              let(:facts) {
+                os_facts.merge(
+                  {
+                    :target_compliance_profile => profile_name
+                  }
+                )
+              }
+
+              let(:hieradata) { 'compliance-engine' }
+
+              let(:human_name) { 'Class[Test4]' }
+
+              let(:params) {
+                _params = Marshal.load(Marshal.dump(@default_params))
+
+                _params['options'].merge!(
+                  {
+                    'client_report' => true,
+                    'report_types'  => ['full']
+                  }
+                )
+
+                _params
+              }
+
+              it { is_expected.to(create_class('compliance_markup')) }
+              
+              it 'should have 0 non_compliant parameters' do
+                expect( report['compliance_profiles'][profile_name]['summary']['non_compliant'] ).to eq(0)
               end
             end
 
