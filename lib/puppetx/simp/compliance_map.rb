@@ -311,6 +311,12 @@ def compliance_map(args, context)
           # ie, functions or built ins.
           if profile_settings.key?('value')
             expected_value = profile_settings['value']
+
+            # Allow for escaping knockout prefixes that we want to preserve in strings
+            # NOTE: This is horrible but less horrible than traversing all manner of
+            # data structures recursively.
+            expected_value = JSON.load(expected_value.to_json.gsub('\\--', '--'))
+
             result = {
                 'compliant_value' => expected_value,
                 'system_value'    => current_value,
