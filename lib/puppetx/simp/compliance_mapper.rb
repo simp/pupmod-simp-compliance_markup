@@ -47,6 +47,7 @@ def enforcement(key, context=self, options={"mode" => "value"}, &block)
 
     begin
       profile_list = Array(call_function('lookup', 'compliance_markup::enforcement', { 'default_value' => [] }))
+      options[:tolerance_setting] = Integer(call_function('lookup', 'compliance_markup::enforcement_tolerance_level', { 'default_value' => 40 }))
 
       unless profile_list == []
         debug("debug: compliance_markup::enforcement set to #{profile_list}, attempting to enforce")
@@ -229,6 +230,7 @@ def compiler_class()
       @compliance_data.each do |filename, map|
         if map.key?("version")
           version = SemanticPuppet::Version.parse(map["version"])
+          map["tolerance_setting"] = options[:tolerance_setting]
 
           if version.major == 2
             v2.import(filename, map)
@@ -367,6 +369,22 @@ def compiler_class()
                   end
                 end
               end
+              if specification.key?('remediation') && !delete_item
+                remediation_hash = specification['remediation']
+                if remediation_hash && @tolerance_setting
+                  highest_saved_risk = 0
+                  remediation_hash = remediation_hash.first if remediation_hash.instance_of?(Array)
+                  next if remediation_hash.nil?
+                  delete_item = true if remediation_hash.keys.include?('disabled')
+                  next unless remediation_hash.keys.include?('risk')
+    
+                  risk_level = remediation_hash['risk'].first['level']
+                  if risk_level >= highest_saved_risk && (@tolerance_setting <= risk_level)
+                    highest_saved_risk = risk_level
+                    delete_item = true
+                  end
+                end
+              end
             end
 
             delete_item
@@ -377,6 +395,7 @@ def compiler_class()
 
         def import(filename, data)
           data.each do |key, value|
+            @tolerance_setting = data["tolerance_setting"] if data.key? "tolerance_setting"
             apply_confinement(value) if value.is_a?(Hash)
 
             case key
