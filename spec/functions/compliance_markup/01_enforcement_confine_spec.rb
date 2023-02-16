@@ -77,6 +77,96 @@ describe 'lookup' do
           'os.family' => '!RedHat',
         },
       },
+      '01_el_disabled_check'       => {
+        'type'     => 'puppet-class-parameter',
+        'settings' => {
+          'parameter' => 'test_module_01::is_disabled',
+          'value'     => true,
+        },
+        'ces'      => [
+          '01_ce2',
+        ],
+        'confine'  => {
+          'os.family' => 'RedHat',
+        },
+        'remediation' => {
+          'disabled' => [
+            {'reason'=> "This is the reason this check is disabled."}
+          ]
+        },
+      },
+      '01_el_level_21_check'       => {
+        'type'     => 'puppet-class-parameter',
+        'settings' => {
+          'parameter' => 'test_module_01::is_level_21',
+          'value'     => true,
+        },
+        'ces'      => [
+          '01_ce2',
+        ],
+        'confine'  => {
+          'os.family' => 'RedHat',
+        },
+        'remediation' => {
+          'risk' => [
+            {'level'=> 21}
+          ]
+        },
+      },
+      '01_el_level_41_check'       => {
+        'type'     => 'puppet-class-parameter',
+        'settings' => {
+          'parameter' => 'test_module_01::is_level_41',
+          'value'     => true,
+        },
+        'ces'      => [
+          '01_ce2',
+        ],
+        'confine'  => {
+          'os.family' => 'RedHat',
+        },
+        'remediation' => {
+          'risk' => [
+            {'level'=> 41, 'reason'=> 'this is the reason for level 41'}
+          ]
+        },
+      },
+      '01_el_level_61_check'       => {
+        'type'     => 'puppet-class-parameter',
+        'settings' => {
+          'parameter' => 'test_module_01::is_level_61',
+          'value'     => true,
+        },
+        'ces'      => [
+          '01_ce2',
+        ],
+        'confine'  => {
+          'os.family' => 'RedHat',
+        },
+        'remediation' => {
+          'risk' => [
+            {'level'=> 61, 'reason'=> 'this is the reason for level 61'}
+          ]
+        },
+      },
+      '01_el_level_81_check'       => {
+        'type'     => 'puppet-class-parameter',
+        'settings' => {
+          'parameter' => 'test_module_01::is_level_81',
+          'value'     => true,
+        },
+        'ces'      => [
+          '01_ce2',
+        ],
+        'confine'  => {
+          'os.family' => 'RedHat',
+        },
+        'remediation' => {
+          'risk' => [
+            {'level'=> 81, 'reason'=> 'this is the reason for level 81'}
+          ]
+        },
+      },
       '01_el7_check'      => {
         'type'     => 'puppet-class-parameter',
         'settings' => {
@@ -207,6 +297,16 @@ describe 'lookup' do
 
       # Test for confine on module name & module version in ce.
       it { is_expected.to run.with_params('test_module_01::fixed_confines').and_raise_error(Puppet::DataBinding::LookupError, "Function lookup() did not find a value for the name 'test_module_01::fixed_confines'") }
+    end
+
+    context "on #{os} with compliance_markup::::enforcement and an existing profile using tolerance level 21" do
+      let(:facts) do
+        os_facts.merge('target_compliance_profile' => '01_profile_test')
+      end
+
+      let(:hieradata) { 'compliance-engine' }
+      binding.pry
+      puts 'test'
     end
   end
 end

@@ -378,6 +378,25 @@ or specfic os version.
 compliance_markup::enforcement: [ 'disa_stig', 'nist_800_53_rev4' ]
 ```
 
+### Configuring enforcement tolerance
+
+Certain checks have a built-in safety mechanism built in called 'enforcement tolerance' this allows the user to define what level of risk they wish to enfoce and based on their tolerance level.
+
+The default enforcement tolerance is `40`. This will allow enforcement of any checks that can not cause any access restrictions or breakages to a system. If you wish to enforce checks that are more dangerous or less dangerous, you can override this default value but using:
+
+```yaml
+---
+compliance_markup::enforcement_tolerance_level: 40
+```
+
+Valid levels are:
+
+- 20: Remediation works fine on all systems, changes will be made.
+- 40: Remediation works, minor issues may arise in special cases
+- 60: May cause login or access issues on system
+- 80: Breaking remediation changes will be enforced
+
+
 ### Debugging the Hiera Backend
 
 The Hiera backend exposes a debug interface to users via `lookup`. These can be used to query the library for data or metrics.
