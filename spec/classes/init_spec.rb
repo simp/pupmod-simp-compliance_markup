@@ -664,7 +664,8 @@ describe 'compliance_markup' do
               let(:facts) {
                 os_facts.merge(
                   {
-                    :target_compliance_profile => profile_name
+                    :target_compliance_profile => profile_name,
+                    :target_enforcement_tolerance => 40
                   }
                 )
               }

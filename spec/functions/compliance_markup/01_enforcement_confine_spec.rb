@@ -77,7 +77,7 @@ describe 'lookup' do
           'os.family' => '!RedHat',
         },
       },
-      '01_el_disabled_check'       => {
+      '01_disabled_check' => {
         'type'     => 'puppet-class-parameter',
         'settings' => {
           'parameter' => 'test_module_01::is_disabled',
@@ -86,16 +86,13 @@ describe 'lookup' do
         'ces'      => [
           '01_ce2',
         ],
-        'confine'  => {
-          'os.family' => 'RedHat',
-        },
         'remediation' => {
           'disabled' => [
             {'reason'=> "This is the reason this check is disabled."}
           ]
         },
       },
-      '01_el_level_21_check'       => {
+      '01_level_21_check' => {
         'type'     => 'puppet-class-parameter',
         'settings' => {
           'parameter' => 'test_module_01::is_level_21',
@@ -104,16 +101,13 @@ describe 'lookup' do
         'ces'      => [
           '01_ce2',
         ],
-        'confine'  => {
-          'os.family' => 'RedHat',
-        },
         'remediation' => {
           'risk' => [
             {'level'=> 21}
           ]
         },
       },
-      '01_el_level_41_check'       => {
+      '01_level_41_check' => {
         'type'     => 'puppet-class-parameter',
         'settings' => {
           'parameter' => 'test_module_01::is_level_41',
@@ -122,16 +116,13 @@ describe 'lookup' do
         'ces'      => [
           '01_ce2',
         ],
-        'confine'  => {
-          'os.family' => 'RedHat',
-        },
         'remediation' => {
           'risk' => [
             {'level'=> 41, 'reason'=> 'this is the reason for level 41'}
           ]
         },
       },
-      '01_el_level_61_check'       => {
+      '01_level_61_check' => {
         'type'     => 'puppet-class-parameter',
         'settings' => {
           'parameter' => 'test_module_01::is_level_61',
@@ -140,16 +131,13 @@ describe 'lookup' do
         'ces'      => [
           '01_ce2',
         ],
-        'confine'  => {
-          'os.family' => 'RedHat',
-        },
         'remediation' => {
           'risk' => [
             {'level'=> 61, 'reason'=> 'this is the reason for level 61'}
           ]
         },
       },
-      '01_el_level_81_check'       => {
+      '01_level_81_check' => {
         'type'     => 'puppet-class-parameter',
         'settings' => {
           'parameter' => 'test_module_01::is_level_81',
@@ -158,16 +146,13 @@ describe 'lookup' do
         'ces'      => [
           '01_ce2',
         ],
-        'confine'  => {
-          'os.family' => 'RedHat',
-        },
         'remediation' => {
           'risk' => [
             {'level'=> 81, 'reason'=> 'this is the reason for level 81'}
           ]
         },
       },
-      '01_el7_check'      => {
+      '01_el7_check' => {
         'type'     => 'puppet-class-parameter',
         'settings' => {
           'parameter' => 'test_module_01::el_version',
@@ -177,7 +162,7 @@ describe 'lookup' do
           '01_ce2',
         ],
         'confine'  => {
-          'os.name'          => [
+          'os.name'  => [
             'RedHat',
             'CentOS',
           ],
@@ -254,7 +239,6 @@ describe 'lookup' do
       end
 
       let(:hieradata) { 'compliance-engine' }
-
       # Test for confine on a single fact in checks.
       if os_facts[:osfamily] == 'RedHat'
         it { is_expected.to run.with_params('test_module_01::is_el').and_return(true) }
@@ -297,16 +281,60 @@ describe 'lookup' do
 
       # Test for confine on module name & module version in ce.
       it { is_expected.to run.with_params('test_module_01::fixed_confines').and_raise_error(Puppet::DataBinding::LookupError, "Function lookup() did not find a value for the name 'test_module_01::fixed_confines'") }
+
+
     end
 
-    context "on #{os} with compliance_markup::::enforcement and an existing profile using tolerance level 21" do
+    context "on #{os} with compliance_markup::::enforcement and an existing profile using tolerance above level 21" do
+        let(:facts) do
+          os_facts.merge('target_compliance_profile' => '01_profile_test', 'target_enforcement_tolerance' => "22")
+        end
+        let(:hieradata) { 'compliance-engine' }
+        
+        it { is_expected.to run.with_params('test_module_01::is_disabled').and_raise_error(Puppet::DataBinding::LookupError, "Function lookup() did not find a value for the name 'test_module_01::is_disabled'") }
+        it { is_expected.to run.with_params('test_module_01::is_level_21').and_return(true) }
+        it { is_expected.to run.with_params('test_module_01::is_level_41').and_raise_error(Puppet::DataBinding::LookupError, "Function lookup() did not find a value for the name 'test_module_01::is_level_41'") }
+        it { is_expected.to run.with_params('test_module_01::is_level_61').and_raise_error(Puppet::DataBinding::LookupError, "Function lookup() did not find a value for the name 'test_module_01::is_level_61'") }
+        it { is_expected.to run.with_params('test_module_01::is_level_81').and_raise_error(Puppet::DataBinding::LookupError, "Function lookup() did not find a value for the name 'test_module_01::is_level_81'") }
+    end
+    
+    context "on #{os} with compliance_markup::::enforcement and an existing profile using tolerance above level 41" do
       let(:facts) do
-        os_facts.merge('target_compliance_profile' => '01_profile_test')
+        os_facts.merge('target_compliance_profile' => '01_profile_test', 'target_enforcement_tolerance' => "42")
       end
-
       let(:hieradata) { 'compliance-engine' }
-      binding.pry
-      puts 'test'
+      
+      it { is_expected.to run.with_params('test_module_01::is_disabled').and_raise_error(Puppet::DataBinding::LookupError, "Function lookup() did not find a value for the name 'test_module_01::is_disabled'") }
+      it { is_expected.to run.with_params('test_module_01::is_level_21').and_return(true) }
+      it { is_expected.to run.with_params('test_module_01::is_level_41').and_return(true) }
+      it { is_expected.to run.with_params('test_module_01::is_level_61').and_raise_error(Puppet::DataBinding::LookupError, "Function lookup() did not find a value for the name 'test_module_01::is_level_61'") }
+      it { is_expected.to run.with_params('test_module_01::is_level_81').and_raise_error(Puppet::DataBinding::LookupError, "Function lookup() did not find a value for the name 'test_module_01::is_level_81'") }
+    end
+
+    context "on #{os} with compliance_markup::::enforcement and an existing profile using tolerance above level 61" do
+      let(:facts) do
+        os_facts.merge('target_compliance_profile' => '01_profile_test', 'target_enforcement_tolerance' => "62")
+      end
+      let(:hieradata) { 'compliance-engine' }
+      
+      it { is_expected.to run.with_params('test_module_01::is_disabled').and_raise_error(Puppet::DataBinding::LookupError, "Function lookup() did not find a value for the name 'test_module_01::is_disabled'") }
+      it { is_expected.to run.with_params('test_module_01::is_level_21').and_return(true) }
+      it { is_expected.to run.with_params('test_module_01::is_level_41').and_return(true) }
+      it { is_expected.to run.with_params('test_module_01::is_level_61').and_return(true) }
+      it { is_expected.to run.with_params('test_module_01::is_level_81').and_raise_error(Puppet::DataBinding::LookupError, "Function lookup() did not find a value for the name 'test_module_01::is_level_81'") }
+    end
+
+    context "on #{os} with compliance_markup::::enforcement and an existing profile using tolerance above level 81" do
+      let(:facts) do
+        os_facts.merge('target_compliance_profile' => '01_profile_test', 'target_enforcement_tolerance' => "82")
+      end
+      let(:hieradata) { 'compliance-engine' }
+      
+      it { is_expected.to run.with_params('test_module_01::is_disabled').and_raise_error(Puppet::DataBinding::LookupError, "Function lookup() did not find a value for the name 'test_module_01::is_disabled'") }
+      it { is_expected.to run.with_params('test_module_01::is_level_21').and_return(true) }
+      it { is_expected.to run.with_params('test_module_01::is_level_41').and_return(true) }
+      it { is_expected.to run.with_params('test_module_01::is_level_61').and_return(true) }
+      it { is_expected.to run.with_params('test_module_01::is_level_81').and_return(true) }
     end
   end
 end
