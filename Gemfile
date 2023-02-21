@@ -15,6 +15,7 @@ group :test do
   major_puppet_version = puppet_version.scan(/(\d+)(?:\.|\Z)/).flatten.first.to_i
   gem 'rake'
   gem 'puppet', puppet_version
+  gem 'facter', ENV['FACTER_GEM_VERSION'] || '~> 4.2.0'
   gem 'rspec'
   gem 'rspec-puppet'
   gem 'hiera-puppet-helper'
