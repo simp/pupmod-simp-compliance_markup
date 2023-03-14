@@ -49,6 +49,8 @@ def enforcement(key, context=self, options={"mode" => "value"}, &block)
       profile_list = Array(call_function('lookup', 'compliance_markup::enforcement', { 'default_value' => [] }))
       begin
         tolerance_setting = call_function('lookup', 'compliance_markup::enforcement_tolerance_level')
+      rescue
+        tolerance_setting = nil
       end
       options[:tolerance_setting] = tolerance_setting.to_i unless tolerance_setting.nil?      
 
