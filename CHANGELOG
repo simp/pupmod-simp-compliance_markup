@@ -1,3 +1,7 @@
+* Thu Mar 14 2023 Garrett Adams <garrett@sicure.us> - 3.3.1
+- Change enforcement tolerance to be nil if not specified, by default.
+  nil will ignore any remediation/disabled checks.
+
 * Thu Feb 16 2023 Garrett Adams <garrett@sicure.us> - 3.3.0
 - Add tolerance as hiera lookup. Confine checks that can be enforced
   based on the tolerance setting.
