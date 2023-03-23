@@ -15,7 +15,6 @@ group :test do
   major_puppet_version = puppet_version.scan(/(\d+)(?:\.|\Z)/).flatten.first.to_i
   gem 'rake'
   gem 'puppet', puppet_version
-  gem 'facter', ENV['FACTER_GEM_VERSION'] || '~> 4.2.0'
   gem 'rspec'
   gem 'rspec-puppet'
   gem 'hiera-puppet-helper'
@@ -39,7 +38,8 @@ end
 group :system_tests do
   gem 'beaker'
   gem 'beaker-rspec'
-  gem 'simp-beaker-helpers', ENV['SIMP_BEAKER_HELPERS_VERSION'] || ['>= 1.23.2', '< 2']
+  gem 'simp-beaker-helpers', ENV['SIMP_BEAKER_HELPERS_VERSION'] || ['>= 1.28.0', '< 2']
+  gem 'bcrypt_pbkdf'
 end
 
 # Evaluate extra gemfiles if they exist
