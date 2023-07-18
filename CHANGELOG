@@ -1,3 +1,6 @@
+* Mon Jul 17 2023 Chris Tessmer <chris.tessmer@onyxpoint.com> - 3.4.0
+- Add RockyLinux 8 support
+
 * Tue Mar 14 2023 Garrett Adams <garrett@sicure.us> - 3.3.1
 - Change enforcement tolerance to be nil if not specified, by default.
   nil will ignore any remediation/disabled checks.
