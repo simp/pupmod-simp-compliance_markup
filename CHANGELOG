@@ -1,3 +1,24 @@
+* Mon Jul 17 2023 Chris Tessmer <chris.tessmer@onyxpoint.com> - 3.4.0
+- Add RockyLinux 8 support
+
+* Tue Mar 14 2023 Garrett Adams <garrett@sicure.us> - 3.3.1
+- Change enforcement tolerance to be nil if not specified, by default.
+  nil will ignore any remediation/disabled checks.
+
+* Thu Feb 16 2023 Garrett Adams <garrett@sicure.us> - 3.3.0
+- Add tolerance as hiera lookup. Confine checks that can be enforced
+  based on the tolerance setting.
+
+* Fri Jun 03 2022 Mike Riddle <mike@sicure.us> - 3.2.3
+- Updated reporting to account for escaping knockout prefixes
+
+* Fri May 20 2022 Trevor Vaughan <trevor@sicura.us> - 3.2.2
+- Allow for escaping knockout prefixes in strings to preserve leading `--`
+  entries
+
+* Wed Mar 02 2022 Mike Riddle <mike@sicura.us> - 3.2.2
+- Updated confines to allow for negative matches using the '--' prefix
+
 * Sun Feb 13 2022 Trevor Vaughan <trevor@sicura.us> - 3.2.1
 - Added support for Amazon Linux 2
 

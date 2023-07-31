@@ -15,3 +15,5 @@ compliance_markup::report_types:
 # do something different based on your test requirements
 compliance_markup::enforcement:
   - "%{facts.target_compliance_profile}"
+
+compliance_markup::enforcement_tolerance_level: "%{facts.target_enforcement_tolerance}"

@@ -1,0 +1,31 @@
+---
+# Some very basic compliance checks designed for the tests
+#
+# These should all pass
+
+version: 2.0.0
+
+compliance_markup::enforcement:
+  - test_profile
+
+compliance_markup::enforcement_tolerance_level: 40
+
+profiles:
+  test_profile:
+    controls:
+      test_control: true
+
+controls:
+  test_control: {}
+
+checks:
+  oval:test4:
+    type: puppet-class-parameter
+    settings:
+      parameter: test4::list1
+      value: 
+        - '\\-- not_a_knockout'
+    controls:
+      test_control: true
+    identifiers:
+      - 'ESC_KNOCKOUT'

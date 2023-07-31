@@ -69,6 +69,11 @@ Puppet::Functions.create_function(:'compliance_markup::enforcement') do
       @context.not_found
     end
 
+    # Allow for escaping knockout prefixes that we want to preserve in strings
+    # NOTE: This is horrible but less horrible than traversing all manner of
+    # data structures recursively.
+    retval = JSON.load(retval.to_json.gsub('\\--', '--'))
+
     # Add the key to the cache if we found something
     cache(key, retval) if retval
 
