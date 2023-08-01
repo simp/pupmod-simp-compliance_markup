@@ -10,13 +10,13 @@
 
 ### Defined types
 
-* [`compliance_markup::map`](#compliance_markupmap): A wrapper to ensure that the mapper is called during the appropriate
+* [`compliance_markup::map`](#compliance_markup--map): A wrapper to ensure that the mapper is called during the appropriate
 
 ### Functions
 
-* [`compliance_markup::compliance_map`](#compliance_markupcompliance_map): Provides a mechanism for mapping compliance data to settings in Puppet
-* [`compliance_markup::enforcement`](#compliance_markupenforcement): Hiera entry point for the SIMP Compliance Engine  To activate this hiera backend, add the following to your `hiera.yaml`:  ```yaml --- versio
-* [`compliance_markup::loaded_maps`](#compliance_markuploaded_maps): Returns the compliance data keys from the loaded compliance maps
+* [`compliance_markup::compliance_map`](#compliance_markup--compliance_map): Provides a mechanism for mapping compliance data to settings in Puppet
+* [`compliance_markup::enforcement`](#compliance_markup--enforcement): Hiera entry point for the SIMP Compliance Engine  To activate this hiera backend, add the following to your `hiera.yaml`:  ```yaml --- versio
+* [`compliance_markup::loaded_maps`](#compliance_markup--loaded_maps): Returns the compliance data keys from the loaded compliance maps
 
 ## Classes
 
@@ -29,17 +29,17 @@ the mapper can properly analyze the standing catalog.
 
 The following parameters are available in the `compliance_markup` class:
 
-* [`compliance_map`](#compliance_map)
-* [`validate_profiles`](#validate_profiles)
-* [`report_types`](#report_types)
-* [`report_format`](#report_format)
-* [`report_on_client`](#report_on_client)
-* [`report_on_server`](#report_on_server)
-* [`server_report_dir`](#server_report_dir)
-* [`custom_report_data`](#custom_report_data)
-* [`options`](#options)
+* [`compliance_map`](#-compliance_markup--compliance_map)
+* [`validate_profiles`](#-compliance_markup--validate_profiles)
+* [`report_types`](#-compliance_markup--report_types)
+* [`report_format`](#-compliance_markup--report_format)
+* [`report_on_client`](#-compliance_markup--report_on_client)
+* [`report_on_server`](#-compliance_markup--report_on_server)
+* [`server_report_dir`](#-compliance_markup--server_report_dir)
+* [`custom_report_data`](#-compliance_markup--custom_report_data)
+* [`options`](#-compliance_markup--options)
 
-##### <a name="compliance_map"></a>`compliance_map`
+##### <a name="-compliance_markup--compliance_map"></a>`compliance_map`
 
 Data type: `Hash`
 
@@ -47,17 +47,20 @@ The compliance Hash to which to map
 
 * This defaults to *Data In Modules*
 
-##### <a name="validate_profiles"></a>`validate_profiles`
+##### <a name="-compliance_markup--validate_profiles"></a>`validate_profiles`
 
 Data type: `Optional[Array[String[1]]]`
 
 Compliance profiles that you wish to validate against
 
-Default value: ``undef``
+Default value: `undef`
 
-##### <a name="report_types"></a>`report_types`
+##### <a name="-compliance_markup--report_types"></a>`report_types`
 
-Data type: `Array[
+Data type:
+
+```puppet
+Array[
     Enum[
       'full',
       'non_compliant',
@@ -66,7 +69,8 @@ Data type: `Array[
       'unknown_parameters',
       'custom_entries'
     ]
-  ]`
+  ]
+```
 
 The types of entries that you want to report on
 
@@ -81,7 +85,7 @@ The types of entries that you want to report on
 
 Default value: `['non_compliant', 'unknown_parameters', 'custom_entries']`
 
-##### <a name="report_format"></a>`report_format`
+##### <a name="-compliance_markup--report_format"></a>`report_format`
 
 Data type: `Enum['json','yaml']`
 
@@ -89,7 +93,7 @@ The output format for the report
 
 Default value: `'json'`
 
-##### <a name="report_on_client"></a>`report_on_client`
+##### <a name="-compliance_markup--report_on_client"></a>`report_on_client`
 
 Data type: `Boolean`
 
@@ -98,17 +102,17 @@ Save a copy of the report on the client as a ``File`` resource
 * This will make the report show up in PuppetDB but may also expose
   unwanted vulnerability information
 
-Default value: ``false``
+Default value: `false`
 
-##### <a name="report_on_server"></a>`report_on_server`
+##### <a name="-compliance_markup--report_on_server"></a>`report_on_server`
 
 Data type: `Boolean`
 
 Save a copy of the report on the puppet server
 
-Default value: ``true``
+Default value: `true`
 
-##### <a name="server_report_dir"></a>`server_report_dir`
+##### <a name="-compliance_markup--server_report_dir"></a>`server_report_dir`
 
 Data type: `Optional[Stdlib::Absolutepath]`
 
@@ -120,9 +124,9 @@ The path where the server should store reports
   sees it:
   ``/opt/puppetlabs/server/data/puppetserver/simp/compliance_reports``
 
-Default value: ``undef``
+Default value: `undef`
 
-##### <a name="custom_report_data"></a>`custom_report_data`
+##### <a name="-compliance_markup--custom_report_data"></a>`custom_report_data`
 
 Data type: `Optional[Hash]`
 
@@ -132,9 +136,9 @@ A hash that will be included in the compliance report under the heading
 * This can be used for adding *anything* to the compliance report. The hash
   is simply processed with ``to_yaml``
 
-Default value: ``undef``
+Default value: `undef`
 
-##### <a name="options"></a>`options`
+##### <a name="-compliance_markup--options"></a>`options`
 
 Data type: `Optional[Hash]`
 
@@ -142,11 +146,11 @@ The options to pass directly to the `compliance_markup::compliance_map` validati
 
 * If specified, various other options may be ignored
 
-Default value: ``undef``
+Default value: `undef`
 
 ## Defined types
 
-### <a name="compliance_markupmap"></a>`compliance_markup::map`
+### <a name="compliance_markup--map"></a>`compliance_markup::map`
 
 phase of the catalog compile.
 
@@ -156,9 +160,9 @@ Defines appear to be run after all classes
 
 The following parameters are available in the `compliance_markup::map` defined type:
 
-* [`options`](#options)
+* [`options`](#-compliance_markup--map--options)
 
-##### <a name="options"></a>`options`
+##### <a name="-compliance_markup--map--options"></a>`options`
 
 Data type: `Hash`
 
@@ -168,7 +172,7 @@ Default value: `{}`
 
 ## Functions
 
-### <a name="compliance_markupcompliance_map"></a>`compliance_markup::compliance_map`
+### <a name="compliance_markup--compliance_map"></a>`compliance_markup::compliance_map`
 
 Type: Ruby 4.x API
 
@@ -379,7 +383,7 @@ Data type: `Optional[String[1]]`
 
 Allows for arbitrary notes to include in the compliance report
 
-### <a name="compliance_markupenforcement"></a>`compliance_markup::enforcement`
+### <a name="compliance_markup--enforcement"></a>`compliance_markup::enforcement`
 
 Type: Ruby 4.x API
 
@@ -471,7 +475,7 @@ Data type: `Puppet::LookupContext`
 
 The context in which the Hiera backend is being called
 
-### <a name="compliance_markuploaded_maps"></a>`compliance_markup::loaded_maps`
+### <a name="compliance_markup--loaded_maps"></a>`compliance_markup::loaded_maps`
 
 Type: Ruby 4.x API
 
