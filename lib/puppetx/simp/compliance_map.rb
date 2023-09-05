@@ -327,7 +327,7 @@ def compliance_map(args, context)
             end
 
             classkey = "#{res.type}[#{res.title}]"
-            if expected_value =~ /^re:(.+)/
+            if expected_value.is_a?(String) && expected_value =~ /^re:(.+)/
               section = (current_value =~ Regexp.new($1)) ? 'compliant' : 'non_compliant'
             else
               section = (current_value == expected_value) ? 'compliant' : 'non_compliant'

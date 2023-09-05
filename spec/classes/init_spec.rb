@@ -60,7 +60,7 @@ describe 'compliance_markup' do
         }
 
         let(:report) {
-          @report = YAML.load(raw_report)
+          @report = YAML.safe_load(raw_report, aliases: true)
           @report
         }
 
