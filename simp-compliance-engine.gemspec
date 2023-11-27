@@ -4,7 +4,7 @@ module Simp
   class Helpers
     def self.get_param(param, command)
       file = "#{File.dirname(__FILE__)}/.gem_#{param}"
-      if (File.exists?(file))
+      if (File.exist?(file))
         info = File.read(file)
       else
         info = `#{command}`
