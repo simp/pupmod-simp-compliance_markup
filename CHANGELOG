@@ -1,3 +1,6 @@
+* Wed Feb 14 2024 Steven Pritchard <steve@sicura.us> - 3.8.1
+- Remove use of legacy facts for Puppet 8 compatibility
+
 * Mon Oct 23 2023 Steven Pritchard <steve@sicura.us> - 3.8.0
 - [puppetsync] Add EL9 support
 
