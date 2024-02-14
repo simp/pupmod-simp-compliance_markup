@@ -55,7 +55,7 @@ describe 'compliance_markup' do
 
         let(:raw_report) {
           # There can be only one
-          report_file = "#{params['options']['server_report_dir']}/#{facts[:fqdn]}/compliance_report.yaml"
+          report_file = "#{params['options']['server_report_dir']}/#{facts[:networking][:fqdn]}/compliance_report.yaml"
           File.read(report_file)
         }
 
@@ -86,11 +86,11 @@ describe 'compliance_markup' do
           let(:params) { @default_params }
 
           it 'should have a server side compliance report node directory' do
-            expect(File).to exist("#{params['options']['server_report_dir']}/#{facts[:fqdn]}")
+            expect(File).to exist("#{params['options']['server_report_dir']}/#{facts[:networking][:fqdn]}")
           end
 
           it 'should have a server side compliance node report' do
-            expect(File).to exist("#{params['options']['server_report_dir']}/#{facts[:fqdn]}/compliance_report.yaml")
+            expect(File).to exist("#{params['options']['server_report_dir']}/#{facts[:networking][:fqdn]}/compliance_report.yaml")
           end
 
           it 'should have a failing check' do
@@ -104,7 +104,7 @@ describe 'compliance_markup' do
           context 'when dumping the catalog compliance_map' do
             let(:catalog_dump) {
               # There can be only one
-              File.read("#{params['options']['server_report_dir']}/#{facts[:fqdn]}/catalog_compliance_map.yaml")
+              File.read("#{params['options']['server_report_dir']}/#{facts[:networking][:fqdn]}/catalog_compliance_map.yaml")
             }
 
             let(:params){
@@ -114,7 +114,7 @@ describe 'compliance_markup' do
             }
 
             it 'should have a generated catlaog' do
-              expect(File).to exist("#{params['options']['server_report_dir']}/#{facts[:fqdn]}/catalog_compliance_map.yaml")
+              expect(File).to exist("#{params['options']['server_report_dir']}/#{facts[:networking][:fqdn]}/catalog_compliance_map.yaml")
 
               expect(catalog_dump).to match(/GENERATED/)
             end
@@ -287,7 +287,7 @@ describe 'compliance_markup' do
 
             let(:report) {
               # There can be only one
-              report_file = "#{params['options']['server_report_dir']}/#{facts[:fqdn]}/compliance_report.#{report_format}"
+              report_file = "#{params['options']['server_report_dir']}/#{facts[:networking][:fqdn]}/compliance_report.#{report_format}"
 
               if report_format == 'yaml'
                 @report ||= YAML.load_file(report_file)
@@ -316,11 +316,11 @@ describe 'compliance_markup' do
               end
 
               it 'should have a server side compliance report node directory' do
-                expect(File).to exist("#{params['options']['server_report_dir']}/#{facts[:fqdn]}")
+                expect(File).to exist("#{params['options']['server_report_dir']}/#{facts[:networking][:fqdn]}")
               end
 
               it 'should have a server side compliance node report' do
-                expect(File).to exist("#{params['options']['server_report_dir']}/#{facts[:fqdn]}/compliance_report.#{report_format}")
+                expect(File).to exist("#{params['options']['server_report_dir']}/#{facts[:networking][:fqdn]}/compliance_report.#{report_format}")
               end
 
               it 'should have a summary for each profile' do
@@ -340,9 +340,9 @@ describe 'compliance_markup' do
               end
 
               it 'should have the default extra data in the report' do
-                expect(report['fqdn']).to eq(facts[:fqdn])
-                expect(report['hostname']).to eq(facts[:hostname])
-                expect(report['ipaddress']).to eq(facts[:ipaddress])
+                expect(report['fqdn']).to eq(facts[:networking][:fqdn])
+                expect(report['hostname']).to eq(facts[:networking][:hostname])
+                expect(report['ipaddress']).to eq(facts[:networking][:ip])
                 expect(report['puppetserver_info']).to eq(server_facts_hash.merge({'environment' => environment}))
               end
 

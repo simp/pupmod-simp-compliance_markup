@@ -128,9 +128,9 @@ def process_options(args)
 
   config[:extra_data] = {
     # Add the rest of the useful information to the map
-    'fqdn'              => @context.lookupvar('fqdn'),
-    'hostname'          => @context.lookupvar('hostname'),
-    'ipaddress'         => @context.lookupvar('ipaddress'),
+    'fqdn'              => lookup_fact('networking.fqdn'),
+    'hostname'          => lookup_fact('networking.hostname'),
+    'ipaddress'         => lookup_fact('networking.ip'),
     'puppetserver_info' => 'local_compile'
   }
 
@@ -219,7 +219,7 @@ end
 
 
 def write_server_report(config, report)
-  report_dir = File.join(config[:server_report_dir], @context.lookupvar('fqdn'))
+  report_dir = File.join(config[:server_report_dir], lookup_fact('networking.fqdn'))
   FileUtils.mkdir_p(report_dir)
 
   if config[:server_report]

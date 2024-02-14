@@ -50,7 +50,7 @@ describe 'compliance_markup class' do
         }
       end
 
-      let(:fqdn) { fact_on(host, 'fqdn') }
+      let(:fqdn) { fact_on(host, 'networking.fqdn') }
 
       it 'should have a report' do
         tmpdir = Dir.mktmpdir
