@@ -39,7 +39,7 @@ describe 'lookup' do
           'parameter' => 'test_module_06::test_param',
           'value'     => 'a string',
         },
-        'ces'      => [
+        'ces' => [
           '06_ce1',
         ],
       },
@@ -49,7 +49,7 @@ describe 'lookup' do
           'parameter' => 'test_module_06::test_param2',
           'value'     => 'another string',
         },
-        'ces'      => [
+        'ces' => [
           '06_ce1',
         ],
       },
@@ -93,10 +93,10 @@ describe 'lookup' do
         expect(result['test_module_06::test_param']).to eq('a string')
         expect(result['test_module_06::test_param2']).to eq('another string')
         expect(result.keys).to eq([
-          'test_module_06::test_param',
-          'test_module_06::test_param2',
-          'compliance_markup::debug::hiera_backend_compile_time',
-        ])
+                                    'test_module_06::test_param',
+                                    'test_module_06::test_param2',
+                                    'compliance_markup::debug::hiera_backend_compile_time',
+                                  ])
       end
 
       it do

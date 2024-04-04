@@ -6,8 +6,8 @@ require 'puppet/pops/lookup/context'
 require 'yaml'
 require 'fileutils'
 
-puppetver = SemanticPuppet::Version.parse(Puppet.version)
-requiredver = SemanticPuppet::Version.parse("4.10.0")
+SemanticPuppet::Version.parse(Puppet.version)
+SemanticPuppet::Version.parse('4.10.0')
 
 describe 'lookup' do
   # Generate a fake module with dummy data for lookup().
@@ -42,11 +42,11 @@ describe 'lookup' do
             'hash key 1' => 'hash value 1',
           },
         },
-        'ces'      => [
+        'ces' => [
           '05_profile_test1',
         ],
       },
-      '05_hash check2'   => {
+      '05_hash check2' => {
         'type'     => 'puppet-class-parameter',
         'settings' => {
           'parameter' => 'test_module_05::hash_param',
@@ -54,7 +54,7 @@ describe 'lookup' do
             'hash key 2' => 'hash value 2',
           },
         },
-        'ces'      => [
+        'ces' => [
           '05_profile_test2',
         ],
       },
@@ -78,11 +78,11 @@ describe 'lookup' do
     fh.puts checks_yaml
   end
 
-  on_supported_os.each do |os, os_facts|
+  on_supported_os.each do |os, _os_facts|
     context "on #{os} with compliance data in modules" do
       before(:all) do
         File.open(File.join(fixtures, 'hieradata', 'profile-merging.yaml'), 'w') do |fh|
-          test_hiera = {'compliance_markup::enforcement' => ['profile_test1']}.to_yaml
+          test_hiera = { 'compliance_markup::enforcement' => ['profile_test1'] }.to_yaml
           fh.puts test_hiera
         end
       end
@@ -90,7 +90,7 @@ describe 'lookup' do
       let(:hieradata) { 'profile-merging' }
 
       # Test a simple hash.
-      it { is_expected.to run.with_params('test_module_05::hash_param').and_return({'hash key 1' => 'hash value 1', 'hash key 2' => 'hash value 2'}) }
+      it { is_expected.to run.with_params('test_module_05::hash_param').and_return({ 'hash key 1' => 'hash value 1', 'hash key 2' => 'hash value 2' }) }
     end
 
     context "on #{os} with compliance_markup::compliance_map override" do
@@ -116,7 +116,7 @@ describe 'lookup' do
       let(:hieradata) { 'profile-merging' }
 
       # Test a simple hash.
-      it { is_expected.to run.with_params('test_module_05::hash_param').and_return({'hash key 1' => 'hash value 1'}) }
+      it { is_expected.to run.with_params('test_module_05::hash_param').and_return({ 'hash key 1' => 'hash value 1' }) }
     end
   end
 end

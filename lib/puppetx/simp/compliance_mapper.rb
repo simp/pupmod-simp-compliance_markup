@@ -24,19 +24,17 @@
 # which allow for debug logging, and caching, respectively.
 require 'deep_merge'
 
-def enforcement(key, context=self, options={"mode" => "value"}, &block)
-
+def enforcement(key, context = self, options = { 'mode' => 'value' }, &block)
   options['mode'] ||= 'value'
 
   # Throw away keys we know we can't handle.
   # This also prevents recursion.
   throw :no_such_key if
-    key.match?(%r{^compliance_markup::(?!debug::)}) || (
-      [
+    key.match?(%r{^compliance_markup::(?!debug::)}) ||
+    [
       'lookup_options',
-      'compliance_map'
-      ].include?(key)
-    )
+      'compliance_map',
+    ].include?(key)
 
   retval = :notfound
 
@@ -52,7 +50,7 @@ def enforcement(key, context=self, options={"mode" => "value"}, &block)
       rescue
         tolerance_setting = nil
       end
-      options[:tolerance_setting] = tolerance_setting.to_i unless tolerance_setting.nil?      
+      options[:tolerance_setting] = tolerance_setting.to_i unless tolerance_setting.nil?
 
       unless profile_list == []
         debug("debug: compliance_markup::enforcement set to #{profile_list}, attempting to enforce")
@@ -62,11 +60,10 @@ def enforcement(key, context=self, options={"mode" => "value"}, &block)
         if context.cache_has_key("compliance_map_#{profile}")
           # If we have a cache for this profile, we've already found
           # everything that we're going to find.
-          if context.cache_has_key(key)
-            return context.cached_value(key)
-          else
-            throw :no_such_key
-          end
+          return context.cached_value(key) if context.cache_has_key(key)
+
+          throw :no_such_key
+
         end
 
         debug("debug: compliance map for #{profile_list} not found, starting compiler")
@@ -89,29 +86,29 @@ def enforcement(key, context=self, options={"mode" => "value"}, &block)
         end
 
         profile_map = profile_compiler.list_puppet_params(profile_list).cook do |item|
-          item[options["mode"]]
+          item[options['mode']]
 
           # Add this parameter to the context cache so that it is
           # preserved between calls.
           #
           # This allows us to prevent deep recursion and repeated digging
           # into files with no benefit.
-          context.cache(item["parameter"], item["value"])
+          context.cache(item['parameter'], item['value'])
         end
 
         context.cache("compliance_map_#{profile}", profile_map)
 
         compile_end_time = Time.now
 
-        profile_map["compliance_markup::debug::hiera_backend_compile_time"] = (compile_end_time - compile_start_time)
+        profile_map['compliance_markup::debug::hiera_backend_compile_time'] = (compile_end_time - compile_start_time)
         context.cache("compliance_map_#{profile}", profile_map)
         debug("debug: compiled compliance_map containing #{profile_map.size} keys in #{compile_end_time - compile_start_time} seconds")
 
-        if key == "compliance_markup::debug::dump"
-           retval = profile_map
+        if key == 'compliance_markup::debug::dump'
+          retval = profile_map
         else
           # Handle a knockout prefix
-          unless profile_map.key?("--" + key)
+          unless profile_map.key?('--' + key)
             if profile_map.key?(key)
               retval = profile_map[key]
             end
@@ -137,7 +134,7 @@ def enforcement(key, context=self, options={"mode" => "value"}, &block)
   retval
 end
 
-def compiler_class()
+def compiler_class
   Class.new do
     attr_reader :compliance_data
     attr_reader :callback
@@ -152,11 +149,11 @@ def compiler_class()
       @version = SemanticPuppet::Version.parse('2.5.0')
     end
 
-    def load(options={}, &block)
+    def load(options = {})
       @callback.debug("callback = #{callback.codebase}")
 
-      module_scope_compliance_map = block.call 'compliance_markup::compliance_map', {}
-      top_scope_compliance_map    = block.call 'compliance_map', {}
+      module_scope_compliance_map = yield 'compliance_markup::compliance_map', {}
+      top_scope_compliance_map    = yield 'compliance_map', {}
 
       @compliance_data = {}
 
@@ -165,8 +162,8 @@ def compiler_class()
 
       begin
         environmentroot            = "#{Puppet[:environmentpath]}/#{callback.environment}"
-        env                        = Puppet::Settings::EnvironmentConf.load_from(environmentroot, ["/test"])
-        rmodules                   = env.modulepath.split(":")
+        env                        = Puppet::Settings::EnvironmentConf.load_from(environmentroot, ['/test'])
+        rmodules                   = env.modulepath.split(':')
         rootpaths[environmentroot] = true
       rescue StandardError => ex
         callback.debug(ex)
@@ -177,11 +174,11 @@ def compiler_class()
       modpaths2 = []
 
       modpaths.each do |modpath|
-        if modpath == "$basemodulepath"
-          modpaths2 = modpaths2 + Puppet[:basemodulepath].split(":")
-        else
-          modpaths2 = modpaths2 + [modpath]
-        end
+        modpaths2 = if modpath == '$basemodulepath'
+                      modpaths2 + Puppet[:basemodulepath].split(':')
+                    else
+                      modpaths2 + [modpath]
+                    end
       end
       modpaths2.each do |modpath|
         begin
@@ -201,11 +198,11 @@ def compiler_class()
       override_data_dirs = Array(override_data_dirs) if override_data_dirs.is_a?(String)
 
       base_paths = override_data_dirs if override_data_dirs.is_a?(Array)
-      base_paths += options[:aux_paths] if (options[:aux_paths] && options[:aux_paths].is_a?(Array))
+      base_paths += options[:aux_paths] if options[:aux_paths]&.is_a?(Array)
 
       load_paths = [
-        "SIMP/compliance_profiles",
-        "simp/compliance_profiles"
+        'SIMP/compliance_profiles',
+        'simp/compliance_profiles',
       ]
 
       ['yaml', 'json'].each do |type|
@@ -215,31 +212,30 @@ def compiler_class()
             "{#{base_paths.join(',')}}",   # Glob against all base module paths
               "{#{load_paths.join(',')}}", # And all intermediate load paths
               '**',                        # And all directories underneath
-              "*.#{type}"                  # Of the given file type
-          )
+              "*.#{type}", # Of the given file type
+          ),
         ) do |filename|
           begin
-            @compliance_data[filename] = YAML.load(File.read(filename)) if (type == 'yaml')
-            @compliance_data[filename] = JSON.parse(File.read(filename)) if (type == 'json')
+            @compliance_data[filename] = YAML.safe_load(File.read(filename)) if type == 'yaml'
+            @compliance_data[filename] = JSON.parse(File.read(filename)) if type == 'json'
           rescue => e
-            warn(%{compliance_engine: Invalid '#{type}' file found at '#{filename}' => #{e}})
+            warn(%(compliance_engine: Invalid '#{type}' file found at '#{filename}' => #{e}))
           end
         end
       end
 
-      @compliance_data["puppet://compliance_markup::compliance_map"] = (module_scope_compliance_map)
-      @compliance_data["puppet://compliance_map"]                    = (top_scope_compliance_map)
+      @compliance_data['puppet://compliance_markup::compliance_map'] = module_scope_compliance_map
+      @compliance_data['puppet://compliance_map']                    = top_scope_compliance_map
 
       @v2 = v2_compiler.new(callback)
 
       @compliance_data.each do |filename, map|
-        if map.key?("version")
-          version = SemanticPuppet::Version.parse(map["version"])
-          map["tolerance_setting"] = options[:tolerance_setting]
+        next unless map.key?('version')
+        version = SemanticPuppet::Version.parse(map['version'])
+        map['tolerance_setting'] = options[:tolerance_setting]
 
-          if version.major == 2
-            v2.import(filename, map)
-          end
+        if version.major == 2
+          v2.import(filename, map)
         end
       end
     end
@@ -260,7 +256,7 @@ def compiler_class()
       v2.profile
     end
 
-    def v2_compiler()
+    def v2_compiler
       Class.new do
         def initialize(callback)
           @control_list = {}
@@ -268,16 +264,16 @@ def compiler_class()
           @check_list = {}
           @profile_list = {}
           @data_locations = {
-              "ce" => {},
-              "profiles" => {},
-              "controls" => {},
-              "checks" => {},
+            'ce' => {},
+              'profiles' => {},
+              'controls' => {},
+              'checks' => {},
           }
           @callback = callback
         end
-        def callback
-          @callback
-        end
+
+        attr_reader :callback
+
         def ce
           @configuration_element_list
         end
@@ -303,7 +299,7 @@ def compiler_class()
 
           case confinement_value.class.to_s
           when 'Array'
-            return confinement_value.any? do |value|
+            confinement_value.any? do |value|
               if value.is_a?(Array)
                 fact_value == value
               else
@@ -311,9 +307,9 @@ def compiler_class()
               end
             end
           when 'String'
-            return string_match(fact_value, confinement_value)
+            string_match(fact_value, confinement_value)
           else
-            return fact_value == confinement_value
+            fact_value == confinement_value
           end
         end
 
@@ -382,10 +378,9 @@ def compiler_class()
                   next if remediation_hash.nil?
                   delete_item = true if remediation_hash.keys.include?('disabled')
                   next unless remediation_hash.keys.include?('risk')
-    
+
                   risk_level = remediation_hash['risk'].first['level']
                   if risk_level >= highest_saved_risk && (@tolerance_setting <= risk_level)
-                    highest_saved_risk = risk_level
                     delete_item = true
                   end
                 end
@@ -398,31 +393,31 @@ def compiler_class()
           value
         end
 
-        def import(filename, data)
+        def import(_filename, data)
           data.each do |key, value|
-            @tolerance_setting = data["tolerance_setting"] if data.key? "tolerance_setting"
+            @tolerance_setting = data['tolerance_setting'] if data.key? 'tolerance_setting'
             apply_confinement(value) if value.is_a?(Hash)
 
             case key
-            when "profiles"
+            when 'profiles'
               value.each do |profile, map|
                 @profile_list[profile] ||= {}
-                @profile_list[profile] = @profile_list[profile].deep_merge!(map, {:knockout_prefix => '--'})
+                @profile_list[profile] = @profile_list[profile].deep_merge!(map, { knockout_prefix: '--' })
               end
-            when "controls"
+            when 'controls'
               value.each do |profile, map|
                 @control_list[profile] ||= {}
-                @control_list[profile] = @control_list[profile].deep_merge!(map, {:knockout_prefix => '--'})
+                @control_list[profile] = @control_list[profile].deep_merge!(map, { knockout_prefix: '--' })
               end
-            when "checks"
+            when 'checks'
               value.each do |profile, map|
                 @check_list[profile] ||= {}
-                @check_list[profile] = @check_list[profile].deep_merge!(map, {:knockout_prefix => '--'})
+                @check_list[profile] = @check_list[profile].deep_merge!(map, { knockout_prefix: '--' })
               end
-            when "ce"
+            when 'ce'
               value.each do |profile, map|
                 @configuration_element_list[profile] ||= {}
-                @configuration_element_list[profile] = @configuration_element_list[profile].deep_merge!(map, {:knockout_prefix => '--'})
+                @configuration_element_list[profile] = @configuration_element_list[profile].deep_merge!(map, { knockout_prefix: '--' })
               end
             end
           end
@@ -491,9 +486,9 @@ def compiler_class()
         def list_puppet_params(profile_list)
           specifications = []
 
-          profile_list.reverse.each do |profile_name|
+          profile_list.reverse_each do |profile_name|
             unless @profile_list.key?(profile_name)
-              @callback.debug(%{SKIP: Profile '#{profile_name}' not in '#{@profile_list.keys.join("', '")}'})
+              @callback.debug(%(SKIP: Profile '#{profile_name}' not in '#{@profile_list.keys.join("', '")}'))
               next
             end
 
@@ -539,49 +534,45 @@ def compiler_class()
             # Merge
             # XXX ToDo: Need merge settings support
             begin
-              case retval[parameter]['value'].class.to_s
-              when 'Array'
-                retval[parameter]['value'] = (retval[parameter]['value'] + Marshal.load(Marshal.dump(specification['settings']['value']))).uniq
-              when 'Hash'
-                retval[parameter]['value'] = retval[parameter]['value'].deep_merge!(specification['settings']['value'])
-              else
-                retval[parameter]['value'] = Marshal.load(Marshal.dump(specification['settings']['value']))
-              end
+              retval[parameter]['value'] = case retval[parameter]['value'].class.to_s
+                                           when 'Array'
+                                             (retval[parameter]['value'] + Marshal.load(Marshal.dump(specification['settings']['value']))).uniq
+                                           when 'Hash'
+                                             retval[parameter]['value'].deep_merge!(specification['settings']['value'])
+                                           else
+                                             Marshal.load(Marshal.dump(specification['settings']['value']))
+                                           end
             rescue
-              if retval[parameter]['value'].class.to_s != specification['settings']['value'].class.to_s
-                raise "Value type mismatch for #{parameter}"
-              else
-                raise "Merge failed for values in #{parameter}"
-              end
+              raise "Value type mismatch for #{parameter}" if retval[parameter]['value'].class.to_s != specification['settings']['value'].class.to_s
+
+              raise "Merge failed for values in #{parameter}"
             end
 
             ['controls', 'identifiers', 'oval-ids'].each do |key|
               next if specification[key].nil?
               begin
-                case retval[parameter][key].class.to_s
-                when 'Array'
-                  retval[parameter][key] = (retval[parameter][key] + Marshal.load(Marshal.dump(specification[key]))).uniq
-                when 'Hash'
-                  retval[parameter][key] = retval[parameter][key].deep_merge!(specification[key])
-                else
-                  retval[parameter][key] = Marshal.load(Marshal.dump(specification[key]))
-                end
+                retval[parameter][key] = case retval[parameter][key].class.to_s
+                                         when 'Array'
+                                           (retval[parameter][key] + Marshal.load(Marshal.dump(specification[key]))).uniq
+                                         when 'Hash'
+                                           retval[parameter][key].deep_merge!(specification[key])
+                                         else
+                                           Marshal.load(Marshal.dump(specification[key]))
+                                         end
               rescue
-                if retval[parameter][key].class.to_s != specification[key].class.to_s
-                  raise "Type mismatch for #{key} in #{parameter}"
-                else
-                  raise "Merge failed for #{key} in #{parameter}"
-                end
+                raise "Type mismatch for #{key} in #{parameter}" if retval[parameter][key].class.to_s != specification[key].class.to_s
+
+                raise "Merge failed for #{key} in #{parameter}"
               end
             end
           end
 
-          return retval
+          retval
         end # list_puppet_params()
       end # Class.new
     end # v2_compiler()
 
-    def control_list()
+    def control_list
       Class.new do
         include Enumerable
 
@@ -597,7 +588,7 @@ def compiler_class()
           @hash.each(&block)
         end
 
-        def cook(&block)
+        def cook
           nhash = {}
           @hash.each do |key, value|
             nvalue = yield value
@@ -606,15 +597,15 @@ def compiler_class()
           nhash
         end
 
-        def to_json()
+        def to_json
           @hash.to_json
         end
 
-        def to_yaml()
+        def to_yaml
           @hash.to_yaml
         end
 
-        def to_h()
+        def to_h
           @hash
         end
       end

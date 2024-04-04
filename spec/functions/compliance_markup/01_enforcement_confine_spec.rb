@@ -6,8 +6,8 @@ require 'puppet/pops/lookup/context'
 require 'yaml'
 require 'fileutils'
 
-puppetver = SemanticPuppet::Version.parse(Puppet.version)
-requiredver = SemanticPuppet::Version.parse("4.10.0")
+SemanticPuppet::Version.parse(Puppet.version)
+SemanticPuppet::Version.parse('4.10.0')
 
 describe 'lookup' do
   # Generate a fake module with dummy data for lookup().
@@ -40,7 +40,7 @@ describe 'lookup' do
         'controls' => {
           '01_control1' => true,
         },
-        'confine'  => {
+        'confine' => {
           'module_name'    => 'simp-compliance_markup',
           'module_version' => '< 3.1.0',
         },
@@ -51,29 +51,29 @@ describe 'lookup' do
   checks_yaml = {
     'version' => '2.0.0',
     'checks'  => {
-      '01_el_check'       => {
+      '01_el_check' => {
         'type'     => 'puppet-class-parameter',
         'settings' => {
           'parameter' => 'test_module_01::is_el',
           'value'     => true,
         },
-        'ces'      => [
+        'ces' => [
           '01_ce2',
         ],
-        'confine'  => {
+        'confine' => {
           'os.family' => 'RedHat',
         },
       },
-      '01_el_negative_check'       => {
+      '01_el_negative_check' => {
         'type'     => 'puppet-class-parameter',
         'settings' => {
           'parameter' => 'test_module_01::is_not_el',
           'value'     => true,
         },
-        'ces'      => [
+        'ces' => [
           '01_ce2',
         ],
-        'confine'  => {
+        'confine' => {
           'os.family' => '!RedHat',
         },
       },
@@ -83,12 +83,12 @@ describe 'lookup' do
           'parameter' => 'test_module_01::is_disabled',
           'value'     => true,
         },
-        'ces'      => [
+        'ces' => [
           '01_ce2',
         ],
         'remediation' => {
           'disabled' => [
-            {'reason'=> "This is the reason this check is disabled."}
+            { 'reason' => 'This is the reason this check is disabled.' },
           ]
         },
       },
@@ -98,12 +98,12 @@ describe 'lookup' do
           'parameter' => 'test_module_01::is_level_21',
           'value'     => true,
         },
-        'ces'      => [
+        'ces' => [
           '01_ce2',
         ],
         'remediation' => {
           'risk' => [
-            {'level'=> 21}
+            { 'level' => 21 },
           ]
         },
       },
@@ -113,12 +113,12 @@ describe 'lookup' do
           'parameter' => 'test_module_01::is_level_41',
           'value'     => true,
         },
-        'ces'      => [
+        'ces' => [
           '01_ce2',
         ],
         'remediation' => {
           'risk' => [
-            {'level'=> 41, 'reason'=> 'this is the reason for level 41'}
+            { 'level' => 41, 'reason' => 'this is the reason for level 41' },
           ]
         },
       },
@@ -128,12 +128,12 @@ describe 'lookup' do
           'parameter' => 'test_module_01::is_level_61',
           'value'     => true,
         },
-        'ces'      => [
+        'ces' => [
           '01_ce2',
         ],
         'remediation' => {
           'risk' => [
-            {'level'=> 61, 'reason'=> 'this is the reason for level 61'}
+            { 'level' => 61, 'reason' => 'this is the reason for level 61' },
           ]
         },
       },
@@ -143,12 +143,12 @@ describe 'lookup' do
           'parameter' => 'test_module_01::is_level_81',
           'value'     => true,
         },
-        'ces'      => [
+        'ces' => [
           '01_ce2',
         ],
         'remediation' => {
           'risk' => [
-            {'level'=> 81, 'reason'=> 'this is the reason for level 81'}
+            { 'level' => 81, 'reason' => 'this is the reason for level 81' },
           ]
         },
       },
@@ -158,44 +158,44 @@ describe 'lookup' do
           'parameter' => 'test_module_01::el_version',
           'value'     => '7',
         },
-        'ces'      => [
+        'ces' => [
           '01_ce2',
         ],
-        'confine'  => {
-          'os.name'  => [
+        'confine' => {
+          'os.name' => [
             'RedHat',
             'CentOS',
           ],
           'os.release.major' => '7',
         },
       },
-      '01_el7_negative_check'      => {
+      '01_el7_negative_check' => {
         'type'     => 'puppet-class-parameter',
         'settings' => {
           'parameter' => 'test_module_01::not_el_version',
           'value'     => '7',
         },
-        'ces'      => [
+        'ces' => [
           '01_ce2',
         ],
-        'confine'  => {
-          'os.name'          => [
+        'confine' => {
+          'os.name' => [
             '!RedHat',
           ],
           'os.release.major' => '7',
         },
       },
-      '01_el7_negative_mixed_check'      => {
+      '01_el7_negative_mixed_check' => {
         'type'     => 'puppet-class-parameter',
         'settings' => {
           'parameter' => 'test_module_01::not_el_centos_version',
           'value'     => '7',
         },
-        'ces'      => [
+        'ces' => [
           '01_ce2',
         ],
-        'confine'  => {
-          'os.name'          => [
+        'confine' => {
+          'os.name' => [
             '!RedHat',
             'CentOS',
           ],
@@ -208,7 +208,7 @@ describe 'lookup' do
           'parameter' => 'test_module_01::fixed_confines',
           'value'     => false,
         },
-        'ces'      => [
+        'ces' => [
           '01_ce3',
         ],
       },
@@ -239,6 +239,7 @@ describe 'lookup' do
       end
 
       let(:hieradata) { 'compliance-engine' }
+
       # Test for confine on a single fact in checks.
       if os_facts[:osfamily] == 'RedHat'
         it { is_expected.to run.with_params('test_module_01::is_el').and_return(true) }
@@ -250,21 +251,30 @@ describe 'lookup' do
       if os_facts[:osfamily] != 'RedHat'
         it { is_expected.to run.with_params('test_module_01::is_not_el').and_return(true) }
       else
-        it { is_expected.to run.with_params('test_module_01::is_not_el').and_raise_error(Puppet::DataBinding::LookupError, "Function lookup() did not find a value for the name 'test_module_01::is_not_el'") }
+        it {
+          is_expected.to run.with_params('test_module_01::is_not_el').and_raise_error(Puppet::DataBinding::LookupError,
+"Function lookup() did not find a value for the name 'test_module_01::is_not_el'")
+        }
       end
 
       # Test for confine on multiple facts and an array of facts in checks.
       if (os_facts[:os][:name] == 'RedHat' || os_facts[:os][:name] == 'CentOS') && os_facts[:operatingsystemmajrelease] == '7'
         it { is_expected.to run.with_params('test_module_01::el_version').and_return('7') }
       else
-        it { is_expected.to run.with_params('test_module_01::el_version').and_raise_error(Puppet::DataBinding::LookupError, "Function lookup() did not find a value for the name 'test_module_01::el_version'") }
+        it {
+          is_expected.to run.with_params('test_module_01::el_version').and_raise_error(Puppet::DataBinding::LookupError,
+"Function lookup() did not find a value for the name 'test_module_01::el_version'")
+        }
       end
 
       # Test for confine on multiple facts and a negative fact match.
       if (os_facts[:os][:name] != 'RedHat') && os_facts[:operatingsystemmajrelease] == '7'
         it { is_expected.to run.with_params('test_module_01::not_el_version').and_return('7') }
       else
-        it { is_expected.to run.with_params('test_module_01::not_el_version').and_raise_error(Puppet::DataBinding::LookupError, "Function lookup() did not find a value for the name 'test_module_01::not_el_version'") }
+        it {
+          is_expected.to run.with_params('test_module_01::not_el_version').and_raise_error(Puppet::DataBinding::LookupError,
+         "Function lookup() did not find a value for the name 'test_module_01::not_el_version'")
+        }
       end
 
       # Test for confine on multiple facts and a negative fact match mixed with a positive one.
@@ -276,61 +286,95 @@ describe 'lookup' do
       elsif (os_facts[:os][:name] != 'RedHat') && (os_facts[:os][:name] != 'CentOS') && os_facts[:operatingsystemmajrelease] == '7'
         it { is_expected.to run.with_params('test_module_01::not_el_centos_version').and_return('7') }
       else
-        it { is_expected.to run.with_params('test_module_01::not_el_centos_version').and_raise_error(Puppet::DataBinding::LookupError, "Function lookup() did not find a value for the name 'test_module_01::not_el_centos_version'") }
+        it {
+          is_expected.to run.with_params('test_module_01::not_el_centos_version').and_raise_error(Puppet::DataBinding::LookupError,
+         "Function lookup() did not find a value for the name 'test_module_01::not_el_centos_version'")
+        }
       end
 
       # Test for confine on module name & module version in ce.
-      it { is_expected.to run.with_params('test_module_01::fixed_confines').and_raise_error(Puppet::DataBinding::LookupError, "Function lookup() did not find a value for the name 'test_module_01::fixed_confines'") }
-
-
+      it {
+        is_expected.to run.with_params('test_module_01::fixed_confines').and_raise_error(Puppet::DataBinding::LookupError,
+       "Function lookup() did not find a value for the name 'test_module_01::fixed_confines'")
+      }
     end
 
     context "on #{os} with compliance_markup::::enforcement and an existing profile using tolerance above level 21" do
-        let(:facts) do
-          os_facts.merge('target_compliance_profile' => '01_profile_test', 'target_enforcement_tolerance' => "22")
-        end
-        let(:hieradata) { 'compliance-engine' }
-        
-        it { is_expected.to run.with_params('test_module_01::is_disabled').and_raise_error(Puppet::DataBinding::LookupError, "Function lookup() did not find a value for the name 'test_module_01::is_disabled'") }
-        it { is_expected.to run.with_params('test_module_01::is_level_21').and_return(true) }
-        it { is_expected.to run.with_params('test_module_01::is_level_41').and_raise_error(Puppet::DataBinding::LookupError, "Function lookup() did not find a value for the name 'test_module_01::is_level_41'") }
-        it { is_expected.to run.with_params('test_module_01::is_level_61').and_raise_error(Puppet::DataBinding::LookupError, "Function lookup() did not find a value for the name 'test_module_01::is_level_61'") }
-        it { is_expected.to run.with_params('test_module_01::is_level_81').and_raise_error(Puppet::DataBinding::LookupError, "Function lookup() did not find a value for the name 'test_module_01::is_level_81'") }
-    end
-    
-    context "on #{os} with compliance_markup::::enforcement and an existing profile using tolerance above level 41" do
       let(:facts) do
-        os_facts.merge('target_compliance_profile' => '01_profile_test', 'target_enforcement_tolerance' => "42")
+        os_facts.merge('target_compliance_profile' => '01_profile_test', 'target_enforcement_tolerance' => '22')
       end
       let(:hieradata) { 'compliance-engine' }
-      
-      it { is_expected.to run.with_params('test_module_01::is_disabled').and_raise_error(Puppet::DataBinding::LookupError, "Function lookup() did not find a value for the name 'test_module_01::is_disabled'") }
+
+      it {
+        is_expected.to run.with_params('test_module_01::is_disabled').and_raise_error(Puppet::DataBinding::LookupError,
+"Function lookup() did not find a value for the name 'test_module_01::is_disabled'")
+      }
+      it { is_expected.to run.with_params('test_module_01::is_level_21').and_return(true) }
+      it {
+        is_expected.to run.with_params('test_module_01::is_level_41').and_raise_error(Puppet::DataBinding::LookupError,
+"Function lookup() did not find a value for the name 'test_module_01::is_level_41'")
+      }
+      it {
+        is_expected.to run.with_params('test_module_01::is_level_61').and_raise_error(Puppet::DataBinding::LookupError,
+"Function lookup() did not find a value for the name 'test_module_01::is_level_61'")
+      }
+      it {
+        is_expected.to run.with_params('test_module_01::is_level_81').and_raise_error(Puppet::DataBinding::LookupError,
+"Function lookup() did not find a value for the name 'test_module_01::is_level_81'")
+      }
+    end
+
+    context "on #{os} with compliance_markup::::enforcement and an existing profile using tolerance above level 41" do
+      let(:facts) do
+        os_facts.merge('target_compliance_profile' => '01_profile_test', 'target_enforcement_tolerance' => '42')
+      end
+      let(:hieradata) { 'compliance-engine' }
+
+      it {
+        is_expected.to run.with_params('test_module_01::is_disabled').and_raise_error(Puppet::DataBinding::LookupError,
+"Function lookup() did not find a value for the name 'test_module_01::is_disabled'")
+      }
       it { is_expected.to run.with_params('test_module_01::is_level_21').and_return(true) }
       it { is_expected.to run.with_params('test_module_01::is_level_41').and_return(true) }
-      it { is_expected.to run.with_params('test_module_01::is_level_61').and_raise_error(Puppet::DataBinding::LookupError, "Function lookup() did not find a value for the name 'test_module_01::is_level_61'") }
-      it { is_expected.to run.with_params('test_module_01::is_level_81').and_raise_error(Puppet::DataBinding::LookupError, "Function lookup() did not find a value for the name 'test_module_01::is_level_81'") }
+      it {
+        is_expected.to run.with_params('test_module_01::is_level_61').and_raise_error(Puppet::DataBinding::LookupError,
+"Function lookup() did not find a value for the name 'test_module_01::is_level_61'")
+      }
+      it {
+        is_expected.to run.with_params('test_module_01::is_level_81').and_raise_error(Puppet::DataBinding::LookupError,
+"Function lookup() did not find a value for the name 'test_module_01::is_level_81'")
+      }
     end
 
     context "on #{os} with compliance_markup::::enforcement and an existing profile using tolerance above level 61" do
       let(:facts) do
-        os_facts.merge('target_compliance_profile' => '01_profile_test', 'target_enforcement_tolerance' => "62")
+        os_facts.merge('target_compliance_profile' => '01_profile_test', 'target_enforcement_tolerance' => '62')
       end
       let(:hieradata) { 'compliance-engine' }
-      
-      it { is_expected.to run.with_params('test_module_01::is_disabled').and_raise_error(Puppet::DataBinding::LookupError, "Function lookup() did not find a value for the name 'test_module_01::is_disabled'") }
+
+      it {
+        is_expected.to run.with_params('test_module_01::is_disabled').and_raise_error(Puppet::DataBinding::LookupError,
+"Function lookup() did not find a value for the name 'test_module_01::is_disabled'")
+      }
       it { is_expected.to run.with_params('test_module_01::is_level_21').and_return(true) }
       it { is_expected.to run.with_params('test_module_01::is_level_41').and_return(true) }
       it { is_expected.to run.with_params('test_module_01::is_level_61').and_return(true) }
-      it { is_expected.to run.with_params('test_module_01::is_level_81').and_raise_error(Puppet::DataBinding::LookupError, "Function lookup() did not find a value for the name 'test_module_01::is_level_81'") }
+      it {
+        is_expected.to run.with_params('test_module_01::is_level_81').and_raise_error(Puppet::DataBinding::LookupError,
+"Function lookup() did not find a value for the name 'test_module_01::is_level_81'")
+      }
     end
 
     context "on #{os} with compliance_markup::::enforcement and an existing profile using tolerance above level 81" do
       let(:facts) do
-        os_facts.merge('target_compliance_profile' => '01_profile_test', 'target_enforcement_tolerance' => "82")
+        os_facts.merge('target_compliance_profile' => '01_profile_test', 'target_enforcement_tolerance' => '82')
       end
       let(:hieradata) { 'compliance-engine' }
-      
-      it { is_expected.to run.with_params('test_module_01::is_disabled').and_raise_error(Puppet::DataBinding::LookupError, "Function lookup() did not find a value for the name 'test_module_01::is_disabled'") }
+
+      it {
+        is_expected.to run.with_params('test_module_01::is_disabled').and_raise_error(Puppet::DataBinding::LookupError,
+"Function lookup() did not find a value for the name 'test_module_01::is_disabled'")
+      }
       it { is_expected.to run.with_params('test_module_01::is_level_21').and_return(true) }
       it { is_expected.to run.with_params('test_module_01::is_level_41').and_return(true) }
       it { is_expected.to run.with_params('test_module_01::is_level_61').and_return(true) }

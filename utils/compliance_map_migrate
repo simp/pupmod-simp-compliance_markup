@@ -12,15 +12,15 @@ require 'fileutils'
 @uid = Time.now.strftime('%s')
 
 def deep_merge(old, new)
-  old.merge(new) { |key, val1, val2|
-    if val1.kind_of?(Hash) and val2.kind_of?(Hash)
+  old.merge(new) do |_key, val1, val2|
+    if val1.is_a?(Hash) && val2.is_a?(Hash)
       deep_merge(val1, val2)
-    elsif val1.kind_of?(Array) and val2.kind_of?(Array)
+    elsif val1.is_a?(Array) && val2.is_a?(Array)
       val1 & val2
     else
       val2
     end
-  }
+  end
 end
 
 def parse_options
@@ -33,14 +33,14 @@ def parse_options
   options.append = ''
 
   _opts = OptionParser.new do |opts|
-    opts.banner = "Usage: #{$0} [options]"
+    opts.banner = "Usage: #{$PROGRAM_NAME} [options]"
 
-    opts.separator ""
+    opts.separator ''
 
     opts.on(
       '-i PATH',
       '--input PATH',
-      'The source Compliance Mapper Hieradata file'
+      'The source Compliance Mapper Hieradata file',
     ) do |arg|
       options.input << File.absolute_path(arg.strip)
     end
@@ -49,12 +49,12 @@ def parse_options
       '-o PATH',
       '--output PATH',
       'The output Compliance Mapper Hieradata file',
-      '  Default: "input" file with the output version appended'
+      '  Default: "input" file with the output version appended',
     ) do |arg|
       options.output = File.absolute_path(arg.strip)
 
       unless File.directory?(File.dirname(options.output))
-        $stderr.puts("Error: Could not find output directory '#{File.dirname(options.output)}'")
+        warn "Error: Could not find output directory '#{File.dirname(options.output)}'"
         exit 1
       end
     end
@@ -63,12 +63,12 @@ def parse_options
       '-s VERSION',
       '--src_version VERSION',
       'Compliance Mapper source API version',
-      "  Default: #{options.src_version}"
+      "  Default: #{options.src_version}",
     ) do |arg|
       options.src_version = arg.strip
 
-      unless options.src_version =~ /\d+\.\d+\.\d+/
-        $stderr.puts('Error: src_version must be of the form X.Y.Z')
+      unless %r{\d+\.\d+\.\d+}.match?(options.src_version)
+        warn 'Error: src_version must be of the form X.Y.Z'
         exit 1
       end
     end
@@ -77,12 +77,12 @@ def parse_options
       '-d VERSION',
       '--dst_version VERSION',
       'Compliance Mapper destination API version',
-      "  Default: #{options.dst_version}"
+      "  Default: #{options.dst_version}",
     ) do |arg|
       options.dst_version = arg.strip
 
-      unless options.dst_version =~ /\d+\.\d+\.\d+/
-        $stderr.puts('Error: src_version must be of the form X.Y.Z')
+      unless %r{\d+\.\d+\.\d+}.match?(options.dst_version)
+        warn 'Error: src_version must be of the form X.Y.Z'
         exit 1
       end
     end
@@ -91,12 +91,12 @@ def parse_options
       '-f FORMAT',
       '--output_format FORMAT',
       'The output format. May be one of "json" or "yaml"',
-      "  Default: #{options.output_format}"
+      "  Default: #{options.output_format}",
     ) do |arg|
       options.output_format = arg.strip
 
-      unless ['yaml','json'].include?(options.output_format)
-        $stderr.puts('Error: The output format must be one of "yaml" or "json"')
+      unless ['yaml', 'json'].include?(options.output_format)
+        warn 'Error: The output format must be one of "yaml" or "json"'
         exit 1
       end
     end
@@ -104,7 +104,7 @@ def parse_options
     opts.on(
       '-m MODULE',
       '--module MODULE',
-      'For 2.0 migrations, isolate the target module to output. If left out, all will be output.'
+      'For 2.0 migrations, isolate the target module to output. If left out, all will be output.',
     ) do |arg|
       options.target_module = arg.strip
     end
@@ -112,7 +112,7 @@ def parse_options
     opts.on(
       '-c FACT=VALUE',
       '--confine FACT=VALUE',
-      'For 2.0 migrations, specify confinement for the target data'
+      'For 2.0 migrations, specify confinement for the target data',
     ) do |arg|
       c = arg.split(%r{\s*=\s*})
       options.confine[c[0]] = c[1]
@@ -121,7 +121,7 @@ def parse_options
     opts.on(
       '-a STRING',
       '--append STRING',
-      'For 2.0 migrations, append STRING to check key'
+      'For 2.0 migrations, append STRING to check key',
     ) do |arg|
       options.append = arg.strip
     end
@@ -129,7 +129,7 @@ def parse_options
     opts.on(
       '-h',
       '--help',
-      'Help Message'
+      'Help Message',
     ) do
       puts opts
       exit(0)
@@ -145,7 +145,7 @@ def parse_options
   end
 
   if options.input.empty?
-    $stderr.puts("You must pass an input file to #{$0}")
+    warn "You must pass an input file to #{$PROGRAM_NAME}"
     puts _opts
     exit 1
   end
@@ -153,26 +153,26 @@ def parse_options
   unless options.output
     options.output = File.join(
       File.dirname(options.input[0]),
-      "#{File.basename(options.input[0],'.yaml')}.#{options.dst_version}.yaml"
+      "#{File.basename(options.input[0], '.yaml')}.#{options.dst_version}.yaml",
     )
   end
 
-  options.input.each do |_infile|
-    if File.exist?(_infile)
-        begin
-        _data = {}
-        if _infile =~ /\.yaml$/
-            _data = YAML.load_file(_infile)
-        else
-            _data = JSON.load(File.read(_infile))
-        end
-        options.input_hash = deep_merge(options.input_hash, _data)
-        rescue Psych::SyntaxError, JSON::JSONError
-        $stderr.puts("Error: Could not parse input file '#{_infile}'")
-        end
+  options.input.each do |infile|
+    if File.exist?(infile)
+      begin
+        data = {}
+        data = if %r{\.yaml$}.match?(_infile)
+                 YAML.load_file(_infile)
+               else
+                 JSON.parse(File.read(_infile))
+               end
+        options.input_hash = deep_merge(options.input_hash, data)
+      rescue Psych::SyntaxError, JSON::JSONError
+        warn "Error: Could not parse input file '#{infile}'"
+      end
     else
-        $stderr.puts("Error: Could not find input file '#{_infile}'")
-        exit 1
+      warn "Error: Could not find input file '#{infile}'"
+      exit 1
     end
   end
 
@@ -187,15 +187,16 @@ def parse_options
       end
 
       unless options.src_version
-        $stderr.puts("Error: Could not determine source version from '#{_infile}'")
+        warn "Error: Could not determine source version from '#{_infile}'"
         exit 1
       end
     end
   end
 
-  return options
+  options
 end
 
+# Translate from one compliance map version to another
 class HieraXlat
   attr_reader :src_version, :dst_version
 
@@ -218,7 +219,7 @@ class HieraXlat
       key = key.join('::')
 
       if garbage == 'compliance'
-        output_hash['compliance_map'][policy] ||= Hash.new
+        output_hash['compliance_map'][policy] ||= {}
 
         unless options.input_hash[entry]['identifier'].nil?
           options.input_hash[entry]['identifiers'] = Array(options.input_hash[entry]['identifier'])
@@ -238,7 +239,7 @@ class HieraXlat
         other_sections = (options.input_hash[entry].keys - main_sections)
 
         (main_sections + other_sections).each do |section|
-          output_hash['compliance_map'][policy][key] ||= Hash.new
+          output_hash['compliance_map'][policy][key] ||= {}
 
           unless options.input_hash[entry][section].nil?
             output_hash['compliance_map'][policy][key][section] = options.input_hash[entry][section]
@@ -247,12 +248,12 @@ class HieraXlat
       elsif garbage == 'global'
         next
       else
-        $stderr.puts("Warning: Unknown source entry '#{entry}'")
+        warn "Warning: Unknown source entry '#{entry}'"
         next
       end
     end
 
-    return output_hash
+    output_hash
   end
 
   def xlat_1_0_0_to_2_0_0(options)
@@ -276,7 +277,7 @@ class HieraXlat
           next unless param.split('::').first == options.target_module
         end
 
-        unique_name = "#{check_header}.#{param.gsub('::','.')}"
+        unique_name = "#{check_header}.#{param.gsub('::', '.')}"
 
         unless options.append.empty?
           unique_name.concat('.', options.append)
@@ -307,9 +308,9 @@ class HieraXlat
           end
         end
 
-        identifiers = maps[policy][param]['identifiers'].map { |v|
+        identifiers = maps[policy][param]['identifiers'].map do |v|
           v.gsub(%r{\(([^\)]*)\)}, ':\1')
-        }
+        end
 
         if output_hash['checks'][unique_name]['identifiers'][policy].nil?
           output_hash['checks'][unique_name]['identifiers'][policy] = identifiers
@@ -318,17 +319,17 @@ class HieraXlat
         end
 
         if policy == 'disa_stig'
-          output_hash['checks'][unique_name]['controls'].merge!({ policy => true })
+          output_hash['checks'][unique_name]['controls'][policy] = true
 
-          output_hash['checks'][unique_name]['controls'].merge!(identifiers.collect { |identifier|
-            if m = %r{^(CCI)-}.match(identifier)
+          output_hash['checks'][unique_name]['controls'].merge!(identifiers.map { |identifier|
+            if (m = %r{^(CCI)-}.match(identifier))
               ["#{m[1].downcase}:#{identifier}", true]
             else
               [identifier, true]
             end
           }.to_h)
         else
-          output_hash['checks'][unique_name]['controls'].merge!(identifiers.collect { |identifier|
+          output_hash['checks'][unique_name]['controls'].merge!(identifiers.map { |identifier|
             ["#{policy}:#{identifier}", true]
           }.to_h)
         end
@@ -343,28 +344,26 @@ class HieraXlat
       end
     end
 
-    return output_hash
+    output_hash
   end
 
   def process(options)
-    xlat_name = "xlat_#{@src_version.gsub('.','_')}_to_#{@dst_version.gsub('.','_')}"
+    xlat_name = "xlat_#{@src_version.tr('.', '_')}_to_#{@dst_version.tr('.', '_')}"
 
-    unless self.respond_to?(xlat_name)
-      $stderr.puts("Error: Cannot translate from #{@src_version} to #{@dst_version}")
+    unless respond_to?(xlat_name)
+      warn "Error: Cannot translate from #{@src_version} to #{@dst_version}"
 
       exit(1)
     end
+    to_ret = send(xlat_name.to_sym, options)
 
-    to_ret = {}
-    to_ret = self.send(xlat_name.to_sym, options)
+    to_ret = if options.output_format == 'yaml'
+               YAML.dump(YAML.safe_load(to_ret.to_json))
+             else
+               JSON.pretty_generate(to_ret)
+             end
 
-    if options.output_format == 'yaml'
-      to_ret = YAML.dump(YAML.load(to_ret.to_json))
-    else
-      to_ret = JSON.pretty_generate(to_ret)
-    end
-
-    return to_ret
+    to_ret
   end
 end
 
@@ -372,7 +371,7 @@ options = parse_options
 
 output = HieraXlat.new(options.src_version, options.dst_version).process(options)
 
-backup_file = File.join(File.dirname(options.output), "#{File.basename(options.output,'.yaml')}.#{@uid}.yaml")
+backup_file = File.join(File.dirname(options.output), "#{File.basename(options.output, '.yaml')}.#{@uid}.yaml")
 
 if File.exist?(options.output)
   puts "Info: Backing up pre-existing output file\n  '#{options.output}' to\n  '#{backup_file}'"
@@ -380,6 +379,6 @@ if File.exist?(options.output)
   FileUtils.mv(options.output, backup_file)
 end
 
-File.open(options.output,'w') do |fh|
+File.open(options.output, 'w') do |fh|
   fh.puts(output)
 end

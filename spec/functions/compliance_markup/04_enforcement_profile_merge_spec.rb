@@ -6,8 +6,8 @@ require 'puppet/pops/lookup/context'
 require 'yaml'
 require 'fileutils'
 
-puppetver = SemanticPuppet::Version.parse(Puppet.version)
-requiredver = SemanticPuppet::Version.parse("4.10.0")
+SemanticPuppet::Version.parse(Puppet.version)
+SemanticPuppet::Version.parse('4.10.0')
 
 describe 'lookup' do
   # Generate a fake module with dummy data for lookup().
@@ -60,7 +60,7 @@ describe 'lookup' do
       'version' => '2.0.0',
       'checks'  => {
         '04_string check1' => {
-          'ces'      => [
+          'ces' => [
             '04_profile_test1',
           ],
           'controls' => {
@@ -141,7 +141,7 @@ describe 'lookup' do
     'checks_20' => {
       'version' => '2.0.0',
       'checks'  => {
-        '04_array check1'  => {
+        '04_array check1' => {
           'type'     => 'puppet-class-parameter',
         },
       },
@@ -149,7 +149,7 @@ describe 'lookup' do
     'checks_21' => {
       'version' => '2.0.0',
       'checks'  => {
-        '04_array check1'  => {
+        '04_array check1' => {
           'ces'      => [
             '04_profile_test1',
           ],
@@ -159,9 +159,9 @@ describe 'lookup' do
     'checks_22' => {
       'version' => '2.0.0',
       'checks'  => {
-        '04_array check1'  => {
+        '04_array check1' => {
           'settings' => {
-            'value'     => [
+            'value' => [
               'array value 1',
             ],
           },
@@ -174,7 +174,7 @@ describe 'lookup' do
     'checks_23' => {
       'version' => '2.0.0',
       'checks'  => {
-        '04_array check1'  => {
+        '04_array check1' => {
           'settings' => {
             'parameter' => 'test_module_04::array_param',
           },
@@ -184,7 +184,7 @@ describe 'lookup' do
     'checks_30' => {
       'version' => '2.0.0',
       'checks'  => {
-        '04_array check2'  => {
+        '04_array check2' => {
           'settings' => {
             'value'     => [
               'array value 2',
@@ -196,7 +196,7 @@ describe 'lookup' do
     'checks_31' => {
       'version' => '2.0.0',
       'checks'  => {
-        '04_array check2'  => {
+        '04_array check2' => {
           'type'     => 'puppet-class-parameter',
         },
       },
@@ -204,7 +204,7 @@ describe 'lookup' do
     'checks_32' => {
       'version' => '2.0.0',
       'checks'  => {
-        '04_array check2'  => {
+        '04_array check2' => {
           'ces'      => [
             '04_profile_test2',
           ],
@@ -214,7 +214,7 @@ describe 'lookup' do
     'checks_33' => {
       'version' => '2.0.0',
       'checks'  => {
-        '04_array check2'  => {
+        '04_array check2' => {
           'settings' => {
             'parameter' => 'test_module_04::array_param',
           },
@@ -227,9 +227,9 @@ describe 'lookup' do
     'checks_40' => {
       'version' => '2.0.0',
       'checks'  => {
-        '04_hash check1'   => {
+        '04_hash check1' => {
           'settings' => {
-            'value'     => {
+            'value' => {
               'hash key 1' => 'hash value 1',
             },
           },
@@ -242,7 +242,7 @@ describe 'lookup' do
     'checks_41' => {
       'version' => '2.0.0',
       'checks'  => {
-        '04_hash check1'   => {
+        '04_hash check1' => {
           'settings' => {
             'parameter' => 'test_module_04::hash_param',
           },
@@ -252,8 +252,8 @@ describe 'lookup' do
     'checks_42' => {
       'version' => '2.0.0',
       'checks'  => {
-        '04_hash check1'   => {
-          'ces'      => [
+        '04_hash check1' => {
+          'ces' => [
             '04_profile_test1',
           ],
         },
@@ -262,7 +262,7 @@ describe 'lookup' do
     'checks_43' => {
       'version' => '2.0.0',
       'checks'  => {
-        '04_hash check1'   => {
+        '04_hash check1' => {
           'type'     => 'puppet-class-parameter',
         },
       },
@@ -270,7 +270,7 @@ describe 'lookup' do
     'checks_50' => {
       'version' => '2.0.0',
       'checks'  => {
-        '04_hash check2'   => {
+        '04_hash check2' => {
           'ces'      => [
             '04_profile_test2',
           ],
@@ -280,7 +280,7 @@ describe 'lookup' do
     'checks_51' => {
       'version' => '2.0.0',
       'checks'  => {
-        '04_hash check2'   => {
+        '04_hash check2' => {
           'type'     => 'puppet-class-parameter',
           'oval-ids' => [
             - '04_oval_id3',
@@ -291,7 +291,7 @@ describe 'lookup' do
     'checks_52' => {
       'version' => '2.0.0',
       'checks'  => {
-        '04_hash check2'   => {
+        '04_hash check2' => {
           'settings' => {
             'parameter' => 'test_module_04::hash_param',
           },
@@ -301,7 +301,7 @@ describe 'lookup' do
     'checks_53' => {
       'version' => '2.0.0',
       'checks'  => {
-        '04_hash check2'   => {
+        '04_hash check2' => {
           'settings' => {
             'value'     => {
               'hash key 2' => 'hash value 2',
@@ -313,7 +313,7 @@ describe 'lookup' do
     'checks_60' => {
       'version' => '2.0.0',
       'checks'  => {
-        '04_nested hash1'  => {
+        '04_nested hash1' => {
           'settings' => {
             'parameter' => 'test_module_04::nested_hash',
           },
@@ -323,8 +323,8 @@ describe 'lookup' do
     'checks_61' => {
       'version' => '2.0.0',
       'checks'  => {
-        '04_nested hash1'  => {
-          'ces'      => [
+        '04_nested hash1' => {
+          'ces' => [
             '04_profile_test1',
           ],
         },
@@ -333,9 +333,9 @@ describe 'lookup' do
     'checks_62' => {
       'version' => '2.0.0',
       'checks'  => {
-        '04_nested hash1'  => {
+        '04_nested hash1' => {
           'settings' => {
-            'value'     => {
+            'value' => {
               'key' => {
                 'key1' => 'value1',
               },
@@ -347,7 +347,7 @@ describe 'lookup' do
     'checks_63' => {
       'version' => '2.0.0',
       'checks'  => {
-        '04_nested hash1'  => {
+        '04_nested hash1' => {
           'type'     => 'puppet-class-parameter',
         },
       },
@@ -355,7 +355,7 @@ describe 'lookup' do
     'checks_70' => {
       'version' => '2.0.0',
       'checks'  => {
-        '04_nested hash2'  => {
+        '04_nested hash2' => {
           'type'     => 'puppet-class-parameter',
         },
       },
@@ -363,7 +363,7 @@ describe 'lookup' do
     'checks_71' => {
       'version' => '2.0.0',
       'checks'  => {
-        '04_nested hash2'  => {
+        '04_nested hash2' => {
           'settings' => {
             'parameter' => 'test_module_04::nested_hash',
           },
@@ -373,7 +373,7 @@ describe 'lookup' do
     'checks_72' => {
       'version' => '2.0.0',
       'checks'  => {
-        '04_nested hash2'  => {
+        '04_nested hash2' => {
           'settings' => {
             'value'     => {
               'key' => {
@@ -387,9 +387,9 @@ describe 'lookup' do
     'checks_73' => {
       'version' => '2.0.0',
       'checks'  => {
-        '04_nested hash2'  => {
+        '04_nested hash2' => {
           'settings' => {
-            'value'     => {
+            'value' => {
               'key' => {
                 'key2' => 'value2',
               },
@@ -401,8 +401,8 @@ describe 'lookup' do
     'checks_74' => {
       'version' => '2.0.0',
       'checks'  => {
-        '04_nested hash2'  => {
-          'ces'      => [
+        '04_nested hash2' => {
+          'ces' => [
             '04_profile_test2',
           ],
         },
@@ -421,11 +421,11 @@ describe 'lookup' do
     end
   end
 
-  on_supported_os.each do |os, os_facts|
+  on_supported_os.each do |os, _os_facts|
     context "on #{os} with compliance_markup::enforcement merging profiles" do
       before(:all) do
         File.open(File.join(fixtures, 'hieradata', 'profile-merging.yaml'), 'w') do |fh|
-          test_hiera = {'compliance_markup::enforcement' => ['profile_test1', 'profile_test2']}.to_yaml
+          test_hiera = { 'compliance_markup::enforcement' => ['profile_test1', 'profile_test2'] }.to_yaml
           fh.puts test_hiera
         end
       end
@@ -439,16 +439,16 @@ describe 'lookup' do
       it { is_expected.to run.with_params('test_module_04::array_param').and_return(['array value 2', 'array value 1']) }
 
       # Test a simple hash.
-      it { is_expected.to run.with_params('test_module_04::hash_param').and_return({'hash key 1' => 'hash value 1', 'hash key 2' => 'hash value 2'}) }
+      it { is_expected.to run.with_params('test_module_04::hash_param').and_return({ 'hash key 1' => 'hash value 1', 'hash key 2' => 'hash value 2' }) }
 
       # Test a nested hash.
-      it { is_expected.to run.with_params('test_module_04::nested_hash').and_return({'key' => { 'key1' => 'value1', 'key2' => 'value2'}}) }
+      it { is_expected.to run.with_params('test_module_04::nested_hash').and_return({ 'key' => { 'key1' => 'value1', 'key2' => 'value2' } }) }
     end
 
     context "on #{os} with compliance_markup::enforcement merging profiles in reverse order" do
       before(:all) do
         File.open(File.join(fixtures, 'hieradata', 'profile-merging.yaml'), 'w') do |fh|
-          test_hiera = {'compliance_markup::enforcement' => ['profile_test2', 'profile_test1']}.to_yaml
+          test_hiera = { 'compliance_markup::enforcement' => ['profile_test2', 'profile_test1'] }.to_yaml
           fh.puts test_hiera
         end
       end
@@ -462,10 +462,10 @@ describe 'lookup' do
       it { is_expected.to run.with_params('test_module_04::array_param').and_return(['array value 1', 'array value 2']) }
 
       # Test a simple hash.
-      it { is_expected.to run.with_params('test_module_04::hash_param').and_return({'hash key 2' => 'hash value 2', 'hash key 1' => 'hash value 1'}) }
+      it { is_expected.to run.with_params('test_module_04::hash_param').and_return({ 'hash key 2' => 'hash value 2', 'hash key 1' => 'hash value 1' }) }
 
       # Test a nested hash.
-      it { is_expected.to run.with_params('test_module_04::nested_hash').and_return({'key' => { 'key1' => 'value2', 'key2' => 'value2'}}) }
+      it { is_expected.to run.with_params('test_module_04::nested_hash').and_return({ 'key' => { 'key1' => 'value2', 'key2' => 'value2' } }) }
     end
   end
 end

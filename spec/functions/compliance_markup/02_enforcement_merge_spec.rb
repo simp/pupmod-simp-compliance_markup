@@ -6,8 +6,8 @@ require 'puppet/pops/lookup/context'
 require 'yaml'
 require 'fileutils'
 
-puppetver = SemanticPuppet::Version.parse(Puppet.version)
-requiredver = SemanticPuppet::Version.parse("4.10.0")
+SemanticPuppet::Version.parse(Puppet.version)
+SemanticPuppet::Version.parse('4.10.0')
 
 describe 'lookup' do
   # Generate a fake module with dummy data for lookup().
@@ -44,7 +44,7 @@ describe 'lookup' do
             'array value 1',
           ],
         },
-        'ces'      => [
+        'ces' => [
           '02_ce1',
         ],
       },
@@ -56,11 +56,11 @@ describe 'lookup' do
             'array value 2',
           ],
         },
-        'ces'      => [
+        'ces' => [
           '02_ce1',
         ],
       },
-      '02_hash check1'  => {
+      '02_hash check1' => {
         'type'     => 'puppet-class-parameter',
         'settings' => {
           'parameter' => 'test_module_02::hash_param',
@@ -68,11 +68,11 @@ describe 'lookup' do
             'hash key 1' => 'hash value 1',
           },
         },
-        'ces'      => [
+        'ces' => [
           '02_ce1',
         ],
       },
-      '02_hash check2'  => {
+      '02_hash check2' => {
         'type'     => 'puppet-class-parameter',
         'settings' => {
           'parameter' => 'test_module_02::hash_param',
@@ -80,7 +80,7 @@ describe 'lookup' do
             'hash key 2' => 'hash value 2',
           },
         },
-        'ces'      => [
+        'ces' => [
           '02_ce1',
         ],
       },
@@ -94,7 +94,7 @@ describe 'lookup' do
             },
           },
         },
-        'ces'      => [
+        'ces' => [
           '02_ce1',
         ],
       },
@@ -108,7 +108,7 @@ describe 'lookup' do
             },
           },
         },
-        'ces'      => [
+        'ces' => [
           '02_ce1',
         ],
       },
@@ -144,10 +144,10 @@ describe 'lookup' do
       it { is_expected.to run.with_params('test_module_02::array_param').and_return(['array value 1', 'array value 2']) }
 
       # Test a simple hash.
-      it { is_expected.to run.with_params('test_module_02::hash_param').and_return({'hash key 1' => 'hash value 1', 'hash key 2' => 'hash value 2'}) }
+      it { is_expected.to run.with_params('test_module_02::hash_param').and_return({ 'hash key 1' => 'hash value 1', 'hash key 2' => 'hash value 2' }) }
 
       # Test a nested hash.
-      it { is_expected.to run.with_params('test_module_02::nested_hash').and_return({'key' => { 'key1' => 'value1', 'key2' => 'value2'}}) }
+      it { is_expected.to run.with_params('test_module_02::nested_hash').and_return({ 'key' => { 'key1' => 'value1', 'key2' => 'value2' } }) }
     end
   end
 end
