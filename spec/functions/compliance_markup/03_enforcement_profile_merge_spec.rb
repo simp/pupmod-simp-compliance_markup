@@ -6,8 +6,8 @@ require 'puppet/pops/lookup/context'
 require 'yaml'
 require 'fileutils'
 
-puppetver = SemanticPuppet::Version.parse(Puppet.version)
-requiredver = SemanticPuppet::Version.parse("4.10.0")
+SemanticPuppet::Version.parse(Puppet.version)
+SemanticPuppet::Version.parse('4.10.0')
 
 describe 'lookup' do
   # Generate a fake module with dummy data for lookup().
@@ -44,7 +44,7 @@ describe 'lookup' do
           'parameter' => 'test_module_03::string_param',
           'value'     => 'string value 1',
         },
-        'ces'      => [
+        'ces' => [
           '03_profile_test1',
         ],
       },
@@ -54,11 +54,11 @@ describe 'lookup' do
           'parameter' => 'test_module_03::string_param',
           'value'     => 'string value 2',
         },
-        'ces'      => [
+        'ces' => [
           '03_profile_test2',
         ],
       },
-      '03_array check1'  => {
+      '03_array check1' => {
         'type'     => 'puppet-class-parameter',
         'settings' => {
           'parameter' => 'test_module_03::array_param',
@@ -66,11 +66,11 @@ describe 'lookup' do
             'array value 1',
           ],
         },
-        'ces'      => [
+        'ces' => [
           '03_profile_test1',
         ],
       },
-      '03_array check2'  => {
+      '03_array check2' => {
         'type'     => 'puppet-class-parameter',
         'settings' => {
           'parameter' => 'test_module_03::array_param',
@@ -78,11 +78,11 @@ describe 'lookup' do
             'array value 2',
           ],
         },
-        'ces'      => [
+        'ces' => [
           '03_profile_test2',
         ],
       },
-      '03_hash check1'   => {
+      '03_hash check1' => {
         'type'     => 'puppet-class-parameter',
         'settings' => {
           'parameter' => 'test_module_03::hash_param',
@@ -90,11 +90,11 @@ describe 'lookup' do
             'hash key 1' => 'hash value 1',
           },
         },
-        'ces'      => [
+        'ces' => [
           '03_profile_test1',
         ],
       },
-      '03_hash check2'   => {
+      '03_hash check2' => {
         'type'     => 'puppet-class-parameter',
         'settings' => {
           'parameter' => 'test_module_03::hash_param',
@@ -102,11 +102,11 @@ describe 'lookup' do
             'hash key 2' => '\-- hash value 2',
           },
         },
-        'ces'      => [
+        'ces' => [
           '03_profile_test2',
         ],
       },
-      '03_nested hash1'  => {
+      '03_nested hash1' => {
         'type'     => 'puppet-class-parameter',
         'settings' => {
           'parameter' => 'test_module_03::nested_hash',
@@ -116,11 +116,11 @@ describe 'lookup' do
             },
           },
         },
-        'ces'      => [
+        'ces' => [
           '03_profile_test1',
         ],
       },
-      '03_nested hash2'  => {
+      '03_nested hash2' => {
         'type'     => 'puppet-class-parameter',
         'settings' => {
           'parameter' => 'test_module_03::nested_hash',
@@ -131,7 +131,7 @@ describe 'lookup' do
             },
           },
         },
-        'ces'      => [
+        'ces' => [
           '03_profile_test2',
         ],
       },
@@ -155,11 +155,11 @@ describe 'lookup' do
     fh.puts checks_yaml
   end
 
-  on_supported_os.each do |os, os_facts|
+  on_supported_os.each do |os, _os_facts|
     context "on #{os} with compliance_markup::enforcement merging profiles" do
       before(:all) do
         File.open(File.join(fixtures, 'hieradata', 'profile-merging.yaml'), 'w') do |fh|
-          test_hiera = {'compliance_markup::enforcement' => ['profile_test1', 'profile_test2']}.to_yaml
+          test_hiera = { 'compliance_markup::enforcement' => ['profile_test1', 'profile_test2'] }.to_yaml
           fh.puts test_hiera
         end
       end
@@ -173,16 +173,16 @@ describe 'lookup' do
       it { is_expected.to run.with_params('test_module_03::array_param').and_return(['array value 2', 'array value 1']) }
 
       # Test a simple hash.
-      it { is_expected.to run.with_params('test_module_03::hash_param').and_return({'hash key 1' => 'hash value 1', 'hash key 2' => '-- hash value 2'}) }
+      it { is_expected.to run.with_params('test_module_03::hash_param').and_return({ 'hash key 1' => 'hash value 1', 'hash key 2' => '-- hash value 2' }) }
 
       # Test a nested hash.
-      it { is_expected.to run.with_params('test_module_03::nested_hash').and_return({'key' => { 'key1' => 'value1', 'key2' => 'value2'}}) }
+      it { is_expected.to run.with_params('test_module_03::nested_hash').and_return({ 'key' => { 'key1' => 'value1', 'key2' => 'value2' } }) }
     end
 
     context "on #{os} with compliance_markup::enforcement merging profiles in reverse order" do
       before(:all) do
         File.open(File.join(fixtures, 'hieradata', 'profile-merging.yaml'), 'w') do |fh|
-          test_hiera = {'compliance_markup::enforcement' => ['profile_test2', 'profile_test1']}.to_yaml
+          test_hiera = { 'compliance_markup::enforcement' => ['profile_test2', 'profile_test1'] }.to_yaml
           fh.puts test_hiera
         end
       end
@@ -196,10 +196,10 @@ describe 'lookup' do
       it { is_expected.to run.with_params('test_module_03::array_param').and_return(['array value 1', 'array value 2']) }
 
       # Test a simple hash.
-      it { is_expected.to run.with_params('test_module_03::hash_param').and_return({'hash key 2' => '-- hash value 2', 'hash key 1' => 'hash value 1'}) }
+      it { is_expected.to run.with_params('test_module_03::hash_param').and_return({ 'hash key 2' => '-- hash value 2', 'hash key 1' => 'hash value 1' }) }
 
       # Test a nested hash.
-      it { is_expected.to run.with_params('test_module_03::nested_hash').and_return({'key' => { 'key1' => 'value2', 'key2' => 'value2'}}) }
+      it { is_expected.to run.with_params('test_module_03::nested_hash').and_return({ 'key' => { 'key1' => 'value2', 'key2' => 'value2' } }) }
     end
   end
 end

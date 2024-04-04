@@ -46,7 +46,7 @@ def write_hieradata(policy_order)
 end
 
 describe 'lookup' do
-  on_supported_os.each do |os, os_facts|
+  on_supported_os.each do |os, _os_facts|
     context "on #{os}" do
       context 'with a single compliance map' do
         let(:hieradata) { '10_enforce_spec' }

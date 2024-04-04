@@ -169,9 +169,8 @@
 #     ...code that applies CCE-1234...
 #   }
 #
-#Puppet::Functions.create_function(:'compliance_markup::compliance_map') do
+# Puppet::Functions.create_function(:'compliance_markup::compliance_map') do
 Puppet::Functions.create_function(:'compliance_markup::compliance_map', Puppet::Functions::InternalFunction) do
-
   # @param map_data
   #   The full Hash of mapping data
   #
@@ -180,7 +179,7 @@ Puppet::Functions.create_function(:'compliance_markup::compliance_map', Puppet::
   dispatch :compliance_map do
     required_param 'Hash', :map_data
     # See: https://github.com/puppetlabs/puppet-specifications/blob/master/language/func-api.md#experimental--internal-features
-    scope_param()
+    scope_param
   end
 
   # @param compliance_profile
@@ -199,14 +198,14 @@ Puppet::Functions.create_function(:'compliance_markup::compliance_map', Puppet::
     required_param 'Variant[String[1], Array[String[1]]]', :identifiers
     optional_param 'String[1]', :notes
     # See: https://github.com/puppetlabs/puppet-specifications/blob/master/language/func-api.md#experimental--internal-features
-    scope_param()
+    scope_param
   end
 
   def compliance_map(map_data, scope)
     create_compliance_map(scope, [map_data])
   end
 
-  def compliance_map_inline(compliance_profile, identifiers, notes=nil, scope)
+  def compliance_map_inline(compliance_profile, identifiers, notes = nil, scope)
     args = [compliance_profile, identifiers]
 
     args << notes if notes
@@ -232,7 +231,7 @@ Puppet::Functions.create_function(:'compliance_markup::compliance_map', Puppet::
     compliance_report_generator = catalog.instance_variable_get(:@simp_compliance_report_generator)
 
     unless compliance_report_generator
-      object = Object.new()
+      object = Object.new
 
       filename = File.join(File.dirname(__FILE__), '..', '..', '..', 'puppetx', 'simp', 'compliance_map.rb')
       object.instance_eval(File.read(filename), filename)
