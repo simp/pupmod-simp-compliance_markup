@@ -6,8 +6,8 @@ require 'puppet/pops/lookup/context'
 require 'yaml'
 require 'fileutils'
 
-puppetver = SemanticPuppet::Version.parse(Puppet.version)
-requiredver = SemanticPuppet::Version.parse("4.10.0")
+SemanticPuppet::Version.parse(Puppet.version)
+SemanticPuppet::Version.parse('4.10.0')
 
 describe 'lookup' do
   # Generate a fake module with dummy data for lookup().
@@ -47,7 +47,7 @@ describe 'lookup' do
           'parameter' => 'test_module_00::test_param',
           'value'     => 'a string',
         },
-        'ces'      => [
+        'ces' => [
           '00_ce1',
         ],
       },
@@ -57,7 +57,7 @@ describe 'lookup' do
           'parameter' => 'test_module_00::test_param2',
           'value'     => 'another string',
         },
-        'ces'      => [
+        'ces' => [
           '00_ce1',
         ],
       },
@@ -89,7 +89,10 @@ describe 'lookup' do
 
       let(:hieradata) { 'compliance-engine' }
 
-      it { is_expected.to run.with_params('test_module_00::test_param').and_raise_error(Puppet::DataBinding::LookupError, "Function lookup() did not find a value for the name 'test_module_00::test_param'") }
+      it {
+        is_expected.to run.with_params('test_module_00::test_param').and_raise_error(Puppet::DataBinding::LookupError,
+"Function lookup() did not find a value for the name 'test_module_00::test_param'")
+      }
     end
 
     context "on #{os} with compliance_markup::enforcement and an existing profile" do
@@ -112,7 +115,10 @@ describe 'lookup' do
       let(:hieradata) { 'compliance-engine' }
 
       # Test unconfined data.
-      it { is_expected.to run.with_params('test_module_00::test_param').and_raise_error(Puppet::DataBinding::LookupError, "Function lookup() did not find a value for the name 'test_module_00::test_param'") }
+      it {
+        is_expected.to run.with_params('test_module_00::test_param').and_raise_error(Puppet::DataBinding::LookupError,
+"Function lookup() did not find a value for the name 'test_module_00::test_param'")
+      }
       it { is_expected.to run.with_params('test_module_00::test_param2').and_return('another string') }
     end
   end

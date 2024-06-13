@@ -3,15 +3,15 @@
 require 'yaml'
 
 def deep_merge(old, new)
-  old.merge(new) { |key, val1, val2|
-    if val1.kind_of?(Hash) and val2.kind_of?(Hash)
+  old.merge(new) do |_key, val1, val2|
+    if val1.is_a?(Hash) && val2.is_a?(Hash)
       deep_merge(val1, val2)
-    elsif val1.kind_of?(Array) and val2.kind_of?(Array)
+    elsif val1.is_a?(Array) && val2.is_a?(Array)
       val1 & val2
     else
       val2
     end
-  }
+  end
 end
 
 el6 = YAML.load_file('checks-el6.yaml')
@@ -22,7 +22,7 @@ combined = {
   'checks'  => {},
 }
 
-el6['checks'].keys.each do |k|
+el6['checks'].each_key do |k|
   key = k.sub(%r{\.el6$}, '')
   if el7['checks'].key?(key)
     if el6['checks'][k]['settings']['value'] == el7['checks'][key]['settings']['value']

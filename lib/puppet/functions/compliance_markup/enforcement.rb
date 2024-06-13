@@ -41,14 +41,14 @@ Puppet::Functions.create_function(:'compliance_markup::enforcement') do
   # @return [Any]
   #   The discovered value or Undef if not found
   dispatch :hiera_enforcement do
-    param "String", :key
-    param "Hash", :options
-    param "Puppet::LookupContext", :context
+    param 'String', :key
+    param 'Hash', :options
+    param 'Puppet::LookupContext', :context
   end
 
   def hiera_enforcement(key, options, context)
     filename = File.expand_path('../../../../puppetx/simp/compliance_mapper.rb', __FILE__)
-    self.instance_eval(File.read(filename), filename)
+    instance_eval(File.read(filename), filename)
 
     retval = nil
 
@@ -59,11 +59,11 @@ Puppet::Functions.create_function(:'compliance_markup::enforcement') do
       options_dup = Marshal.load(Marshal.dump(options))
 
       retval = enforcement(key, @context, options_dup) do |k, default|
-         call_function('lookup', k, { 'default_value' => default })
+        call_function('lookup', k, { 'default_value' => default })
       end
     rescue => e
-      unless (e.class.to_s == 'ArgumentError')
-        debug("Threw error #{e.to_s}")
+      unless e.class.to_s == 'ArgumentError'
+        debug("Threw error #{e}")
       end
 
       @context.not_found
@@ -72,7 +72,7 @@ Puppet::Functions.create_function(:'compliance_markup::enforcement') do
     # Allow for escaping knockout prefixes that we want to preserve in strings
     # NOTE: This is horrible but less horrible than traversing all manner of
     # data structures recursively.
-    retval = JSON.load(retval.to_json.gsub('\\--', '--'))
+    retval = JSON.parse(retval.to_json.gsub('\\--', '--'))
 
     # Add the key to the cache if we found something
     cache(key, retval) if retval
@@ -80,16 +80,16 @@ Puppet::Functions.create_function(:'compliance_markup::enforcement') do
     retval
   end
 
-  def codebase()
+  def codebase
     'compliance_markup::enforcement'
   end
 
-  def environment()
+  def environment
     closure_scope.environment.name.to_s
   end
 
   def debug(message)
-    @context.explain() { "#{message}" }
+    @context.explain { message.to_s }
   end
 
   def cache(key, value)
@@ -113,14 +113,12 @@ Puppet::Functions.create_function(:'compliance_markup::enforcement') do
   end
 
   def lookup_fact(fact)
-    begin
-      call_function('dig', closure_scope.lookupvar('facts'), *fact.split('.'))
-    rescue ArgumentError
-      nil
-    end
+    call_function('dig', closure_scope.lookupvar('facts'), *fact.split('.'))
+  rescue ArgumentError
+    nil
   end
 
   def module_list
-    closure_scope.environment.modules.map { |obj| { "name" => obj.metadata["name"], "version" => obj.metadata["version"] } }
+    closure_scope.environment.modules.map { |obj| { 'name' => obj.metadata['name'], 'version' => obj.metadata['version'] } }
   end
 end
