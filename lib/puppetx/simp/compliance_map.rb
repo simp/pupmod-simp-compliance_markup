@@ -297,7 +297,7 @@ def compliance_map(args, context)
 
         if res.nil? && base_resource
           unknown_resources << base_resource
-        elsif res.key?(param.to_sym)
+        elsif res.has_key?(param.to_sym) # rubocop:disable Style/PreferredHashMethods
           current_value = res[param]
 
           # XXX ToDo This should be improved to allow for validators to be specified
