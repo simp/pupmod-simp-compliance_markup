@@ -66,7 +66,7 @@ describe 'compliance_markup class' do
       it 'has a report' do
         expect(compliance_data).not_to be_nil
         expect(compliance_data[:report]).not_to be_nil
-        expect(compliance_data[:report]).not_to be_instance_of(Hash)
+        expect(compliance_data[:report]).to be_instance_of(Hash)
         expect(compliance_data[:report]).not_to be_empty
       end
 
