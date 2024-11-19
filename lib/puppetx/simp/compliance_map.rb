@@ -2,36 +2,35 @@
 # BEGIN COMPLIANCE_PROFILE
 #
 def catalog_to_map(catalog)
-  catalog_map = Hash.new()
+  catalog_map = {}
 
   catalog_map['compliance_map::percent_sign'] = '%'
   catalog_map['compliance_map'] = {
     'version'                => @api_version,
-    'generated_via_function' => Hash.new()
+    'generated_via_function' => {}
   }
 
   catalog.resources.each do |resource|
     # Ignore our own nonsense
     next if resource.name == 'Compliance_markup'
 
-    if resource.name.is_a?(String) && (resource.name[0] =~ /[A-Z]/) && resource.parameters
-      resource.parameters.each do |param_array|
-        param = param_array.last
+    next unless resource.name.is_a?(String) && (resource.name[0] =~ %r{[A-Z]}) && resource.parameters
+    resource.parameters.each do |param_array|
+      param = param_array.last
 
-        param_name = %{#{resource.name}::#{param.name}}.downcase
+      param_name = %(#{resource.name}::#{param.name}).downcase
 
-        # We only want things with values
-        next if param.value.nil?
+      # We only want things with values
+      next if param.value.nil?
 
-        catalog_map['compliance_map']['generated_via_function'][param_name] = {
-          'identifiers' => ['GENERATED'],
-          'value'       => param.value
-        }
-      end
+      catalog_map['compliance_map']['generated_via_function'][param_name] = {
+        'identifiers' => ['GENERATED'],
+        'value'       => param.value
+      }
     end
   end
 
-  return catalog_map.to_yaml
+  catalog_map.to_yaml
 end
 
 # There is no way to silence the global warnings on looking up a qualified
@@ -42,40 +41,40 @@ end
 
 def process_options(args)
   config = {
-    :custom_call               => false,
-    :report_types              => [
+    custom_call: false,
+    report_types: [
       'non_compliant',
       'unknown_parameters',
-      'custom_entries'
+      'custom_entries',
     ],
-    :format                    => 'json',
-    :client_report             => false,
-    :client_report_timestamp   => false,
-    :server_report             => true,
-    :server_report_dir         => File.join(Puppet[:vardir], 'simp', 'compliance_reports'),
-    :default_map               => {},
-    :catalog_to_compliance_map => false
+    format: 'json',
+    client_report: false,
+    client_report_timestamp: false,
+    server_report: true,
+    server_report_dir: File.join(Puppet[:vardir], 'simp', 'compliance_reports'),
+    default_map: {},
+    catalog_to_compliance_map: false
   }
 
   # What profile are we using?
   if args && !args.empty?
-    unless (args.first.is_a?(String) || args.first.is_a?(Hash))
-      raise Puppet::ParseError, "compliance_map(): First parameter must be a String or Hash"
+    unless args.first.is_a?(String) || args.first.is_a?(Hash)
+      raise Puppet::ParseError, 'compliance_map(): First parameter must be a String or Hash'
     end
 
     # This is used during the main call
     if args.first.is_a?(Hash)
       # Convert whatever was passed in to a symbol so that the Hash merge
       # works properly.
-      user_config = Hash[args.first.map{|k,v| [k.to_sym, v] }]
+      user_config = Hash[args.first.map { |k, v| [k.to_sym, v] }]
       if user_config[:report_types]
         user_config[:report_types] = Array(user_config[:report_types])
       end
 
       # Takes care of things that have been set to 'undef' in Puppet
-      user_config.delete_if{|k,v|
+      user_config.delete_if do |_k, v|
         v.nil? || v.is_a?(Symbol)
-      }
+      end
 
       config.merge!(user_config)
 
@@ -83,22 +82,22 @@ def process_options(args)
     else
       config[:custom_call] = true
       config[:custom] = {
-        :profile    => args.shift,
-        :identifier => args.shift,
-        :notes      => args.shift
+        profile: args.shift,
+        identifier: args.shift,
+        notes: args.shift
       }
 
       if config[:custom][:profile] && !config[:custom][:identifier]
-        raise Puppet::ParseError, "compliance_map(): You must pass at least two parameters"
+        raise Puppet::ParseError, 'compliance_map(): You must pass at least two parameters'
       end
 
       unless config[:custom][:identifier].is_a?(String)
-        raise Puppet::ParseError, "compliance_map(): Second parameter must be a compliance identifier String"
+        raise Puppet::ParseError, 'compliance_map(): Second parameter must be a compliance identifier String'
       end
 
       if config[:custom][:notes]
         unless config[:custom][:notes].is_a?(String)
-          raise Puppet::ParseError, "compliance_map(): Third parameter must be a compliance notes String"
+          raise Puppet::ParseError, 'compliance_map(): Third parameter must be a compliance notes String'
         end
       end
     end
@@ -106,7 +105,7 @@ def process_options(args)
 
   valid_formats = [
     'json',
-    'yaml'
+    'yaml',
   ]
 
   unless valid_formats.include?(config[:format])
@@ -119,7 +118,7 @@ def process_options(args)
     'compliant',
     'unknown_resources',
     'unknown_parameters',
-    'custom_entries'
+    'custom_entries',
   ]
 
   unless (config[:report_types] - valid_report_types).empty?
@@ -146,7 +145,7 @@ def process_options(args)
     end
   end
 
-  return config
+  config
 end
 
 def get_compliance_profiles
@@ -158,72 +157,68 @@ def get_compliance_profiles
   compliance_class_resource = @context.catalog.resource('Class[compliance_markup]')
   compliance_profiles ||= compliance_class_resource[:validate_profiles] if compliance_class_resource
 
-  return compliance_profiles
+  compliance_profiles
 end
 
 def add_file_to_client(config, compliance_map)
-  if config[:client_report]
-    client_vardir = @context.lookupvar('puppet_vardir')
+  return unless config[:client_report]
+  client_vardir = @context.lookupvar('puppet_vardir')
 
-    unless client_vardir
-      raise(Puppet::ParseError, "compliance_map(): Cannot find fact `puppet_vardir`. Ensure `puppetlabs/stdlib` is installed")
-    else
-      compliance_report_target = %(#{client_vardir}/compliance_report.#{config[:format]})
-    end
+  raise(Puppet::ParseError, 'compliance_map(): Cannot find fact `puppet_vardir`. Ensure `puppetlabs/stdlib` is installed') unless client_vardir
 
-    # Retrieve the catalog resource if it already exists, create one if it
-    # does not
-    compliance_resource = @context.catalog.resources.find{ |res|
-      res.type == 'File' && res.name == compliance_report_target
-    }
+  compliance_report_target = %(#{client_vardir}/compliance_report.#{config[:format]})
 
-    if compliance_resource
-      # This is a massive hack that should be removed in the future.  Some
-      # versions of Puppet, including the latest 3.X, do not check to see if
-      # a resource has the 'remove' capability defined before calling it.  We
-      # patch in the method here to work around this issue.
-      unless compliance_resource.respond_to?(:remove)
-        # Using this instead of define_singleton_method for Ruby 1.8 compatibility.
-        class << compliance_resource
-          self
-        end.send(:define_method, :remove) do nil end
-      end
-
-      @context.catalog.remove_resource(compliance_resource)
-    else
-      compliance_resource = Puppet::Parser::Resource.new(
-        'file',
-        compliance_report_target,
-        :scope => @context,
-        :source => @context.source
-      )
-      compliance_resource.set_parameter('owner',Process.uid)
-      compliance_resource.set_parameter('group',Process.gid)
-      compliance_resource.set_parameter('mode','0600')
-    end
-
-    unless (config[:client_report_timestamp].nil? || config[:client_report_timestamp])
-      compliance_map.delete('timestamp') if compliance_map['timestamp']
-    end
-
-    if config[:format] == 'json'
-      compliance_resource.set_parameter('content',%(#{(compliance_map.to_json)}\n))
-    elsif config[:format] == 'yaml'
-      compliance_resource.set_parameter('content',%(#{compliance_map.to_yaml}\n))
-    end
-
-    # Inject new information into the catalog
-    @context.catalog.add_resource(compliance_resource)
+  # Retrieve the catalog resource if it already exists, create one if it
+  # does not
+  compliance_resource = @context.catalog.resources.find do |res|
+    res.type == 'File' && res.name == compliance_report_target
   end
-end
 
+  if compliance_resource
+    # This is a massive hack that should be removed in the future.  Some
+    # versions of Puppet, including the latest 3.X, do not check to see if
+    # a resource has the 'remove' capability defined before calling it.  We
+    # patch in the method here to work around this issue.
+    unless compliance_resource.respond_to?(:remove)
+      # Using this instead of define_singleton_method for Ruby 1.8 compatibility.
+      class << compliance_resource
+        self
+      end.send(:define_method, :remove) { nil }
+    end
+
+    @context.catalog.remove_resource(compliance_resource)
+  else
+    compliance_resource = Puppet::Parser::Resource.new(
+      'file',
+      compliance_report_target,
+      scope: @context,
+      source: @context.source,
+    )
+    compliance_resource.set_parameter('owner', Process.uid)
+    compliance_resource.set_parameter('group', Process.gid)
+    compliance_resource.set_parameter('mode', '0600')
+  end
+
+  unless config[:client_report_timestamp].nil? || config[:client_report_timestamp]
+    compliance_map.delete('timestamp') if compliance_map['timestamp']
+  end
+
+  if config[:format] == 'json'
+    compliance_resource.set_parameter('content', %(#{compliance_map.to_json}\n))
+  elsif config[:format] == 'yaml'
+    compliance_resource.set_parameter('content', %(#{compliance_map.to_yaml}\n))
+  end
+
+  # Inject new information into the catalog
+  @context.catalog.add_resource(compliance_resource)
+end
 
 def write_server_report(config, report)
   report_dir = File.join(config[:server_report_dir], lookup_fact('networking.fqdn'))
   FileUtils.mkdir_p(report_dir)
 
   if config[:server_report]
-    File.open(File.join(report_dir,"compliance_report.#{config[:format]}"),'w') do |fh|
+    File.open(File.join(report_dir, "compliance_report.#{config[:format]}"), 'w') do |fh|
       if config[:format] == 'json'
         fh.puts(report.to_json)
       elsif config[:format] == 'yaml'
@@ -231,10 +226,9 @@ def write_server_report(config, report)
       end
     end
   end
-  if config[:catalog_to_compliance_map]
-    File.open(File.join(report_dir,'catalog_compliance_map.yaml'),'w') do |fh|
-      fh.puts(catalog_to_map(@context.resource.scope.catalog))
-    end
+  return unless config[:catalog_to_compliance_map]
+  File.open(File.join(report_dir, 'catalog_compliance_map.yaml'), 'w') do |fh|
+    fh.puts(catalog_to_map(@context.resource.scope.catalog))
   end
 end
 
@@ -242,14 +236,14 @@ def compliance_map(args, context)
   require 'set'
 
   @context = context
-  if (@custom_entries == nil)
+  if @custom_entries.nil?
     @custom_entries = {}
   end
 
   @catalog = @context.resource.scope.catalog
   profile_compiler = compiler_class.new(self)
   profile_compiler.load do |key, default|
-    @context.call_function('lookup', [key, {"default_value" => default}])
+    @context.call_function('lookup', [key, { 'default_value' => default }])
   end
   main_config = process_options(args)
   report_types = main_config[:report_types]
@@ -264,7 +258,7 @@ def compliance_map(args, context)
 
   report = main_config[:extra_data].dup
 
-  report['version'] = '1.0.1';
+  report['version'] = '1.0.1'
   report['timestamp'] = Time.now.to_s
   report['compliance_profiles'] = {}
 
@@ -297,13 +291,13 @@ def compliance_map(args, context)
             # This only finds the first instance but this limits the amount of
             # work done every time this runs. Will probably need to figure out
             # a better way to do this in the future.
-            res = @catalog.resources.find{|r| r.to_s =~ /#{define_resource_name}/}
+            res = @catalog.resources.find { |r| r.to_s =~ %r{#{define_resource_name}} }
           end
         end
 
         if res.nil? && base_resource
           unknown_resources << base_resource
-        elsif res.has_key?(param.to_sym)
+        elsif res.has_key?(param.to_sym) # rubocop:disable Style/PreferredHashMethods
           current_value = res[param]
 
           # XXX ToDo This should be improved to allow for validators to be specified
@@ -315,23 +309,23 @@ def compliance_map(args, context)
             # Allow for escaping knockout prefixes that we want to preserve in strings
             # NOTE: This is horrible but less horrible than traversing all manner of
             # data structures recursively.
-            expected_value = JSON.load(expected_value.to_json.gsub('\\--', '--'))
+            expected_value = JSON.parse(expected_value.to_json.gsub('\\--', '--'))
 
             result = {
-                'compliant_value' => expected_value,
-                'system_value'    => current_value,
+              'compliant_value' => expected_value,
+                'system_value' => current_value,
             }
 
             if profile_settings.key?('identifiers')
-             result['identifiers'] = profile_settings['identifiers']
+              result['identifiers'] = profile_settings['identifiers']
             end
 
             classkey = "#{res.type}[#{res.title}]"
-            if expected_value.is_a?(String) && expected_value =~ /^re:(.+)/
-              section = (current_value =~ Regexp.new($1)) ? 'compliant' : 'non_compliant'
-            else
-              section = (current_value == expected_value) ? 'compliant' : 'non_compliant'
-            end
+            section = if expected_value.is_a?(String) && expected_value =~ %r{^re:(.+)}
+                        (current_value =~ Regexp.new(Regexp.last_match(1))) ? 'compliant' : 'non_compliant'
+                      else
+                        (current_value == expected_value) ? 'compliant' : 'non_compliant'
+                      end
 
             if section == 'compliant'
               num_compliant += 1
@@ -389,9 +383,9 @@ def summary(profile_report, num_compliant, num_non_compliant)
   end
 
   total_checks = num_non_compliant + num_compliant
-  report['percent_compliant'] = total_checks == 0 ? 0 : ((num_compliant.to_f/total_checks) * 100).round(0)
+  report['percent_compliant'] = (total_checks == 0) ? 0 : ((num_compliant.to_f / total_checks) * 100).round(0)
 
-  return report
+  report
 end
 
 def add_custom_entries(main_config)
@@ -401,8 +395,8 @@ def add_custom_entries(main_config)
   file_info = custom_call_file_info
 
   value = {
-      "identifiers" => main_config[:custom][:identifier],
-      "location" => %(#{file_info[:file]}:#{file_info[:line]})
+    'identifiers' => main_config[:custom][:identifier],
+      'location' => %(#{file_info[:file]}:#{file_info[:line]})
   }
 
   if main_config[:custom][:notes]
@@ -412,24 +406,23 @@ def add_custom_entries(main_config)
   profile = main_config[:custom][:profile]
   resource_name = %(#{@context.resource.type}::#{@context.resource.title})
 
-  unless (@custom_entries.key?(profile))
+  unless @custom_entries.key?(profile)
     @custom_entries[profile] = {}
   end
 
-  unless (@custom_entries[profile].key?(resource_name))
+  unless @custom_entries[profile].key?(resource_name)
     @custom_entries[profile][resource_name] = []
   end
 
-  unless @custom_entries[profile][resource_name].include?(value)
-    @custom_entries[profile][resource_name] << value
-  end
+  return if @custom_entries[profile][resource_name].include?(value)
+  @custom_entries[profile][resource_name] << value
 end
 
 def custom_call_file_info
   file_info = {
-      :file => @context.source.file,
+    file: @context.source.file,
       # We may not know the line number if this is at Top Scope
-      :line => @context.source.line || '<unknown>',
+      line: @context.source.line || '<unknown>',
   }
 
   # If we don't know the filename, guess....
@@ -438,32 +431,33 @@ def custom_call_file_info
     # Cast this to a string because it could potentially be a symbol from
     # the bowels of Puppet, or 'nil', or whatever and is purely
     # informative.
-    env_manifest = "#{@context.environment.manifest}"
+    env_manifest = @context.environment.manifest.to_s
 
-    if env_manifest =~ /\.pp$/
-      file = env_manifest
+    if %r{\.pp$}.match?(env_manifest)
+      env_manifest
     else
-      file = File.join(env_manifest,'site.pp')
+      File.join(env_manifest, 'site.pp')
     end
   else
     filename = @context.source.name.split('::')
     filename[-1] = filename[-1] + '.pp'
 
-    file = File.join(
+    File.join(
         '<estimate>',
-        "#{@context.environment.modulepath.first}",
-        filename
-    )
+        @context.environment.modulepath.first.to_s,
+        filename,
+      )
   end
 
-  return file_info
+  file_info
 end
 
-def debug(message)
-  return
+def debug(_message)
+  nil
 end
+
 def codebase
-  "compliance_map"
+  'compliance_map'
 end
 
 def environment
@@ -471,13 +465,11 @@ def environment
 end
 
 def lookup_fact(fact)
-  begin
-    @context.call_function('dig', [@context.lookupvar('facts'), *fact.split('.')])
-  rescue ArgumentError
-    nil
-  end
+  @context.call_function('dig', [@context.lookupvar('facts'), *fact.split('.')])
+rescue ArgumentError
+  nil
 end
 
 def module_list
-  @context.environment.modules.map { |obj| { "name" => obj.metadata["name"], "version" => obj.metadata["version"] } }
+  @context.environment.modules.map { |obj| { 'name' => obj.metadata['name'], 'version' => obj.metadata['version'] } }
 end

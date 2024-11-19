@@ -13,67 +13,62 @@ params = {}
 Dir.glob('../data/compliance_profiles/**/*.json') do |filename|
   data = JSON.parse(File.read(filename))
   data['compliance_markup::compliance_map'].each do |profile, value|
-    if (profile != 'version')
-      value.each do |key, value|
-        unless (params.key?(key))
-          params[key] = []
-        end
-        duplicate = false
-        value['profiles'] = [ profile ]
-        params[key].each do |entry|
-          if (entry['value'] == value['value'])
-            duplicate = true
-            entry['identifiers'].concat(value['identifiers'])
-            entry['identifiers'] = entry['identifiers'].uniq
-            entry['profiles'] << profile
-            entry['profiles'] = entry['profiles'].uniq
-          end
-        end
-        if (duplicate == false)
-          params[key] << value
-        end
+    next unless profile != 'version'
+    value.each do |k, v|
+      unless params.key?(k)
+        params[k] = []
+      end
+      duplicate = false
+      v['profiles'] = [ profile ]
+      params[k].each do |entry|
+        next unless entry['value'] == v['value']
+        duplicate = true
+        entry['identifiers'].concat(v['identifiers'])
+        entry['identifiers'] = entry['identifiers'].uniq
+        entry['profiles'] << profile
+        entry['profiles'] = entry['profiles'].uniq
+      end
+      if duplicate == false
+        params[k] << v
       end
     end
   end
 end
 
 params.each do |key, value|
-  if (value.size == 1)
+  if value.size == 1
     check_name = "oval:simp.shared.#{key}:def:1"
     output_hash['checks'][check_name] = value[0]
   else
     output = "#{key} = "
     value.each do |entry|
-
       output += "#{entry['profiles'][0]}:#{entry['value']} "
-      if (entry['profiles'].include?('disa_stig'))
-        check_name = "oval:simp.disa.#{key}:def:1"
-      else
-        check_name = "oval:simp.nist.#{key}:def:1"
-      end
+      check_name = if entry['profiles'].include?('disa_stig')
+                     "oval:simp.disa.#{key}:def:1"
+                   else
+                     "oval:simp.nist.#{key}:def:1"
+                   end
       output_hash['checks'][check_name] = entry
-
     end
     puts output
   end
 end
 
 output_hash['checks'].each do |checkname, check|
-  configuration_element = {}
   controls = {}
   check['identifiers'].each do |identifier|
     ident = identifier.split('(')[0]
     case ident
-    when /RHEL-/
+    when %r{RHEL-}
       break
-    when /CCI-/
+    when %r{CCI-}
       break
-    when /SRG-/
+    when %r{SRG-}
       break
     else
       control = ident
     end
-    unless (output_hash['controls'].key?(control))
+    unless output_hash['controls'].key?(control)
       family = control.split('-')[0]
       output_hash['controls'][control] = {
         'family' => family
@@ -96,6 +91,6 @@ output_hash['checks'].each do |checkname, check|
   end
 end
 
-output_hash['profiles'].each do |key, value|
+output_hash['profiles'].each_value do |value|
   value['ces'].sort!
 end
