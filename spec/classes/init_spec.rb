@@ -1,71 +1,49 @@
 require 'spec_helper'
 require 'fileutils'
 
-def activate_data(profile_dir)
-  fixtures = File.expand_path('../fixtures', __dir__)
-
-  dummy_module = File.join(fixtures, 'modules', 'init_spec', 'SIMP', 'compliance_profiles')
-  FileUtils.mkdir_p(dummy_module)
-
-  Dir.glob(File.join(fixtures, 'hieradata', profile_dir, 'SIMP', 'compliance_profiles', '*.yaml')).each do |file|
-    FileUtils.cp file, dummy_module
-  end
-end
-
-def remove_data
-  fixtures = File.expand_path('../fixtures', __dir__)
-
-  dummy_module = File.join(fixtures, 'modules', 'init_spec', 'SIMP', 'compliance_profiles')
-
-  Dir.glob(File.join(dummy_module, '*.yaml')).each do |file|
-    FileUtils.rm file
-  end
-end
-
 describe 'compliance_markup' do
   on_supported_os.each do |os, os_facts|
     let(:report_version) { '1.0.1' }
+    let(:fixtures) { File.expand_path('../fixtures', __dir__) }
+    let(:dummy_module) { File.join(fixtures, 'modules', 'init_spec', 'SIMP', 'compliance_profiles') }
 
     context "on #{os}" do
       # This needs to be called as the very last item of a compile
       let(:post_condition) do
-        <<-EOM
+        <<~EOM
           include 'compliance_markup'
         EOM
       end
 
       context 'with data in modules' do
-        before(:each) do
-          @server_report_dir = Dir.mktmpdir
-          @default_params = {
-            'options' => {
-              'server_report_dir' => @server_report_dir,
-              'format'            => 'yaml'
-            }
-          }
-
-          is_expected.to(compile.with_all_deps)
-        end
-
-        after(:each) do
-          @default_params = {}
-          @report = nil
-          File.exist?(@server_report_dir) && FileUtils.remove_entry(@server_report_dir)
-        end
-
+        let(:server_report_dir) { Dir.mktmpdir }
         let(:raw_report) do
           # There can be only one
           report_file = "#{params['options']['server_report_dir']}/#{facts[:networking][:fqdn]}/compliance_report.yaml"
           File.read(report_file)
         end
-
         let(:report) do
-          @report = YAML.safe_load(raw_report, aliases: true)
-          @report
+          YAML.safe_load(raw_report, aliases: true)
+        end
+        let(:default_params) do
+          {
+            'options' => {
+              'server_report_dir' => server_report_dir,
+              'format'            => 'yaml'
+            }
+          }
+        end
+
+        before(:each) do
+          is_expected.to(compile.with_all_deps)
+        end
+
+        after(:each) do
+          File.exist?(server_report_dir) && FileUtils.remove_entry(server_report_dir)
         end
 
         context 'when running with the inbuilt data' do
-          pre_condition_common = <<-EOM
+          pre_condition_common = <<~EOM
             class yum (
               # This should trigger a finding
               $config_options = {}
@@ -75,7 +53,7 @@ describe 'compliance_markup' do
           EOM
 
           let(:pre_condition) do
-            <<-EOM
+            <<~EOM
               $compliance_profile = ['disa_stig', 'nist_800_53:rev4']
 
               #{pre_condition_common}
@@ -83,7 +61,7 @@ describe 'compliance_markup' do
           end
 
           let(:facts) { os_facts }
-          let(:params) { @default_params }
+          let(:params) { default_params }
 
           it 'has a server side compliance report node directory' do
             expect(File).to exist("#{params['options']['server_report_dir']}/#{facts[:networking][:fqdn]}")
@@ -108,9 +86,9 @@ describe 'compliance_markup' do
             end
 
             let(:params) do
-              _params = Marshal.load(Marshal.dump(@default_params))
-              _params['options']['catalog_to_compliance_map'] = true
-              _params
+              p = Marshal.load(Marshal.dump(default_params))
+              p['options']['catalog_to_compliance_map'] = true
+              p
             end
 
             it 'has a generated catlaog' do
@@ -141,7 +119,7 @@ describe 'compliance_markup' do
           case data[:profile_type]
           when 'Array'
             let(:pre_condition) do
-              <<-EOM
+              <<~EOM
                 $compliance_profile = [
                   '#{profile_name}',
                   'other_profile'
@@ -198,7 +176,7 @@ describe 'compliance_markup' do
             end
           when 'String'
             let(:pre_condition) do
-              <<-EOM
+              <<~EOM
                 $compliance_profile = '#{profile_name}'
 
                 class test1 (
@@ -256,26 +234,7 @@ describe 'compliance_markup' do
 
           ['yaml', 'json'].each do |report_format|
             context "with report format #{report_format}" do
-              before(:each) do
-                @server_report_dir = Dir.mktmpdir
-
-                @default_params = {
-                  'options' => {
-                    'server_report_dir' => @server_report_dir,
-                    'format'            => report_format
-                  }
-                }
-
-                is_expected.to compile.with_all_deps
-              end
-
-              after(:each) do
-                @default_params = {}
-                @report = nil
-
-                File.exist?(@server_report_dir) && FileUtils.remove_entry(@server_report_dir)
-              end
-
+              let(:server_report_dir) { Dir.mktmpdir }
               # Working around the fact that we can't actually figure out how to get
               # Puppet[:vardir]
               let(:compliance_file_resource) do
@@ -283,30 +242,50 @@ describe 'compliance_markup' do
                   x.type == 'File' && x[:path] =~ %r{compliance_report.#{report_format}$}
                 }.flatten.first
               end
-
               let(:report) do
                 # There can be only one
                 report_file = "#{params['options']['server_report_dir']}/#{facts[:networking][:fqdn]}/compliance_report.#{report_format}"
 
                 if report_format == 'yaml'
-                  @report ||= YAML.load_file(report_file)
+                  YAML.load_file(report_file)
                 elsif report_format == 'json'
-                  @report ||= JSON.parse(File.read(report_file))
+                  JSON.parse(File.read(report_file))
+                end
+              end
+              let(:default_params) do
+                {
+                  'options' => {
+                    'server_report_dir' => server_report_dir,
+                    'format'            => report_format
+                  }
+                }
+              end
+
+              before(:each) do
+                allow(File).to receive(:read).and_call_original
+                allow(Dir).to receive(:glob).and_call_original
+
+                dummy_files = []
+                Dir.glob(File.join(fixtures, 'hieradata', active_data, 'SIMP', 'compliance_profiles', '*.yaml')).each do |file|
+                  dummy_file = File.join(dummy_module, File.basename(file))
+                  allow(File).to receive(:read).with(dummy_file, any_args).and_return(File.read(file))
+                  dummy_files << dummy_file
                 end
 
-                @report
+                allow(Dir).to receive(:glob).with(%r{\bSIMP/compliance_profiles\b.*/\*\*/\*\.yaml$}, any_args) do |_, &block|
+                  dummy_files.each(&block)
+                end
+
+                is_expected.to compile.with_all_deps
+              end
+
+              after(:each) do
+                File.exist?(server_report_dir) && FileUtils.remove_entry(server_report_dir)
               end
 
               context 'in a default run' do
-                before(:all) do
-                  activate_data('passing_checks')
-                end
-
-                after(:all) do
-                  remove_data
-                end
-
-                let(:params) { @default_params }
+                let(:active_data) { 'passing_checks' }
+                let(:params) { default_params }
 
                 it { is_expected.to(create_class('compliance_markup')) }
 
@@ -323,9 +302,9 @@ describe 'compliance_markup' do
                 end
 
                 it 'has a summary for each profile' do
-                  report['compliance_profiles'].each do |_compliance_profile, data|
-                    expect(data['summary']).not_to be_nil
-                    expect(data['summary']).not_to be_empty
+                  report['compliance_profiles'].each_value do |value|
+                    expect(value['summary']).not_to be_nil
+                    expect(value['summary']).not_to be_empty
 
                     all_report_types = [
                       'compliant',
@@ -334,7 +313,7 @@ describe 'compliance_markup' do
                       'documented_missing_classes',
                       'percent_compliant',
                     ]
-                    expect(data['summary'].keys - all_report_types).to eq([])
+                    expect(value['summary'].keys - all_report_types).to eq([])
                   end
                 end
 
@@ -347,22 +326,22 @@ describe 'compliance_markup' do
 
                 if data[:profile_type] == 'Array'
                   it 'has the expected custom entries' do
-                    data = report['compliance_profiles']['other_profile']['custom_entries']
+                    custom_entries = report['compliance_profiles']['other_profile']['custom_entries']
 
-                    expect(data).not_to be_nil
-                    expect(data).not_to be_empty
-                    expect(data.keys).to match_array([
-                                                       'Class::Test1',
-                                                       'Class::main',
-                                                       'One_off_inline::one off',
-                                                     ])
-                    expect(data['Class::Test1'].size).to eq(2)
-                    expect(data['Class::Test1'].first['identifiers']).to eq('IN_CLASS')
-                    expect(data['Class::Test1'].last['identifiers']).to eq('IN_CLASS2')
-                    expect(data['Class::main'].size).to eq(1)
-                    expect(data['Class::main'].first['identifiers']).to eq('TOP_LEVEL')
-                    expect(data['One_off_inline::one off'].size).to eq(1)
-                    expect(data['One_off_inline::one off'].first['identifiers']).to eq('ONE_OFF')
+                    expect(custom_entries).not_to be_nil
+                    expect(custom_entries).not_to be_empty
+                    expect(custom_entries.keys).to match_array([
+                                                                 'Class::Test1',
+                                                                 'Class::main',
+                                                                 'One_off_inline::one off',
+                                                               ])
+                    expect(custom_entries['Class::Test1'].size).to eq(2)
+                    expect(custom_entries['Class::Test1'].first['identifiers']).to eq('IN_CLASS')
+                    expect(custom_entries['Class::Test1'].last['identifiers']).to eq('IN_CLASS2')
+                    expect(custom_entries['Class::main'].size).to eq(1)
+                    expect(custom_entries['Class::main'].first['identifiers']).to eq('TOP_LEVEL')
+                    expect(custom_entries['One_off_inline::one off'].size).to eq(1)
+                    expect(custom_entries['One_off_inline::one off'].first['identifiers']).to eq('ONE_OFF')
                   end
                 else
                   it 'does not have entries from the "other_profile"' do
@@ -372,37 +351,29 @@ describe 'compliance_markup' do
               end
 
               context 'when placing the report on the client' do
-                before(:all) do
-                  activate_data('passing_checks')
-                end
-
-                after(:all) do
-                  remove_data
-                end
+                let(:active_data) { 'passing_checks' }
 
                 let(:params) do
-                  _params = Marshal.load(Marshal.dump(@default_params))
+                  p = Marshal.load(Marshal.dump(default_params))
 
-                  _params['options'].merge!(
+                  p['options'].merge!(
                     {
                       'client_report' => true,
                       'report_types'  => ['full']
                     },
                   )
 
-                  _params
+                  p
                 end
 
                 let(:client_report) do
                   report_content = compliance_file_resource[:content]
 
                   if report_format == 'yaml'
-                    @report ||= YAML.safe_load(report_content)
+                    YAML.safe_load(report_content)
                   elsif report_format == 'json'
-                    @report ||= JSON.parse(report_content)
+                    JSON.parse(report_content)
                   end
-
-                  @report
                 end
 
                 it { is_expected.to(create_class('compliance_markup')) }
@@ -421,9 +392,9 @@ describe 'compliance_markup' do
 
                 context 'with client_report_timestamp = true' do
                   let(:params) do
-                    _params = Marshal.load(Marshal.dump(@default_params))
+                    p = Marshal.load(Marshal.dump(default_params))
 
-                    _params['options'].merge!(
+                    p['options'].merge!(
                       {
                         'client_report'           => true,
                         'client_report_timestamp' => true,
@@ -431,7 +402,7 @@ describe 'compliance_markup' do
                       },
                     )
 
-                    _params
+                    p
                   end
 
                   it "has a valid #{report_format} report" do
@@ -445,20 +416,14 @@ describe 'compliance_markup' do
               end
 
               context 'when checking system compliance' do
-                before(:all) do
-                  activate_data('passing_checks')
-                end
-
-                after(:all) do
-                  remove_data
-                end
+                let(:active_data) { 'passing_checks' }
 
                 let(:params) do
-                  _params = Marshal.load(Marshal.dump(@default_params))
+                  p = Marshal.load(Marshal.dump(default_params))
 
-                  _params['options']['report_types'] = ['full']
+                  p['options']['report_types'] = ['full']
 
-                  _params
+                  p
                 end
 
                 let(:all_resources) do
@@ -592,15 +557,8 @@ describe 'compliance_markup' do
               end
 
               context 'when running with the default options' do
-                before(:all) do
-                  activate_data('passing_checks')
-                end
-
-                after(:all) do
-                  remove_data
-                end
-
-                let(:params) { @default_params }
+                let(:active_data) { 'passing_checks' }
+                let(:params) { default_params }
 
                 it 'has a valid profile' do
                   expect(report['compliance_profiles'][profile_name]).not_to be_empty
@@ -645,15 +603,7 @@ describe 'compliance_markup' do
               end
 
               context 'when an option in test4 has an escaped knockout prefix' do
-                before(:all) do
-                  activate_data('escaped_knockout')
-                end
-
-                after(:all) do
-                  remove_data
-                end
-
-                let(:params) { @default_params }
+                let(:active_data) { 'escaped_knockout' }
 
                 let(:facts) do
                   os_facts.merge(
@@ -669,16 +619,16 @@ describe 'compliance_markup' do
                 let(:human_name) { 'Class[Test4]' }
 
                 let(:params) do
-                  _params = Marshal.load(Marshal.dump(@default_params))
+                  p = Marshal.load(Marshal.dump(default_params))
 
-                  _params['options'].merge!(
+                  p['options'].merge!(
                     {
                       'client_report' => true,
                       'report_types'  => ['full']
                     },
                   )
 
-                  _params
+                  p
                 end
 
                 it { is_expected.to(create_class('compliance_markup')) }
@@ -689,15 +639,7 @@ describe 'compliance_markup' do
               end
 
               context 'when an option in test1 has deviated' do
-                before(:all) do
-                  activate_data('test1_deviation')
-                end
-
-                after(:all) do
-                  remove_data
-                end
-
-                let(:params) { @default_params }
+                let(:active_data) { 'test1_deviation' }
 
                 let(:human_name) { 'Class[Test1]' }
 
@@ -706,16 +648,16 @@ describe 'compliance_markup' do
                 end
 
                 let(:params) do
-                  _params = Marshal.load(Marshal.dump(@default_params))
+                  p = Marshal.load(Marshal.dump(default_params))
 
-                  _params['options'].merge!(
+                  p['options'].merge!(
                     {
                       'client_report' => true,
                       'report_types'  => ['full']
                     },
                   )
 
-                  _params
+                  p
                 end
 
                 it 'has 1 non_compliant parameter' do
@@ -745,15 +687,9 @@ describe 'compliance_markup' do
               end
 
               context 'when an option in test2::test3 has deviated' do
-                before(:all) do
-                  activate_data('test2_3_deviation')
-                end
+                let(:active_data) { 'test2_3_deviation' }
 
-                after(:all) do
-                  remove_data
-                end
-
-                let(:params) { @default_params }
+                let(:params) { default_params }
 
                 let(:human_name) { 'Class[Test2::Test3]' }
 
@@ -776,69 +712,39 @@ describe 'compliance_markup' do
 
               context 'without a compliance_profile variable set' do
                 let(:pre_condition) do
-                  <<-EOM
-                  include 'compliance_markup'
-                EOM
+                  <<~EOM
+                    include 'compliance_markup'
+                  EOM
                 end
 
-                before(:all) do
-                  activate_data('passing_checks')
-                end
-
-                after(:all) do
-                  remove_data
-                end
+                let(:active_data) { 'passing_checks' }
 
                 it { is_expected.to(compile.with_all_deps) }
               end
 
               context 'with an unknown compliance_profile variable set' do
                 let(:pre_condition) do
-                  <<-EOM
-                  $compliance_profile = 'FOO BAR'
-                EOM
+                  <<~EOM
+                    $compliance_profile = 'FOO BAR'
+                  EOM
                 end
 
-                before(:all) do
-                  activate_data('passing_checks')
-                end
-
-                after(:all) do
-                  remove_data
-                end
+                let(:active_data) { 'passing_checks' }
 
                 it { is_expected.to(compile.with_all_deps) }
               end
 
               context 'with undefined values in the compliance hash' do
                 let(:pre_condition) do
-                  <<-EOM
-                  include 'compliance_markup'
-                EOM
+                  <<~EOM
+                    include 'compliance_markup'
+                  EOM
                 end
 
-                before(:all) do
-                  activate_data('undefined_values')
-                end
-
-                after(:all) do
-                  remove_data
-                end
+                let(:active_data) { 'undefined_values' }
 
                 it { is_expected.to(compile.with_all_deps) }
               end
-
-              #             # Unknown why this does not work
-              #             xcontext 'without valid compliance data in Hiera' do
-              #               let(:pre_condition) {''}
-              #               # NOTE: No hieradata set!
-              #
-              #               it 'should fail' do
-              #                 expect {
-              #                   is_expected.to compile.with_all_deps
-              #                 }.to raise_error
-              #               end
-              #             end
             end
           end
         end

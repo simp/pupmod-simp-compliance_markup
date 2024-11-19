@@ -91,6 +91,6 @@ output_hash['checks'].each do |checkname, check|
   end
 end
 
-output_hash['profiles'].each do |_key, value|
+output_hash['profiles'].each_value do |value|
   value['ces'].sort!
 end

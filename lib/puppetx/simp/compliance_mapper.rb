@@ -181,15 +181,13 @@ def compiler_class
                     end
       end
       modpaths2.each do |modpath|
-        begin
-          Dir.glob("#{modpath}/*") do |modulename|
-            begin
-              rootpaths[modulename] = true
-            rescue
-            end
-          end
-        rescue
+        Dir.glob("#{modpath}/*") do |modulename|
+          rootpaths[modulename] = true
+        rescue StandardError => e
+          warn e.message
         end
+      rescue StandardError => e
+        warn e.message
       end
 
       base_paths = rootpaths.keys
@@ -215,12 +213,10 @@ def compiler_class
               "*.#{type}", # Of the given file type
           ),
         ) do |filename|
-          begin
-            @compliance_data[filename] = YAML.safe_load(File.read(filename)) if type == 'yaml'
-            @compliance_data[filename] = JSON.parse(File.read(filename)) if type == 'json'
-          rescue => e
-            warn(%(compliance_engine: Invalid '#{type}' file found at '#{filename}' => #{e}))
-          end
+          @compliance_data[filename] = YAML.safe_load(File.read(filename)) if type == 'yaml'
+          @compliance_data[filename] = JSON.parse(File.read(filename)) if type == 'json'
+        rescue => e
+          warn(%(compliance_engine: Invalid '#{type}' file found at '#{filename}' => #{e}))
         end
       end
 

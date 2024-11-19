@@ -32,12 +32,12 @@ def parse_options
   options.confine = {}
   options.append = ''
 
-  _opts = OptionParser.new do |opts|
-    opts.banner = "Usage: #{$PROGRAM_NAME} [options]"
+  opts = OptionParser.new do |opt|
+    opt.banner = "Usage: #{$PROGRAM_NAME} [options]"
 
-    opts.separator ''
+    opt.separator ''
 
-    opts.on(
+    opt.on(
       '-i PATH',
       '--input PATH',
       'The source Compliance Mapper Hieradata file',
@@ -45,7 +45,7 @@ def parse_options
       options.input << File.absolute_path(arg.strip)
     end
 
-    opts.on(
+    opt.on(
       '-o PATH',
       '--output PATH',
       'The output Compliance Mapper Hieradata file',
@@ -59,7 +59,7 @@ def parse_options
       end
     end
 
-    opts.on(
+    opt.on(
       '-s VERSION',
       '--src_version VERSION',
       'Compliance Mapper source API version',
@@ -73,7 +73,7 @@ def parse_options
       end
     end
 
-    opts.on(
+    opt.on(
       '-d VERSION',
       '--dst_version VERSION',
       'Compliance Mapper destination API version',
@@ -87,7 +87,7 @@ def parse_options
       end
     end
 
-    opts.on(
+    opt.on(
       '-f FORMAT',
       '--output_format FORMAT',
       'The output format. May be one of "json" or "yaml"',
@@ -101,7 +101,7 @@ def parse_options
       end
     end
 
-    opts.on(
+    opt.on(
       '-m MODULE',
       '--module MODULE',
       'For 2.0 migrations, isolate the target module to output. If left out, all will be output.',
@@ -109,7 +109,7 @@ def parse_options
       options.target_module = arg.strip
     end
 
-    opts.on(
+    opt.on(
       '-c FACT=VALUE',
       '--confine FACT=VALUE',
       'For 2.0 migrations, specify confinement for the target data',
@@ -118,7 +118,7 @@ def parse_options
       options.confine[c[0]] = c[1]
     end
 
-    opts.on(
+    opt.on(
       '-a STRING',
       '--append STRING',
       'For 2.0 migrations, append STRING to check key',
@@ -126,27 +126,27 @@ def parse_options
       options.append = arg.strip
     end
 
-    opts.on(
+    opt.on(
       '-h',
       '--help',
       'Help Message',
     ) do
-      puts opts
+      puts opt
       exit(0)
     end
   end
 
   begin
-    _opts.parse!(ARGV)
+    opts.parse!(ARGV)
   rescue OptionParser::ParseError => e
     puts e
-    puts _opts
+    puts opts
     exit 1
   end
 
   if options.input.empty?
     warn "You must pass an input file to #{$PROGRAM_NAME}"
-    puts _opts
+    puts opts
     exit 1
   end
 
@@ -160,7 +160,6 @@ def parse_options
   options.input.each do |infile|
     if File.exist?(infile)
       begin
-        data = {}
         data = if %r{\.yaml$}.match?(_infile)
                  YAML.load_file(_infile)
                else

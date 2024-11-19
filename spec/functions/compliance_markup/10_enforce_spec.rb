@@ -46,9 +46,12 @@ def write_hieradata(policy_order)
 end
 
 describe 'lookup' do
-  on_supported_os.each do |os, _os_facts|
+  on_supported_os.each do |os, os_facts|
     context "on #{os}" do
+      let(:facts) { os_facts }
+
       context 'with a single compliance map' do
+        let(:lookup) { subject }
         let(:hieradata) { '10_enforce_spec' }
         let(:policy_order) { ['disa_stig'] }
 
@@ -57,7 +60,7 @@ describe 'lookup' do
         end
 
         it 'returns /bin/disa' do
-          result = subject.execute('useradd::shells')
+          result = lookup.execute('useradd::shells')
           expect(result).to be_instance_of(Array)
           expect(result).to include('/bin/disa')
         end
@@ -66,7 +69,7 @@ describe 'lookup' do
           let(:policy_order) { 'disa_stig' }
 
           it 'returns /bin/disa' do
-            result = subject.execute('useradd::shells')
+            result = lookup.execute('useradd::shells')
             expect(result).to be_instance_of(Array)
             expect(result).to include('/bin/disa')
           end
@@ -74,6 +77,7 @@ describe 'lookup' do
       end
 
       context 'when disa is higher priority' do
+        let(:lookup) { subject }
         let(:hieradata) { '10_enforce_spec' }
         let(:policy_order) { ['disa_stig', 'nist_800_53:rev4'] }
 
@@ -82,7 +86,7 @@ describe 'lookup' do
         end
 
         it 'returns /bin/disa and /bin/nist' do
-          result = subject.execute('useradd::shells')
+          result = lookup.execute('useradd::shells')
           expect(result).to be_instance_of(Array)
           expect(result).to include('/bin/disa')
           expect(result).to include('/bin/nist')

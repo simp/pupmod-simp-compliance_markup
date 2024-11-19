@@ -177,9 +177,9 @@ Puppet::Functions.create_function(:'compliance_markup::compliance_map', Puppet::
   # @return [Nil]
   #
   dispatch :compliance_map do
-    required_param 'Hash', :map_data
     # See: https://github.com/puppetlabs/puppet-specifications/blob/master/language/func-api.md#experimental--internal-features
     scope_param
+    required_param 'Hash', :map_data
   end
 
   # @param compliance_profile
@@ -194,18 +194,18 @@ Puppet::Functions.create_function(:'compliance_markup::compliance_map', Puppet::
   # @return [Nil]
   #
   dispatch :compliance_map_inline do
+    # See: https://github.com/puppetlabs/puppet-specifications/blob/master/language/func-api.md#experimental--internal-features
+    scope_param
     required_param 'Variant[String[1], Array[String[1]]]', :compliance_profile
     required_param 'Variant[String[1], Array[String[1]]]', :identifiers
     optional_param 'String[1]', :notes
-    # See: https://github.com/puppetlabs/puppet-specifications/blob/master/language/func-api.md#experimental--internal-features
-    scope_param
   end
 
-  def compliance_map(map_data, scope)
+  def compliance_map(scope, map_data)
     create_compliance_map(scope, [map_data])
   end
 
-  def compliance_map_inline(compliance_profile, identifiers, notes = nil, scope)
+  def compliance_map_inline(scope, compliance_profile, identifiers, notes = nil)
     args = [compliance_profile, identifiers]
 
     args << notes if notes

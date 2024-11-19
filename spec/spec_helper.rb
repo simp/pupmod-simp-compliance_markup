@@ -166,9 +166,7 @@ RSpec.configure do |c|
 end
 
 Dir.glob("#{RSpec.configuration.module_path}/*").each do |dir|
-  begin
-    Pathname.new(dir).realpath
-  rescue StandardError
-    raise "ERROR: The module '#{dir}' is not installed. Tests cannot continue."
-  end
+  Pathname.new(dir).realpath
+rescue StandardError
+  raise "ERROR: The module '#{dir}' is not installed. Tests cannot continue."
 end

@@ -114,7 +114,8 @@ Puppet::Functions.create_function(:'compliance_markup::enforcement') do
 
   def lookup_fact(fact)
     call_function('dig', closure_scope.lookupvar('facts'), *fact.split('.'))
-  rescue ArgumentError
+  rescue ArgumentError => e
+    debug e.message
     nil
   end
 

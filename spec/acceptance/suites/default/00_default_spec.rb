@@ -21,12 +21,12 @@ describe 'compliance_markup class' do
   let(:compliant_hieradata) do
     <<~EOS
     ---
-    compliance_map :
-      test_policy :
-        test::var1 :
-          'identifiers' :
+    compliance_map:
+      test_policy:
+        test::var1:
+          'identifiers':
             - 'TEST_POLICY1'
-          'value' : 'test1'
+          'value': 'test1'
     EOS
   end
 
@@ -44,35 +44,38 @@ describe 'compliance_markup class' do
 
   hosts.each do |host|
     shared_examples 'a valid report' do
-      before(:all) do
-        @compliance_data = {
-          report: {}
-        }
+      let(:compliance_data) do
+        tmpdir = Dir.mktmpdir
+        value = nil
+        begin
+          Dir.chdir(tmpdir) do
+            scp_from(host, "/opt/puppetlabs/puppet/cache/simp/compliance_reports/#{fqdn}/compliance_report.json", '.')
+
+            value = {
+              report: JSON.parse(File.read('compliance_report.json'))
+            }
+          end
+        ensure
+          FileUtils.remove_entry_secure tmpdir
+        end
+        value
       end
 
       let(:fqdn) { fact_on(host, 'networking.fqdn') }
 
       it 'has a report' do
-        tmpdir = Dir.mktmpdir
-        begin
-          Dir.chdir(tmpdir) do
-            scp_from(host, "/opt/puppetlabs/puppet/cache/simp/compliance_reports/#{fqdn}/compliance_report.json", '.')
-
-            expect {
-              @compliance_data[:report] = JSON.parse(File.read('compliance_report.json'))
-            }.not_to raise_error
-          end
-        ensure
-          FileUtils.remove_entry_secure tmpdir
-        end
+        expect(compliance_data).not_to be_nil
+        expect(compliance_data[:report]).not_to be_nil
+        expect(compliance_data[:report]).not_to be_instance_of(Hash)
+        expect(compliance_data[:report]).not_to be_empty
       end
 
       it 'has host metadata' do
-        expect(@compliance_data[:report]['fqdn']).to eq(fqdn)
+        expect(compliance_data[:report]['fqdn']).to eq(fqdn)
       end
 
       it 'has a compliance profile report' do
-        expect(@compliance_data[:report]['compliance_profiles']).not_to be_empty
+        expect(compliance_data[:report]['compliance_profiles']).not_to be_empty
       end
     end
 
