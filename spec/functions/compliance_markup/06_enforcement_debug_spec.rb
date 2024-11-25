@@ -121,5 +121,40 @@ describe 'lookup' do
         expect(result['checks']).to include(checks['checks'])
       end
     end
+
+    context "on #{os} compliance_markup::debug values with no compliance_markup::enforcement" do
+      it do
+        begin
+          result = subject.execute('compliance_markup::debug::hiera_backend_compile_time')
+        rescue => e
+        end
+        expect(e).to be_a(Puppet::DataBinding::LookupError)
+        expect(e.to_s).to eq("Function lookup() did not find a value for the name 'compliance_markup::debug::hiera_backend_compile_time'")
+      end
+
+      it do
+        begin
+          result = subject.execute('compliance_markup::debug::dump')
+        rescue => e
+        end
+        expect(e).to be_a(Puppet::DataBinding::LookupError)
+        expect(e.to_s).to eq("Function lookup() did not find a value for the name 'compliance_markup::debug::dump'")
+      end
+
+      it do
+        result = subject.execute('compliance_markup::debug::profiles')
+        expect(result).to be_a(Array)
+        expect(result).to include('06_profile_test')
+      end
+
+      it do
+        result = subject.execute('compliance_markup::debug::compliance_data')
+        expect(result).to be_a(Hash)
+        expect(result.keys).to eq(['version', 'profiles', 'ce', 'checks'])
+        expect(result['profiles']).to include(profile['profiles'])
+        expect(result['ce']).to include(ces['ce'])
+        expect(result['checks']).to include(checks['checks'])
+      end
+    end
   end
 end
