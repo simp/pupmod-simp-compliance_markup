@@ -15,6 +15,31 @@ describe 'compliance_markup' do
         EOM
       end
 
+      context 'with no configuration' do
+        let(:facts) { os_facts }
+
+        it { is_expected.to(compile.with_all_deps) }
+      end
+
+      context 'with a basic configuration' do
+        let(:facts) { os_facts.merge('target_compliance_profile' => 'disa_stig') }
+        let(:params) do
+          {
+            'validate_profiles' => ['disa_stig'],
+            'report_on_client'  => true,
+            'report_on_server'  => false,
+            'report_types'      => [
+              'non_compliant',
+              'unknown_parameters',
+              'unknown_resources',
+            ],
+          }
+        end
+        let(:hieradata) { 'compliance-engine' }
+
+        it { is_expected.to(compile.with_all_deps) }
+      end
+
       context 'with data in modules' do
         let(:server_report_dir) { Dir.mktmpdir }
         let(:raw_report) do
