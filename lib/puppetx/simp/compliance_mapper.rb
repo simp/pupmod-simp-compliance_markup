@@ -286,8 +286,8 @@ def compiler_class
           @profile_list
         end
 
-        def fact_match(fact_value, confinement_value)
-          def string_match(fact_value, confinement_value)
+        def fact_match?(fact_value, confinement_value)
+          def string_match?(fact_value, confinement_value)
             return fact_value != confinement_value.delete_prefix('!') if confinement_value.start_with?('!')
 
             fact_value == confinement_value
@@ -299,11 +299,11 @@ def compiler_class
               if value.is_a?(Array)
                 fact_value == value
               else
-                fact_match(fact_value, value)
+                fact_match?(fact_value, value)
               end
             end
           when 'String'
-            string_match(fact_value, confinement_value)
+            string_match?(fact_value, confinement_value)
           else
             fact_value == confinement_value
           end
@@ -359,7 +359,7 @@ def compiler_class
 
                     fact_value = @callback.lookup_fact(confinement_setting)
                     next if fact_value.nil?
-                    unless fact_match(fact_value, confinement_value)
+                    unless fact_match?(fact_value, confinement_value)
                       delete_item = true
                       throw :confine_end
                     end

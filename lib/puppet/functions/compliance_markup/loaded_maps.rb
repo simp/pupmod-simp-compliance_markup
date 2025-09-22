@@ -25,7 +25,7 @@ Puppet::Functions.create_function(:'compliance_markup::loaded_maps', Puppet::Fun
     closure_scope.environment.name.to_s
   end
 
-  def debug(_message)
+  def debug(_message) # rubocop:disable Naming/PredicateMethod
     false
   end
 end

@@ -261,7 +261,7 @@ describe 'lookup' do
       end
 
       # Test for confine on multiple facts and an array of facts in checks.
-      if (os_facts[:os][:name] == 'RedHat' || os_facts[:os][:name] == 'CentOS') && os_facts[:os][:release][:major] == '7'
+      if ['RedHat', 'CentOS'].include?(os_facts[:os][:name]) && os_facts[:os][:release][:major] == '7'
         it { is_expected.to run.with_params('test_module_01::el_version').and_return('7') }
       else
         it do
