@@ -13,4 +13,3 @@ fixtures:
       repo: https://github.com/simp/pupmod-puppetlabs-yumrepo_core.git
       puppet_version: ">= 6.0.0"
   symlinks:
-    compliance_markup: "#{source_dir}"
