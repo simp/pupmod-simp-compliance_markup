@@ -68,7 +68,7 @@ describe 'compliance_markup class enforcement' do
         it 'has /bin/sh in /etc/shells' do
           apply_manifest_on(host, manifest, catch_failures: true)
           result = on(host, 'cat /etc/shells').output.strip
-          expect(result).to match(%r{/bin/sh})
+          expect(result).to include('/bin/sh')
         end
 
         context 'when disa is higher priority' do
@@ -82,8 +82,8 @@ describe 'compliance_markup class enforcement' do
             apply_manifest_on(host, manifest, catch_failures: true)
 
             result = on(host, 'cat /etc/shells').output.strip
-            expect(result).to match(%r{/bin/disa})
-            expect(result).to match(%r{/bin/nist})
+            expect(result).to include('/bin/disa')
+            expect(result).to include('/bin/nist')
           end
         end
       end

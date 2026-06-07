@@ -12,16 +12,16 @@ describe 'compliance_markup', type: :class do
   #
   # This needs to be well defined since we can also manipulate defined type
   # defaults
-  expected_classes = [
+  EXPECTED_CLASSES = [
     'yum',
-  ]
+  ].freeze
 
-  allowed_failures = {
+  ALLOWED_FAILURES = {
     'documented_missing_parameters' => [
-    ] + expected_classes.map { |c| Regexp.new("^(?!#{c}(::.*)?)") },
+    ] + EXPECTED_CLASSES.map { |c| Regexp.new("^(?!#{c}(::.*)?)") },
     'documented_missing_resources' => [
-    ] + expected_classes.map { |c| Regexp.new("^(?!#{c}(::.*)?)") }
-  }
+    ] + EXPECTED_CLASSES.map { |c| Regexp.new("^(?!#{c}(::.*)?)") }
+  }.freeze
 
   on_supported_os.each do |os, os_facts|
     context "on #{os}" do
@@ -43,7 +43,7 @@ describe 'compliance_markup', type: :class do
 
           let(:pre_condition) do
             %(
-            #{expected_classes.map { |c| %(include #{c}) }.join("\n")}
+            #{EXPECTED_CLASSES.map { |c| %(include #{c}) }.join("\n")}
           )
           end
 
@@ -85,7 +85,7 @@ describe 'compliance_markup', type: :class do
                 compliance_profile_data[report_section].delete_if do |item|
                   rm = false
 
-                  Array(allowed_failures[report_section]).each do |allowed|
+                  Array(ALLOWED_FAILURES[report_section]).each do |allowed|
                     if allowed.is_a?(Regexp)
                       if allowed.match?(item)
                         rm = true
