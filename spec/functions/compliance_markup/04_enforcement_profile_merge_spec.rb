@@ -431,13 +431,13 @@ describe 'lookup' do
 
     context "on #{os} with compliance_markup::enforcement merging profiles" do
       before(:each) do
-        File.open(File.join(fixtures, 'hieradata', 'profile-merging.yaml'), 'w') do |fh|
+        File.open(File.join(fixtures, 'hieradata', '04_profile-merging.yaml'), 'w') do |fh|
           test_hiera = { 'compliance_markup::enforcement' => ['profile_test1', 'profile_test2'] }.to_yaml
           fh.puts test_hiera
         end
       end
 
-      let(:hieradata) { 'profile-merging' }
+      let(:hieradata) { '04_profile-merging' }
 
       # Test a string.
       it { is_expected.to run.with_params('test_module_04::string_param').and_return('string value 1') }
@@ -454,13 +454,13 @@ describe 'lookup' do
 
     context "on #{os} with compliance_markup::enforcement merging profiles in reverse order" do
       before(:each) do
-        File.open(File.join(fixtures, 'hieradata', 'profile-merging.yaml'), 'w') do |fh|
+        File.open(File.join(fixtures, 'hieradata', '04_profile-merging.yaml'), 'w') do |fh|
           test_hiera = { 'compliance_markup::enforcement' => ['profile_test2', 'profile_test1'] }.to_yaml
           fh.puts test_hiera
         end
       end
 
-      let(:hieradata) { 'profile-merging' }
+      let(:hieradata) { '04_profile-merging' }
 
       # Test a string.
       it { is_expected.to run.with_params('test_module_04::string_param').and_return('string value 2') }
