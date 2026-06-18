@@ -72,7 +72,12 @@ Puppet::Functions.create_function(:'compliance_markup::enforcement') do
     # Allow for escaping knockout prefixes that we want to preserve in strings
     # NOTE: This is horrible but less horrible than traversing all manner of
     # data structures recursively.
-    retval = JSON.parse(retval.to_json.gsub('\\--', '--'))
+    #
+    # The match is against the JSON-encoded form, where a single literal
+    # backslash from the data ('\--') is serialized as '\\--'. Matching the
+    # encoded form keeps the result valid JSON; the older '\--' pattern left a
+    # dangling '\-' escape that only parsed under lenient JSON implementations.
+    retval = JSON.parse(retval.to_json.gsub('\\\\--', '--'))
 
     # Add the key to the cache if we found something
     cache(key, retval) if retval
