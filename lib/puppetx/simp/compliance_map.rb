@@ -309,7 +309,11 @@ def compliance_map(args, context)
             # Allow for escaping knockout prefixes that we want to preserve in strings
             # NOTE: This is horrible but less horrible than traversing all manner of
             # data structures recursively.
-            expected_value = JSON.parse(expected_value.to_json.gsub('\\--', '--'))
+            #
+            # Match against the JSON-encoded form ('\\--'), where a single literal
+            # backslash from the data is serialized as two characters, so the result
+            # stays valid JSON under strict parsers.
+            expected_value = JSON.parse(expected_value.to_json.gsub('\\\\--', '--'))
 
             result = {
               'compliant_value' => expected_value,

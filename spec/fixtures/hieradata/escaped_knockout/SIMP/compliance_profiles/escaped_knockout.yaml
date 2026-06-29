@@ -24,7 +24,7 @@ checks:
     settings:
       parameter: test4::list1
       value: 
-        - '\\-- not_a_knockout'
+        - '\-- not_a_knockout'
     controls:
       test_control: true
     identifiers:

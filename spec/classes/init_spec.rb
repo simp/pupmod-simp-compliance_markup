@@ -68,14 +68,16 @@ describe 'compliance_markup' do
         end
 
         context 'when running with the inbuilt data' do
-          pre_condition_common = <<~EOM
-            class yum (
-              # This should trigger a finding
-              $config_options = {}
-            ) { }
+          let(:pre_condition_common) do
+            <<~EOM
+              class yum (
+                # This should trigger a finding
+                $config_options = {}
+              ) { }
 
-            include yum
-          EOM
+              include yum
+            EOM
+          end
 
           let(:pre_condition) do
             <<~EOM
@@ -140,7 +142,9 @@ describe 'compliance_markup' do
         { profile_type: 'String' },
       ].each do |data|
         context "with a fabricated test profile #{data[:profile_type]}" do
-          profile_name = 'test_profile'
+          let(:profile_name) { 'test_profile' }
+          let(:facts) { os_facts }
+
           case data[:profile_type]
           when 'Array'
             let(:pre_condition) do
@@ -254,8 +258,6 @@ describe 'compliance_markup' do
               EOM
             end
           end
-
-          let(:facts) { os_facts }
 
           ['yaml', 'json'].each do |report_format|
             context "with report format #{report_format}" do
