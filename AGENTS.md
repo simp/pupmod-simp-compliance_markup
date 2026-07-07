@@ -27,9 +27,9 @@ elements), and `controls`.
 ### The shared mapper (the unusual core)
 
 `lib/puppetx/simp/compliance_mapper.rb` holds the engine, but it is **not** a
-class you instantiate. Each caller creates a plain object and does
-`instance_eval(File.read('compliance_mapper.rb'))` to graft the methods onto
-itself, then supplies a small callback API the mapper depends on:
+class you instantiate. Callers `instance_eval` the file by absolute path (see
+`lib/puppet/functions/compliance_markup/enforcement.rb` and `compliance_map.rb`)
+to graft the methods onto themselves, then supply a small callback API the mapper depends on:
 
 - `debug(message)`, `cache(k,v)` / `cached_value(k)` / `cache_has_key(k)` (the
   Hiera backend maps these onto the `Puppet::LookupContext`; other callers stub
@@ -81,7 +81,7 @@ Key methods in the mapper:
 - **`compliance_map.rb`** — the **reporting** function (a
   `Puppet::Functions::InternalFunction`). Two dispatches: a full-config `Hash`
   call, or an inline **custom-entry** call
-  `compliance_map(profile, identifier[, notes])`. It lazily builds a report
+  `compliance_map(profile, identifiers[, notes])`. It lazily builds a report
   generator object (instance_eval'ing both `compliance_map.rb` **and** the
   mapper) and stashes it on the catalog (`@simp_compliance_report_generator`) so
   repeated calls reuse it.
