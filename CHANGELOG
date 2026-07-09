@@ -1,3 +1,6 @@
+* Thu Jul 09 2026 Steven Pritchard <steve@sicura.us> - 4.0.1
+- Corrected bogus weekdays in changelog dates
+
 * Mon Jun 08 2026 Steven Pritchard <steven.pritchard@gmail.com> - 4.0.0
 - Switch `requirements` from `puppet` to `openvox` (>= 8 < 9)
 - Point `issues_url` at GitHub Issues
@@ -316,7 +319,7 @@
 - Aligned the EL7 disa_stig profile with the latest SSG content
 - Fixed several parameters with incorrect data types
 
-* Mon Oct 03 2017 Dylan Cochran <dylan.cochran@onyxpoint.com> - 2.3.2-0
+* Tue Oct 03 2017 Dylan Cochran <dylan.cochran@onyxpoint.com> - 2.3.2-0
 - Fix discrepancies between NIST and DISA compliance profiles
 
 * Fri Sep 22 2017 Dylan Cochran <dylan.cochran@onyxpoint.com> - 2.3.1-0
@@ -332,7 +335,7 @@
 - Provided scripts in 'utils/' to convert the compliance profiles from
   YAML to JSON and vice versa.
 
-* Mon Jun 16 2017 Dylan Cochran <dylan.cochran@onyxpoint.com> - 2.2.0-0
+* Fri Jun 16 2017 Dylan Cochran <dylan.cochran@onyxpoint.com> - 2.2.0-0
 - Added a compliance enforcement hierav3 and hierav5 backend.
 
 * Sat Jun 10 2017 Trevor Vaughan <tvaughan@onyxpoint.com> - 2.1.0-0
