@@ -4,6 +4,13 @@
 [![Puppet Forge Downloads](https://img.shields.io/puppetforge/dt/simp/compliance_markup.svg)](https://forge.puppetlabs.com/simp/compliance_markup)
 [![Build Status](https://travis-ci.org/simp/pupmod-simp-compliance_markup.svg)](https://travis-ci.org/simp/pupmod-simp-compliance_markup)
 
+> **Note:** This module is the *original* implementation of the SIMP Compliance
+> Engine. It has been superseded by
+> [`compliance_engine`](https://github.com/simp/rubygem-simp-compliance_engine),
+> which is available both as a standalone Ruby gem and as a Puppet module
+> ([`simp-compliance_engine`](https://forge.puppet.com/modules/simp/compliance_engine)
+> on the Puppet Forge).
+
 Table of Contents
 
 <!-- vim-markdown-toc GFM -->

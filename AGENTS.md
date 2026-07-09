@@ -4,6 +4,13 @@ This file provides guidance to AI agents when working with code in this reposito
 
 ## What this module does
 
+> **Note:** This module is the *original* implementation of the SIMP Compliance
+> Engine. It has been superseded by
+> [`compliance_engine`](https://github.com/simp/rubygem-simp-compliance_engine),
+> which is available both as a standalone Ruby gem and as a Puppet module
+> ([`simp-compliance_engine`](https://forge.puppet.com/modules/simp/compliance_engine)
+> on the Puppet Forge).
+
 `pupmod-simp-compliance_markup` is the SIMP **Compliance Engine** module. Unlike
 most SIMP modules it installs no packages and manages no services — it is almost
 entirely Ruby that plugs into Puppet in two ways:
