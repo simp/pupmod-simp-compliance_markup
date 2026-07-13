@@ -47,6 +47,8 @@ The compliance Hash to which to map
 
 * This defaults to *Data In Modules*
 
+Default value: `{}`
+
 ##### <a name="-compliance_markup--validate_profiles"></a>`validate_profiles`
 
 Data type: `Optional[Array[String[1]]]`
