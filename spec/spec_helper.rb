@@ -117,8 +117,7 @@ RSpec.configure do |c|
     c.backtrace_clean_patterns = backtrace_exclusion_patterns
   end
 
-  # rubocop:disable RSpec/BeforeAfterAll
-  c.before(:all) do
+  c.before(:all) do # rubocop:disable RSpec/BeforeAfterAll
     data = YAML.safe_load(default_hiera_config)
     data.each_key do |key|
       next unless data[key].is_a?(Hash)
@@ -134,7 +133,6 @@ RSpec.configure do |c|
       f.write data.to_yaml
     end
   end
-  # rubocop:enable RSpec/BeforeAfterAll
 
   c.before(:each) do
     @spec_global_env_temp = Dir.mktmpdir('simpspec')

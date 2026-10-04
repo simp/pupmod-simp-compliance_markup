@@ -103,7 +103,7 @@ describe 'compliance_markup' do
           end
 
           it 'does not have ruby serialized objects in the output' do
-            expect(raw_report).not_to match(%r{!ruby})
+            expect(raw_report).not_to include('!ruby')
           end
 
           context 'when dumping the catalog compliance_map' do
@@ -121,11 +121,11 @@ describe 'compliance_markup' do
             it 'has a generated catlaog' do
               expect(File).to exist("#{params['options']['server_report_dir']}/#{facts[:networking][:fqdn]}/catalog_compliance_map.yaml")
 
-              expect(catalog_dump).to match(%r{GENERATED})
+              expect(catalog_dump).to include('GENERATED')
             end
 
             it 'does not have Ruby serialized objects in the dump' do
-              expect(catalog_dump).not_to match(%r{!ruby})
+              expect(catalog_dump).not_to include('!ruby')
             end
 
             it 'is valid YAML' do
