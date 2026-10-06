@@ -71,7 +71,7 @@ describe 'lookup' do
         'version' => '2.0.0',
         'checks'  => {
           '04_string check1' => {
-            'type'     => 'puppet-class-parameter',
+            'type' => 'puppet-class-parameter',
           },
         },
       },
@@ -80,7 +80,7 @@ describe 'lookup' do
         'checks'  => {
           '04_string check1' => {
             'settings' => {
-              'value'     => 'string value 1',
+              'value' => 'string value 1',
             },
           },
         },
@@ -110,7 +110,7 @@ describe 'lookup' do
         'checks'  => {
           '04_string check2' => {
             'settings' => {
-              'value'     => 'string value 2',
+              'value' => 'string value 2',
             },
             'identifiers' => {
               '04_identifier2' => [],
@@ -122,7 +122,7 @@ describe 'lookup' do
         'version' => '2.0.0',
         'checks'  => {
           '04_string check2' => {
-            'type'     => 'puppet-class-parameter',
+            'type' => 'puppet-class-parameter',
           },
         },
       },
@@ -130,7 +130,7 @@ describe 'lookup' do
         'version' => '2.0.0',
         'checks'  => {
           '04_string check2' => {
-            'ces'      => [
+            'ces' => [
               '04_profile_test2',
             ],
           },
@@ -140,7 +140,7 @@ describe 'lookup' do
         'version' => '2.0.0',
         'checks'  => {
           '04_array check1' => {
-            'type'     => 'puppet-class-parameter',
+            'type' => 'puppet-class-parameter',
           },
         },
       },
@@ -148,7 +148,7 @@ describe 'lookup' do
         'version' => '2.0.0',
         'checks'  => {
           '04_array check1' => {
-            'ces'      => [
+            'ces' => [
               '04_profile_test1',
             ],
           },
@@ -184,7 +184,7 @@ describe 'lookup' do
         'checks'  => {
           '04_array check2' => {
             'settings' => {
-              'value'     => [
+              'value' => [
                 'array value 2',
               ],
             },
@@ -195,7 +195,7 @@ describe 'lookup' do
         'version' => '2.0.0',
         'checks'  => {
           '04_array check2' => {
-            'type'     => 'puppet-class-parameter',
+            'type' => 'puppet-class-parameter',
           },
         },
       },
@@ -203,7 +203,7 @@ describe 'lookup' do
         'version' => '2.0.0',
         'checks'  => {
           '04_array check2' => {
-            'ces'      => [
+            'ces' => [
               '04_profile_test2',
             ],
           },
@@ -261,7 +261,7 @@ describe 'lookup' do
         'version' => '2.0.0',
         'checks'  => {
           '04_hash check1' => {
-            'type'     => 'puppet-class-parameter',
+            'type' => 'puppet-class-parameter',
           },
         },
       },
@@ -269,7 +269,7 @@ describe 'lookup' do
         'version' => '2.0.0',
         'checks'  => {
           '04_hash check2' => {
-            'ces'      => [
+            'ces' => [
               '04_profile_test2',
             ],
           },
@@ -301,7 +301,7 @@ describe 'lookup' do
         'checks'  => {
           '04_hash check2' => {
             'settings' => {
-              'value'     => {
+              'value' => {
                 'hash key 2' => 'hash value 2',
               },
             },
@@ -346,7 +346,7 @@ describe 'lookup' do
         'version' => '2.0.0',
         'checks'  => {
           '04_nested hash1' => {
-            'type'     => 'puppet-class-parameter',
+            'type' => 'puppet-class-parameter',
           },
         },
       },
@@ -354,7 +354,7 @@ describe 'lookup' do
         'version' => '2.0.0',
         'checks'  => {
           '04_nested hash2' => {
-            'type'     => 'puppet-class-parameter',
+            'type' => 'puppet-class-parameter',
           },
         },
       },
@@ -373,7 +373,7 @@ describe 'lookup' do
         'checks'  => {
           '04_nested hash2' => {
             'settings' => {
-              'value'     => {
+              'value' => {
                 'key' => {
                   'key1' => 'value2',
                 },
