@@ -426,6 +426,10 @@ describe 'lookup' do
     end
   end
 
+  after(:each) do
+    FileUtils.rm_f(File.join(fixtures, 'hieradata', '04_profile-merging.yaml'))
+  end
+
   on_supported_os.each do |os, os_facts|
     let(:facts) { os_facts }
 

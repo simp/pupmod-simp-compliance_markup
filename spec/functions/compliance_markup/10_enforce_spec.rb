@@ -46,6 +46,10 @@ def write_hieradata(policy_order)
 end
 
 describe 'lookup' do
+  after(:each) do
+    FileUtils.rm_f(File.join(File.expand_path('../../fixtures', __dir__), 'hieradata', '10_enforce_spec.yaml'))
+  end
+
   on_supported_os.each do |os, os_facts|
     context "on #{os}" do
       let(:facts) { os_facts }
