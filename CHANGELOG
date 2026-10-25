@@ -1,3 +1,8 @@
+* Sun Oct 25 2026 Steven Pritchard <steve@sicura.us> - 4.0.2
+- Call `DeepMerge.deep_merge!` explicitly instead of `Hash#deep_merge!`, so
+  compliance data merges correctly when another library (such as
+  activesupport) replaces `Hash#deep_merge!`
+
 * Thu Jul 09 2026 Steven Pritchard <steve@sicura.us> - 4.0.1
 - Corrected bogus weekdays in changelog dates
 

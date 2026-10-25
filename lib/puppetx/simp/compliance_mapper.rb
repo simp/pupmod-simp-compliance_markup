@@ -22,7 +22,7 @@
 # cache_has_key(key)
 #
 # which allow for debug logging, and caching, respectively.
-require 'deep_merge'
+require 'deep_merge/core'
 
 def enforcement(key, context = self, options = { 'mode' => 'value' }, &block)
   options['mode'] ||= 'value'
@@ -398,22 +398,22 @@ def compiler_class
             when 'profiles'
               value.each do |profile, map|
                 @profile_list[profile] ||= {}
-                @profile_list[profile] = @profile_list[profile].deep_merge!(map, { knockout_prefix: '--' })
+                @profile_list[profile] = DeepMerge.deep_merge!(map, @profile_list[profile], { knockout_prefix: '--' })
               end
             when 'controls'
               value.each do |profile, map|
                 @control_list[profile] ||= {}
-                @control_list[profile] = @control_list[profile].deep_merge!(map, { knockout_prefix: '--' })
+                @control_list[profile] = DeepMerge.deep_merge!(map, @control_list[profile], { knockout_prefix: '--' })
               end
             when 'checks'
               value.each do |profile, map|
                 @check_list[profile] ||= {}
-                @check_list[profile] = @check_list[profile].deep_merge!(map, { knockout_prefix: '--' })
+                @check_list[profile] = DeepMerge.deep_merge!(map, @check_list[profile], { knockout_prefix: '--' })
               end
             when 'ce'
               value.each do |profile, map|
                 @configuration_element_list[profile] ||= {}
-                @configuration_element_list[profile] = @configuration_element_list[profile].deep_merge!(map, { knockout_prefix: '--' })
+                @configuration_element_list[profile] = DeepMerge.deep_merge!(map, @configuration_element_list[profile], { knockout_prefix: '--' })
               end
             end
           end
@@ -534,7 +534,7 @@ def compiler_class
                                            when 'Array'
                                              (retval[parameter]['value'] + Marshal.load(Marshal.dump(specification['settings']['value']))).uniq
                                            when 'Hash'
-                                             retval[parameter]['value'].deep_merge!(specification['settings']['value'])
+                                             DeepMerge.deep_merge!(specification['settings']['value'], retval[parameter]['value'])
                                            else
                                              Marshal.load(Marshal.dump(specification['settings']['value']))
                                            end
@@ -551,7 +551,7 @@ def compiler_class
                                          when 'Array'
                                            (retval[parameter][key] + Marshal.load(Marshal.dump(specification[key]))).uniq
                                          when 'Hash'
-                                           retval[parameter][key].deep_merge!(specification[key])
+                                           DeepMerge.deep_merge!(specification[key], retval[parameter][key])
                                          else
                                            Marshal.load(Marshal.dump(specification[key]))
                                          end

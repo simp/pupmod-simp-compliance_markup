@@ -184,6 +184,24 @@ describe 'lookup' do
       it { is_expected.to run.with_params('test_module_03::nested_hash').and_return({ 'key' => { 'key1' => 'value1', 'key2' => 'value2' } }) }
     end
 
+    # Other libraries (activesupport, for one) define their own
+    # Hash#deep_merge!, which replaces the deep_merge gem's
+    context "on #{os} with Hash#deep_merge! replaced by another library" do
+      before(:each) do
+        allow_any_instance_of(Hash).to receive(:deep_merge!).and_raise(NoMethodError, 'unexpected call to Hash#deep_merge!') # rubocop:disable RSpec/AnyInstance
+
+        File.open(File.join(fixtures, 'hieradata', '03_profile-merging.yaml'), 'w') do |fh|
+          test_hiera = { 'compliance_markup::enforcement' => ['profile_test1', 'profile_test2'] }.to_yaml
+          fh.puts test_hiera
+        end
+      end
+
+      let(:hieradata) { '03_profile-merging' }
+
+      it { is_expected.to run.with_params('test_module_03::hash_param').and_return({ 'hash key 1' => 'hash value 1', 'hash key 2' => '-- hash value 2' }) }
+      it { is_expected.to run.with_params('test_module_03::nested_hash').and_return({ 'key' => { 'key1' => 'value1', 'key2' => 'value2' } }) }
+    end
+
     context "on #{os} with compliance_markup::enforcement merging profiles in reverse order" do
       before(:each) do
         File.open(File.join(fixtures, 'hieradata', '03_profile-merging.yaml'), 'w') do |fh|
