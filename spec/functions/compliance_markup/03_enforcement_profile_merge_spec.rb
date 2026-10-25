@@ -158,6 +158,10 @@ describe 'lookup' do
     allow(File).to receive(:read).with(File.join(compliance_dir, 'checks.yaml'), any_args).and_return(checks_yaml)
   end
 
+  after(:each) do
+    FileUtils.rm_f(File.join(fixtures, 'hieradata', '03_profile-merging.yaml'))
+  end
+
   on_supported_os.each do |os, os_facts|
     let(:facts) { os_facts }
 
